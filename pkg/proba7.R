@@ -203,96 +203,72 @@ newRule<-function(rule){if(class(rule)!="function") stop("'rule' argument must b
                         }
 
                         
-                 
-                          
-                      
-
-#----------------------------------------------- generating radom sequences with random rules--------------------------
+             
+#------------------------------------------------- checking the uniquness of generated sequences ---------------------------------------------------
 
 
-#automatically creating objects of class "Item"
+#in order to check the uniquness of generations (in order to avoid presenting the person the same number sequences)
+# I would like to store all the sequences in a matrix. In order to be easily compared I assume all the sequences
+#are of the same length. Each number in a sequence will be represented by three digits i.e.  1 will be saved as 001
+# Otherwise it would be impossible to distinguish between similiar sequences. ie. 3-32-21 and 33-2-21 are different #sequences but both would be saved as 33221. So I am planning to save them in the following manner: 003032021 and 033002021.
 
 
-
-# if any error appears make it drop it and generate another sequence (so that the final ) 
-
-createSequence<-function(n=6){          #a function to creates n sequences (default number of sequences is 6)
-                              for(i in 1:n){
-                                            f<-sample(c(1:99), 1,replace = T) # argument 'first' for object from class "Item" generated from between 1 and 99. All numers are chosen at the same probability
-                                            s<-sample(c(1:99,0), 1, prob = c(rep(0.3/99,99),0.7), replace = T) # argument 'second' for object from class "Item" generated from between . Zero should be chosen with greater probability
-                                
-                                            co<-sample(c(1:50,0), 1,prob = c(rep(0.3/50,50),0.7), replace = T) # generating a constant for functions that would use it 
-                                
-                                            iii<-createItem(first=f,second=s) #creating an item named 'iii' where first=f and second=s
-                                                                                                
-                                            fun<-sample(rulenames,1) #generating function from the list of functions and evaluating it by its name 
-                                
-                                            seq1<-generate(iii,eval(parse(text=fun),co)) #generating the random sequence
-                                            
-                                            seq2<-paste(unlist(seq1),collapse="") #transorming a sequence into a single number (that can be stored in a tree)
-                                            seq3<-as.numeric(seq2) # in this form I will save the sequence in a tree
-                                            
-                                            #cat(paste("generation",i,"is \n",seq1,"\n Item", iii, "\n rule", fun))
-                                            }
-                              
-                              cat(paste("generation",i,"is \n",seq1,"\n Item", iii, "\n rule", fun))
-                             }
-
-
-
-
-
-
-
-
-
-
-
-
-#----------------------------a tree---------------------------------------------------------------------------------
-# a tree structure used to store generated sequences (checking whether there are no sequences that are the same)
-# based on the art of programming book
-
-
-# function creating storage matrix - being given the first value, and pointing 
-# there are three columns of the matrix - first row is , second row is, third row is the inserted value
-
-newtree <- function(firstval,inc) {
-                                  m <- matrix(rep(NA,inc*3),nrow=inc,ncol=3)
-                                  m[1,3] <- firstval
-                                  return(list(mat=m,nxt=2,inc=inc))
-                                  }
-
-
-
-
-# inserts newval into the subtree of tr, with the subtree's root being
-# at index hdidx; note that return value must be reassigned to tr by the
-# caller (including ins() itself, due to recursion)
-
-  ins <- function(hdidx,tr,newval) {   
-              dir <- if (newval <= tr$mat[hdidx,3]) 1 else 2 # which direction will this new node go, left or right?
-                                                  # if null link in that direction, place the new node here, otherwise
-                                                  # recurse
-                     if (is.na(tr$mat[hdidx,dir])) {
-                                          newidx <- tr$nxt # where new node goes
-                                          
-                                          if (tr$nxt == nrow(tr$mat) + 1) {# check for room to add a new element
-                                                                          tr$mat <- rbind(tr$mat, matrix(rep(NA,tr$inc*3),nrow=tr$inc,ncol=3))
-                                                                          }
-     
-                                          tr$mat[newidx,3] <- newval # insert new tree node
-     
-                                          tr$mat[hdidx,dir] <- newidx# link to the new node
-                                          tr$nxt <- tr$nxt + 1 # ready for next insert
-                                          return(tr)
-                                                    } else tr <- ins(tr$mat[hdidx,dir],tr,newval)
+storageTransf<-function(glist){
+                                    tabela=matrix(NA,1,length(glist))
+                                    for(i in 1:length(glist)){ #where kkk is a list with numeric sequence produced by function 'generate'
+                                                              lg=length(digits(glist[[i]])) #length of an element of list 
+                                                              if(lg>3)stop (paste("element ",i, "of the generated sequence is greater than 999" ))
+                                                              if(lg==3){k=paste(glist[[i]])}            else{
+                                                              if(lg<3)k=paste(paste(rep(0,3-lg),collapse=""),glist[[i]], sep="")} #glueing together zeros and a number from the list
+                                                              tabela[1,i]=k
+                                                              }
+                                    
+                                    return(paste(unlist(tabela),collapse=""))
                                     }
 
 
 
 
 
+#Now I will create a matrix to store the generated number sequences in format created by storageTransf function
+#After generating a new sequence the program will check whether such combination already exists in this matrix.
+#If it does - there will be an error.
+
+
+uniqGen<-function(nseq){ #nseq is a new sequence produced by function 'generate'
+                    testItems<-matrix("020010030040070110",1,1) # a matrix containing generated number sequences(initial matrix has one column and one row)
+                    k=storageTransf(nseq)
+                    if(!k%in%testItems) { testItems=rbind(NA,testItems)#if new sequence is not present in a matrix, add it to the matrix in the last
+                                          testItems[nrow(testItems),1]=k #saving new generation in the last row of the matrix
+                                        
+                                        } else stop ("Such generation already exists") 
+                    return(testItems)
+                    
+                    }
+
+
+
+
+# this function need exception handling, because it sometimes works and sometimes it doesn't
+# check whether the number sequence is not constant!
+
+randSeq<-function(){  f<-sample(c(1:99), 1,replace = T) # argument 'first' for object from class "Item" generated from between 1 and 99. All numers are chosen at the same probability
+                      s<-sample(c(1:99,0), 1, prob = c(rep(0.3/99,99),0.7), replace = T) # argument 'second' for object from class "Item" generated from between . Zero should be chosen with greater probability
+                      co<-sample(c(1:50,0), 1,prob = c(rep(0.3/50,50),0.7), replace = T) # generating a constant for functions that would use it 
+
+                      iii<-createItem(first=f,second=s) #creating an item named 'iii' where first=f and second=s
+
+                      fun<-sample(rulenames,1) #generating function from the list of functions and evaluating it by its name
+
+                      seq<-generate(iii,eval(parse(text=fun),co))
+                      
+                      #print(paste("item: ", iii, ", function: ", fun))
+
+                      return(seq)
+                      
+                      }
+
+# checking the uniqueness of rules
 
 
 
@@ -300,95 +276,3 @@ newtree <- function(firstval,inc) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#automatically generating the sequence with generated starting items and rules 
-
-
-# PRZESZUKIWANIE, CZY NIE MA TAKICH SAMYCH ELEMENT?W - W DRZEWIE -
-#NP. ZAPISYWANIE GENERACJI W POSTACI DRZEWA
-wo caveats:
-  
-  1.  It hasn't been checked yet.  There may be bugs, inefficiencies etc.
-
-2.  It does search and insert, not delete.
-
-Norm Matloff
-
-# routines to create trees and insert items into them are included
-# below; a deletion routine is left to the reader as an exercise
-
-# storage is in a matrix, say m, one row per node of the tree; a link i
-# in the tree means the vector m[i,] = (u,v,w); u and v are the left and
-# right links, and w is the stored value; null links have the value NA;
-# the matrix is referred to as the list (m,nxt,inc), where m is the
-# matrix, nxt is the next empty row to be used, and inc is the number of
-# rows of expansion to be allocated when the matrix becomes full
-
-# initializes a storage matrix, with initial stored value firstval
-newtree <- function(firstval,inc) {
-m <- matrix(rep(NA,inc*3),nrow=inc,ncol=3)
-m[1,3] <- firstval
-return(list(mat=m,nxt=2,inc=inc))
-}
-
-# inserts newval into nonempty tree whose head is index hdidx in the
-# storage space treeloc; note that return value must be reassigned to
-# tree; inc is as in newtree() above
-ins <- function(hdidx,tree,newval,inc) {
-tr <- tree
-# check for room to add a new element
-tr$nxt <- tr$nxt + 1
-if (tr$nxt > nrow(tr$mat))
-tr$mat <- rbind(tr$mat,matrix(rep(NA,inc*3),nrow=inc,ncol=3))
-newidx <- tr$nxt  # where we'll put the new tree node
-tr$mat[newidx,3] <- newval
-idx <- hdidx  # marks our current place in the tree
-node <- tr$mat[idx,]
-nodeval <- node[3]
-while (TRUE) {
-  # which direction to descend, left or right?
-  if (newval <= nodeval) dir <- 1 else dir <- 2
-  # descend
-  # null link?
-  if (is.na(node[dir])) {
-    tr$mat[idx,dir] <- newidx
-    break
-  } else {
-    idx <- node[dir]
-    node <- tr$mat[idx,]
-    nodeval <- node[3]
-  }
-}
-return(tr)
-}
-
-# print sorted tree via inorder traversal
-printtree <- function(hdidx,tree) {
-  left <- tree$mat[hdidx,1]
-  if (!is.na(left)) printtree(left,tree)
-  print(tree$mat[hdidx,3])
-  right <- tree$mat[hdidx,2]
-  if (!is.na(right)) printtree(right,tree)
-} 
