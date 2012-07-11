@@ -22,7 +22,9 @@ createItem<-function(first,second=0){
 #ADDING A CONSTANT #1
 addConst<-function(x,y){ 
                     if(class(x)!="Item") stop("x argument must be an object of Item class")
-                    if(class(y)!="numeric") stop ("'y' argument must be of type numeric")  
+                    if(class(y)!="numeric") stop ("'y' argument must be of type numeric")
+                    stopifnot(y > 0)
+                                        
                     a<-new("Item", first=x@first+y)
                     return(a)
                       }
@@ -33,6 +35,8 @@ subsConst<-function(x,y){
                         if(class(x)!="Item") stop("'x' argument must be an object of Item class")
                         if(class(y)!="numeric") stop ("'y' argument must be of type numeric")
                         if(x@first<y)stop (paste(deparse(substitute(x)), "<", deparse(substitute(y))," ;sorry - no negative numbers allowed"))
+                        stopifnot(y > 0) # prevents from generatng constant sequence
+                        
                         a<-new("Item", first=x@first-y)
                         return(a)
                         }
@@ -42,6 +46,7 @@ subsConst<-function(x,y){
 #ADD TWO PREVIOUS NUMBERS #3
 add<-function(x,y){
                   if(class(x)!="Item") stop("x argument must be an object of Item class")
+                  
                   a<-new("Item", first=x@second, second=(x@first+x@second))
                   return(a)                  
                   }
@@ -134,13 +139,13 @@ digSum3<-function(x,y=0){
 # przy generowaniu ciagow o zadanej dlugosci zaokraglaj wartosci length funkcja 'round'
 
 generate<-function(x,rule,const=0,length=6){
-                        if(class(x)!="Item") stop("'x' argument must be an object of Item class")
+                        if(class(x)!="Item") stop("'x' argument must be an object of class Item")
                         if(class(rule)!="function") stop("'rule' argument must be a function")
                         if(class(length)!="numeric") stop("'length' argument must be numeric")
                         if(length<4||length > 10) stop("'length' argument greater than 10 or smaller than 3")
                         
                                 
-                        y=const
+                        y=const #not every function uses 'constant' parameter (if theu dont this parameter is set 0)
                         
                         k<-list()  # a list containing objects of class "Item" necessary to generate a sequence
                         k[1]=x
@@ -255,19 +260,22 @@ uniqGen<-function(nseq){ #nseq is a new sequence produced by function 'generate'
 randSeq<-function(){  f<-sample(c(1:99), 1,replace = T) # argument 'first' for object from class "Item" generated from between 1 and 99. All numers are chosen at the same probability
                       s<-sample(c(1:99,0), 1, prob = c(rep(0.3/99,99),0.7), replace = T) # argument 'second' for object from class "Item" generated from between . Zero should be chosen with greater probability
                       co<-sample(c(1:50,0), 1,prob = c(rep(0.3/50,50),0.7), replace = T) # generating a constant for functions that would use it 
-
+                      print(co)
+                      
                       iii<-createItem(first=f,second=s) #creating an item named 'iii' where first=f and second=s
-
+                      print(iii)
+                      
                       fun<-sample(rulenames,1) #generating function from the list of functions and evaluating it by its name
-
+                      print(fun)
+                      
                       seq<-generate(iii,eval(parse(text=fun),co))
                       
-                      #print(paste("item: ", iii, ", function: ", fun))
-
+                      
                       return(seq)
                       
                       }
 
+#Error in eval(parse(text = fun), 22) : not that many frames on the stack   ???
 # checking the uniqueness of rules
 
 
