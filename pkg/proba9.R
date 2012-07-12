@@ -1,9 +1,7 @@
-
-#a class for creating sequence
-setClass("Item", representation(first="numeric", second="numeric"))
-
-
-
+#------------------DEFINIG CLASSES--------------------------------------------------------------------------------
+#[1]
+#a class for creating starting items
+setClass("Item", representation(first="numeric", second="numeric"),S3methods=TRUE)
 
 
 #a function creating object of class "Item"
@@ -13,6 +11,37 @@ createItem<-function(first,second=0){
                                     }
 
 
+
+#creating a class describing starting item (S3 class)
+# createItem<-function(first, second=0){
+#                                       newItem<-list(first=first, second=second)#
+#                                       class(newItem)<-"Item"                                    
+#                                       return(newItem)
+#                                       }
+
+
+
+
+#[2]
+#creating a class describing the rules (S4 class)
+setClass("Rule", representation(ruleName="character",ruleBody="function"),S3methods=TRUE)
+
+
+createRule<-function(insertedRule){ #a function creating objects of class 'Rule'
+                                name<-new("Rule", ruleName=as.character(match.call(insertedRule)$x),ruleBody=insertedRule )
+                                return(name)
+                              }
+
+#[2]
+#creating a class describing the rules (S3 class)
+
+# createRule<-function(insertedRule){
+#                                     if(class(insertedRule)!="function") stop ("argument 'inserted rule' must be of type 'function'")
+#                                                                       
+#                                     z<-list(ruleName=match.call(insertedRule)$x, ruleBody=insertedRule)
+#                                     class(z)<-"Rule"
+#                                     return(z)
+#                                   }
 
 
 #-------------------------------------------------------------------------------
@@ -113,6 +142,7 @@ digSum2<-function(x,y=0){
 digSum3<-function(x,y=0){
                       if(class(x)!="Item") stop ("'x' argument must be an object of Item class")
                       if(x@first<10) stop("first element of an object is less than 10")
+                      
   
                       m=digits(x@first) #a number transformed into digits
                       suma1=sum(m[c(1:length(m))]) #sum of digits
@@ -136,35 +166,36 @@ digSum3<-function(x,y=0){
 
 
 #przy generacji ciagu bede wyswietlac tylko parametry 'first' kolejnych elementow listy
-# przy generowaniu ciagow o zadanej dlugosci zaokraglaj wartosci length funkcja 'round'
+#przy generowaniu ciagow o zadanej dlugosci zaokraglaj wartosci length funkcja 'round'
 
 generate<-function(x,rule,const=0,length=6){
                         if(class(x)!="Item") stop("'x' argument must be an object of class Item")
-                        if(class(rule)!="function") stop("'rule' argument must be a function")
+                        if(class(rule)!="Rule") stop("'rule' argument must be of class 'Rule'")
                         if(class(length)!="numeric") stop("'length' argument must be numeric")
                         if(length<4||length > 10) stop("'length' argument greater than 10 or smaller than 3")
                         
-                                
-                        y=const #not every function uses 'constant' parameter (if theu dont this parameter is set 0)
+                              
+                        y<-const #not every function uses 'constant' parameter (if they dont this parameter is set 0)
                         
                         k<-list()  # a list containing objects of class "Item" necessary to generate a sequence
-                        k[1]=x
+                        m<-list() # a list containing only numbers for generating the sequence
+                        k[[1]]=x
+                        m[1]=k[[1]]@first
                         
-                        m <-list() # a list containing generated sequence (numeric values)
-                        m[1]=x@first
+                                        
                         
-                        #print(x@first)
+                        #print(k[[1]]@first)
                                                                                   
                                                          
                         for (i in 2:(round(length,0))){
-                                                         k[i]=rule(k[[i-1]],y)
-                                                         #print(k[[i]]@first)
-                                                         m[i]=k[[i]]@first
+                                                        k[[i]]=rule@ruleBody(k[[i-1]],y)
+                                                        m[i]=(k[[i]]@first)
+                                                        
                                                        }         
                                                             
-                        #return(k)
+                       
                         return(m)
-                                                                                             
+                                                                                                                     
                                            }
 
 
@@ -189,27 +220,62 @@ as.numeric(unlist(k)) # where k is a list generated by function generate
 #A LIST OF RULES
 
 
-#new functions created by user should contain parameters referring to (x,y)
-#returning objects of class "Item" or take objects of class "Item" as an argument
+#a list in which I store objects of class 'Rule'- there are 6 defult rules there . I am going to check two things:
+#A. for every rule I will keep also a checking value - a generated number sequence in type of character
+#   the checking sequences will be generated for an object of class'Item' with values first=17, second=20 and constant=1
+#B. I will check whether there already is a function of a given name
 
 
-#a list containing names of functions - YOU SHOULD MAKE IT DYNAMIC RATHER THAN STATIC
-rulenames<-matrix(c("addConst","subsConst","add","digSum1","digSum2","digSum3"),6,1) # default matrix of rules (6 default rules present) that can be expanded by a user
+
+addRule(rule){
+              if(class(rule)!="Rule")stop("'rule' argument must be an object of class Rule")
+              b<-storageTransf(generate(createItem(17,20),rule,1))
+              
+              
+  
+                #the list of rules
+                ruleList=list(createRule(addConst), createRule(subsConst), createRule(add), createRule(digSum1), createRule(digSum2),createRule(digSum3))
+                
+                #the rule of generated checking sequence
+                checkGen<-list()
+                fnames<-list()
+                body<-list()
+                
+                for(i in 1:length(functions)){
+                                              body[[i]]<-ruleList[[i]]@ruleBody
+                                              fnames[i]<-ruleList[[i]]@ruleName
+                                              
+                                              k<-storageTransf(generate(createItem(17,20),ruleList[[i]],1))
+                                              checkGen[i]=k
+                                              }
+
+                checkList=list(fnames,body,checkGen) 
+              #check the "rule@ruleName%in%checkList[[1]]"
+              #check the code "b%in%checkList[[3]]"
+
+              }
+              
 
 
-newRule<-function(rule){if(class(rule)!="function") stop("'rule' argument must be a function")
+#a function adding new rule to the list. New rules must be objects of class Rule
+#before adding new rule to the list I will check whether it doesnt return the same result as any other function that is already in a list
+
+addRule<-function(rule){if(class(rule)!="Rule")stop("'rule' argument must be an object of class Rule")
                         
+                        b<-storageTransf(generate(createItem(17,20),rule$ruleBody,1))
                         
-                            m<-as.character(match.call(rule)$x) #gettig the name of function from parameter 'rule'
-                            if(m%in%rulenames[,1]){stop (paste(" functioned named",m, "already exists. For details print 'rulenames' matrix"))} else{
-                            rulenames<<-rbind(rulenames,m)
-                            print(paste(m,"succesfully added to the matrix of functions"))
-                                                                                                                                                    }
+                        if(!b%in%summaryCheck[[2]]) {
+                                                    summaryCheck[[1]]=c(summaryCheck[[1]],rule)
+                                                    summaryCheck[[2]]=c(summaryCheck[[2]],b)
+                                                    } else {#add a rule to the list if there is no other function on the list that gives the same reult
+                                                    print(paste("New rule called: '", rule$ruleName, "' is already on the list"))}
+                          
+                        
+                        #return(summaryCheck)
                         }
-
-                        
+                  
              
-#------------------------------------------------- checking the uniquness of generated sequences ---------------------------------------------------
+#------------------------------------------------- checking the uniquness of generated sequences -------------------
 
 
 #in order to check the uniquness of generations (in order to avoid presenting the person the same number sequences)
