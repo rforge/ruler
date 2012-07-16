@@ -25,7 +25,15 @@ createRule<-function(insertedRule){ #a function creating objects of class 'Rule'
                                 name<-new("Rule", ruleName=as.character(match.call(insertedRule)$x),ruleBody=insertedRule )
                                 return(name)
                                 }
- 
+
+#[3]
+#creating class for generated sequence
+#'findex' is the index of table 'functions' where a rule is stored
+# 'co' is constant; 'seq' is number sequence; 'item' is the starting item
+# 
+# setClass("Sequence", representation(seq="numeric", item="Item", findex="numeric", co="numeric"))
+
+
 
 #-------------------------------------------------------------------------------
 # DIFFERENT RULES
@@ -174,7 +182,7 @@ generate<-function(x,rule,const=0,length=6){
                                                        }         
                                                             
                        
-                        return(m)
+                        return(unlist(m))
                                                                                                                      
                                            }
 
@@ -217,7 +225,7 @@ createCL<-function(){    # a function creating a checklist
                         for(i in 1:length(functions)){
                                                       checkList[[1]][i]<-functions[[i]]@ruleName
                                                       checkList[[2]][[i]]<-functions[[i]]@ruleBody
-                                                      checkList[[3]][[i]]<-unlist(generate(createItem(17,20),functions[[i]],1))
+                                                      checkList[[3]][[i]]<-generate(createItem(17,20),functions[[i]],1)
                                                       }
                         
                                                 
@@ -243,7 +251,7 @@ checkRule<-function(rule){
                                                                 }
                           
                           for(i in 1:length(cl[[2]])){
-                                                      if(identical(unlist(generate(createItem(17,20),rule,1)), cl[[3]][[i]])){
+                                                      if(identical(generate(createItem(17,20),rule,1), cl[[3]][[i]])){
                                                                                                 z=1
                                                                                                 return(list(z,"your rule gives the same number sequence as an existing rule"))
                                                                                                 break 
@@ -302,26 +310,8 @@ addRule<-function(rule){
 # this function need exception handling, because it sometimes works and sometimes it doesn't
 # check whether the number sequence is not constant!
 
+
 randSeq<-function(){  f<-sample(c(1:99), 1,replace = T) # argument 'first' for object from class "Item" generated from between 1 and 99. All numers are chosen at the same probability
-                      s<-sample(c(1:99,0), 1, prob = c(rep(0.3/99,99),0.7), replace = T) # argument 'second' for object from class "Item" generated from between . Zero should be chosen with greater probability
-                      co<-sample(c(1:50,0), 1,prob = c(rep(0.5/50,50),0.5), replace = T) # generating a constant for functions that would use it 
-                      print(paste("constant: ",co))
-                      
-                      iii<-createItem(first=f,second=s) #creating an item named 'iii' where first=f and second=s
-                      print(iii)
-                      
-                      fun<-sample(1:length(functions),1) #generating function from the list of functions and evaluating it by its name
-                      print(fun)
-                      
-                      seq<-unlist(generate(iii,functions[[fun]],co))
-                                                                
-                      return(seq)
-                      
-                      }
-
-
-
-randSeq2<-function(){  f<-sample(c(1:99), 1,replace = T) # argument 'first' for object from class "Item" generated from between 1 and 99. All numers are chosen at the same probability
                       s<-sample(c(1:99,0), 1, prob = c(rep(0.3/99,99),0.7), replace = T) # argument 'second' for object from class "Item" generated from between . Zero should be chosen with greater probability
                       co<-sample(c(1:50,0), 1,prob = c(rep(0.5/50,50),0.5), replace = T) # generating a constant for functions that would use it 
                       #print(paste("constant: ",co))
@@ -332,18 +322,41 @@ randSeq2<-function(){  f<-sample(c(1:99), 1,replace = T) # argument 'first' for 
                       fun<-sample(1:length(functions),1) #generating function from the list of functions and evaluating it by its name
                       #print(fun)
                       
-                      #seq<-unlist(generate(iii,functions[[fun]],co))
+                      #seq<-generate(iii,functions[[fun]],co)
                       
-                      tryCatch({ result=unlist(generate(iii,functions[[fun]],co));return(result)}, error=function(e){randSeq2()} ) #catching the errors
+                      tryCatch({ result=list(seq=generate(iii,functions[[fun]],co),item=iii,findex=fun,constant=co)
+                                 return(result)
+                                 }, error=function(e){randSeq()} ) #catching the errors
                       
-                      
-                      
+                                  
                       }
+
+
+
+
+
+noise<-function(seq,n){ #generating wrong answers (to choose), 'n' specyfies how many answers you want to create
+                      #if(class(rule)!="Sequence")stop("'seq' argument must be an object of class Sequence")
+                      
+                       k<-c(findex)
+                       m=n # numerator
+                       
+                       functions=functions[-seq$k] #all the rules exept the one used to generate a sequence
+                       
+                       print(functions)
+                       b<-sample(1:length(functions),1)
+                       print(b)
+                                      
+                       
+                       
+                                          tryCatch({ result=generate(seq$item,functions[[b]],seq$constant)
+                                          return(result[length(result)])
+                                       }, error=function(e){noise(seq)} ) #catching the errors
+                                        
+                                            
+                      }  
 
 
 # creating a session (generating several number sequences, saving them in a matrix and checking whether such a sequence already exists)
 # n - means how many sequences you want to generate
-
-
-
 
