@@ -1,6 +1,6 @@
 ##------------------------------SingleRules-------------------------------------------------
 
-#VIRTUAL CLASS FOR RULESOPERATING ON SINGLE ARGUMENTS
+#VIRTUAL CLASS FOR RULES OPERATING ON SINGLE ARGUMENTS
 
 setClass("SingleRule",  
            representation = representation(previousRule="SingleRule"),

@@ -34,7 +34,7 @@ createRule<-function(insertedRule){ #a function creating objects of class 'Rule'
 #-------------------------------------------------------------------------------
 
 #ADD [1]
-add<-function(x,y=0){
+add<-function(x,y){
   if(class(x)!="Item") stop("x argument must be an object of Item class")
   if(class(y)!="numeric") stop("y argument must be an object of numeric class")
   if(y<0) stop("y argument must be greater than or equal to 0")
@@ -45,7 +45,7 @@ add<-function(x,y=0){
                   return(a)  
                   } else  # this means that I want to add a constant to a previous number
                           {
-                      a<-new("Item",first=x@first+y)
+                      a<-new("Item",first=x@first+y, second=x@first)
                       return(a)
                           }
                    
@@ -54,10 +54,10 @@ add<-function(x,y=0){
 
 
 #SUBSTRACTING [2]
-subs<-function(x,y=0){
+subs<-function(x,y){
                         if(class(x)!="Item") stop("'x' argument must be an object of Item class")
                         if(class(y)!="numeric") stop ("'y' argument must be of type numeric")
-                        if(x@first<y)stop (paste(deparse(substitute(x)), "<", deparse(substitute(y))," ;sorry - no negative numbers allowed"))
+                        #if(x@first<y)stop (paste(deparse(substitute(x)), "<", deparse(substitute(y))," ;sorry - no negative numbers allowed"))
                         stopifnot(y >= 0) # prevents from generatng constant sequence
                         
                         
@@ -65,7 +65,7 @@ subs<-function(x,y=0){
                                 a<-new("Item",first=x@second, second=(x@first-x@second))
                                 return(a)
                                 } else { # this means I want to substract the constant value of 'y'
-                                        a<-new("Item", first=x@first-y)
+                                        a<-new("Item", first=x@first-y,second=x@first-y)
                                         return(a)
                                         }
                        
@@ -147,18 +147,20 @@ iden<-function(x){
 # y1 is a constant to applied into first rule (fun1). Its default value is 0
 #'fun2' is the second function. It will be applied to a result of the first function (fun1)
 #'fun2' is by default a identical function (it returns the same thing it gets as an argument)
-#'y2' is a constant that can be applied to the second function (fun2). By default y1=y2
+#'y2' is a constant that can be applied to the second function (fun2). By default y1=0
 
 
-combine<-function(x,fun1,y1=0,fun2=iden,y2=y1){ 
+combine<-function(x,fun1,y1=0,fun2=iden,y2=0){ 
                                               if(class(x)!="Item") stop("'x' argument must be an object of class Item")
+                                              #if(identical(fun1,fun2)) stop("fun1 must be different from fun2")
   
                                               if(length(formals(fun1))==2){ # because not all functions have two arguments
                                                                           bbb<-fun1(x,y1)
                                                                           }else{bbb<-fun1(x)}
+                                              #print(bbb)
   
                                               if(length(formals(fun2))==2){# because not all functions have two arguments
-                                                                          ccc<-fun(bbb,y2)
+                                                                          ccc<-fun2(bbb,y2)
                                                                           } else{ccc<-fun2(bbb)}
   
                                               return(ccc)
@@ -171,16 +173,20 @@ combine<-function(x,fun1,y1=0,fun2=iden,y2=y1){
 
 #'n' is the length of generated sequence (by default it is 6)
 #
-generate<-function(x,fun1,y1=0,fun2=iden,y2=y1,n=6){
+generate<-function(x,fun1,y1=0,fun2=iden,y2=0,n=6){
                                                 if(class(x)!="Item") stop("'x' argument must be an object of class Item")
                                                 if(class(n)!="numeric") stop("length'n' argument must be numeric")
+                                                
+                                                
                                                                                                 
                                                 k<-list() # a linst in which I will store a number sequence
-                                                k[1]=x@first
+                                                #k[1]=x@first
+                                                k[1]=x
                                                 
                                                 for(i in 2:n){
-                                                              ccc<-combine(x,fun1,y1=0,fun2=iden,y2=y1)
-                                                              k[i]<-ccc@first
+                                                              ccc<-combine(x,fun1,y1,fun2,y2)
+                                                              #k[i]<-ccc@first
+                                                              k[i]<-ccc
                                                               x<-ccc
                                                               }                                                                                                                            
                                                 return(k)
@@ -197,35 +203,35 @@ generate<-function(x,fun1,y1=0,fun2=iden,y2=y1,n=6){
 
 #przy generacji ciagu bede wyswietlac tylko parametry 'first' kolejnych elementow listy
 #przy generowaniu ciagow o zadanej dlugosci zaokraglaj wartosci length funkcja 'round'
-
-generate<-function(x,rule,const=0,length=6){
-                        if(class(x)!="Item") stop("'x' argument must be an object of class Item")
-                        #if(class(rule)!="Rule") stop("'rule' argument must be of class 'Rule'")
-                        if(class(length)!="numeric") stop("'length' argument must be numeric")
-                        if(length<4||length > 10) stop("'length' argument greater than 10 or smaller than 3")
-                        
-                              
-                        y<-const #not every function uses 'constant' parameter (if they dont this parameter is set 0)
-                        
-                        k<-list()  # a list containing objects of class "Item" necessary to generate a sequence
-                        m<-list() # a list containing only numbers for generating the sequence
-                        k[[1]]=x
-                        m[1]=k[[1]]@first
-                                                          
-                        
-                        #print(k[[1]]@first)
-                                                                                  
-                                                         
-                        for (i in 2:(round(length,0))){
-                                                        k[[i]]=rule@ruleBody(k[[i-1]],y)
-                                                        m[i]=(k[[i]]@first)
-                                                        
-                                                       }         
-                                                            
-                       
-                        return(unlist(m))
-                                                                                                                     
-                                           }
+# 
+# generate<-function(x,rule,const=0,length=6){
+#                         if(class(x)!="Item") stop("'x' argument must be an object of class Item")
+#                         #if(class(rule)!="Rule") stop("'rule' argument must be of class 'Rule'")
+#                         if(class(length)!="numeric") stop("'length' argument must be numeric")
+#                         if(length<4||length > 10) stop("'length' argument greater than 10 or smaller than 3")
+#                         
+#                               
+#                         y<-const #not every function uses 'constant' parameter (if they dont this parameter is set 0)
+#                         
+#                         k<-list()  # a list containing objects of class "Item" necessary to generate a sequence
+#                         m<-list() # a list containing only numbers for generating the sequence
+#                         k[[1]]=x
+#                         m[1]=k[[1]]@first
+#                                                           
+#                         
+#                         #print(k[[1]]@first)
+#                                                                                   
+#                                                          
+#                         for (i in 2:(round(length,0))){
+#                                                         k[[i]]=rule@ruleBody(k[[i-1]],y)
+#                                                         m[i]=(k[[i]]@first)
+#                                                         
+#                                                        }         
+#                                                             
+#                        
+#                         return(unlist(m))
+#                                                                                                                      
+#                                            }
 
 
 #--------------------------------------------------------------------------------
