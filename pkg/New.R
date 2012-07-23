@@ -1,4 +1,6 @@
-##------------------------------SingleRules-------------------------------------------------
+#-------------------------------------------------------------------------------------------
+#------------------------------SingleRules--------------------------------------------------
+#-------------------------------------------------------------------------------------------
 
 #VIRTUAL CLASS FOR RULES OPERATING ON SINGLE ARGUMENTS
 
@@ -44,6 +46,27 @@ setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
             return(x@constantVal*y)
           })
 
+#[3] SUBSTRACTING A CONSTANT
+
+setClass("SubsConstSingleRule",
+         contains="SingleRule",
+         representation(constantVal="numeric"),
+         S3methods=TRUE)
+
+setMethod("calculateSpecific",signature(x="SubsConstSingleRule",y="numeric"),
+          function(x,y){
+            return(y-x@constantVal)
+          })
+
+#[4] DIGITSUM
+
+setClass("DigSumSingleRule", contains="SingleRule",S3methods=TRUE)
+
+setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
+            function(x,y){
+              return(sum(digits(y)))
+            })
+
 
 
 
@@ -64,9 +87,9 @@ setMethod("calculate",signature(x="SingleRule", y="numeric"), #both [1] and [2] 
             return(calculateSpecific(x,result)) # if there are no more nested functions, execute
           })
 
-
-##------------------------------------------------DoubleRules-------------------------------
-
+#-------------------------------------------------------------------------------------------
+#------------------------------------------------DoubleRules--------------------------------
+#-------------------------------------------------------------------------------------------
 #VIRTUAL CLASS FOR RULES OPERATING ON TWO ARGUMENTS
 
 setClass("DoubleRule", representation = representation(firstRule="SingleRule", secondRule="SingleRule"),
@@ -94,9 +117,24 @@ setMethod("calculateDoubleSpecific",signature(x="MultDoubleRule", y="numeric", z
             return(y*z)
           })
 
+#[3] SUBSTRACT TWO PREVIOUS EXPRESSIONS
+
+setClass("SubsDoubleRule",contains="DoubleRule",S3methods=TRUE)
+
+
+setMethod("calculateDoubleSpecific",signature(x="SubsDoubleRule", y="numeric", z="numeric"),
+          function(x,y,z){
+            return(y-z)
+          })
+
+
+
+
+
+
 #EXECUTING RULES OPERATING ON TWO ARGUMENTS
 
-calculateDouble <- function(x,y,z){stop ("No function to execute this.")} #throw a mistake
+calculateDouble <- function(x,y,z){stop ("No function to execute this.")} #throw a mistake, because you should execute just single functions contained by cladd DoubleRule
 
 
 setMethod("calculateDouble",signature(x="DoubleRule", y="numeric", z="numeric"),
@@ -114,7 +152,9 @@ setMethod("calculateDouble",signature(x="DoubleRule", y="numeric", z="numeric"),
             return(calculateDoubleSpecific(x,firstArg, secondArg)) #if there are no more nested rules, execute
           })
 
-##-------------------------- examples --------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
+#--------------------------- examples ------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 
 p<-new("AddConstSingleRule", constantVal=6)
 q<-new("MultConstSingleRule", constantVal=10, previousRule=p)
@@ -129,3 +169,40 @@ r<-new("AddDoubleRule")
 calculateDouble(s,2,2)# (2+6)*2=16
 calculateDouble(r,3,2)# 3+2=5
 
+k<-new("SubsConstSingleRule",constantVal=1)
+calculate(k,12) #12-1=11
+
+m<-new("SubsDoubleRule", firstRule=k)
+calculateDouble(m,10,12) #(10-1)-12=-3
+
+n<-new("SubsDoubleRule")
+calculateDouble(n,10,12) #10-12=-2
+
+
+jjj<-new("AddDigSumDoubleRule")
+calculateDouble(jjj,12,13) # (1+2)+13=16
+
+
+p<-new("DigSumSingleRule")
+g<-new("AddDoubleRule", firstRule=p)
+calculateDouble(g,12,34) #adding a digitsum to the second word
+
+
+
+#-------------------------------------------------------------------------------------------
+#----------------------------------generating sequences-------------------------------------
+#-------------------------------------------------------------------------------------------
+
+#n - how long should be a sequence
+#rule
+
+sequence<-function(rule,n,a){
+                            if(class(rule)=="SingleRule"){
+                              
+                                                          }
+                            
+                            if(class(rule)=="DoubleleRule"){
+                              
+                                                            }
+                            
+                            }
