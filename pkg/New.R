@@ -350,11 +350,6 @@ combineSR<-function(obj1=NULL,obj2=NULL){
 
 
 
-
-
-
-
-
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
 
 #'fr' firstRule argument of an object of class doubleRule 
@@ -421,9 +416,11 @@ sequence<-function(x1,x2=NULL,rule,n=6){
 
 
 
+
 # checking if a vector is in any row of the matrix
 #'mx' is a matrix in which I am searching
 #'vec' is a vector which is being checked
+# result TRUE means that there is already such vector in the matrix
 
 duplicate<-function(mx,vec){
                           return(any(apply(mx, 1, function(x, want) isTRUE(all.equal(x, want)), vec)))
@@ -435,6 +432,7 @@ duplicate<-function(mx,vec){
 
 #CHECKING IF THE SEQUENCE IS NOT CONSTANT
 # it returns '0' when teh sequence is constant and '1' when the sequence is not constant
+# a function examines three last elements of a sequence, so even sequences like 27,9,9,9,9 ... are excluded
 
 conCheck<-function(seq){
   if(class(seq)!="list") stop("sequence must be of type 'list'")
@@ -450,27 +448,20 @@ conCheck<-function(seq){
 
 
 # checking whether the sequence is not constant, numbers are not greater than 1000 or no lesser than -1000
-check<-function(seqlen){
+check<-function(seqlen,items){
         x1<-as.numeric(sample(1:100,1)) #generate the first element of numeric sequence
         x2<-as.numeric(sample(1:100,1)) # generate the second element of numeric sequence
         m<-sample(c(1,2,3),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
-         #print(paste("items inside check",items))   
-  
+          
         if(m==1){rule<-createSR()} else{
           if(m==2){rule<-combineSR(createSR(),createSR())} else {rule<-combineDR()}}
   
               
         result<-sequence(x1,x2,rule,n=seqlen)
-  
-        if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000){check(seqlen)} else{return(result)}
+          
+        if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=result)){check(seqlen,items)} else{return(result)}
   
                   }
-
-
-
-
-
-
 
 
 
@@ -484,9 +475,7 @@ automaticTest<-function(testlen,seqlen=6){
                                           rules<- list() # I will keep the rules on a list
                                                                                     
                                           for(i in 1:testlen){
-                                                    #print(paste("items inside automativTest", items))
-                                                    items[i,]<- unlist(check(seqlen))
-                                                    
+                                                    items[i,]<- unlist(check(seqlen,items))                                                    
                                                              }                                                                                       
                                                                                   
                                           return(items)
