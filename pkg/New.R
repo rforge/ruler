@@ -255,78 +255,62 @@ calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 #----------------------------------generating sequences-------------------------------------
 #-------------------------------------------------------------------------------------------
 
-# #a list of single rules 
-# singleRules<-list(list(ruleName="AddConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-# list(ruleName="MultConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-# list(ruleName="SubsConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-# list(ruleName="DigSumSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
-# list(ruleName="NegativeSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")))
-# 
-# 
-# #a list of double rules
-# doubleRules<-list(list(ruleName="AddDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
-# list(ruleName="MultDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
-# list(ruleName="SubsDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")))
-# 
-# 
-# 
-# 
-# # A FUNCTION TO CREATE A SINGLE RULE 
-# # 'a' is an index of a rule on singleRules list (which rule I want to use to create a sequence) - if not specyfied it will be generated
-# # 'cv' constant value (default is NULL)
-# # 'comb' is telling me whether I want to combine several rules
-# 
-# #creating a simple singleRule object (with previous rules=NULL)
-# createSR<-function(a=NULL,cv=NULL){  
-#                               if(!is.null(a) && a>length(singleRules)) stop (paste("The list of SingleRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(singleRules)))
-#                                                     
-#                               
-#                               
-#                               if(is.null(a)) a<-sample(1:length(singleRules),1) #if 'a' is not specyfied, generate it                         
-#                                                           
-#                               a<-round(a)# 'a' needs to be integer                                                       
-#                               
-#                               if(length(singleRules[[a]]$argumentName)>1){
-#                                                       if(is.null(cv)) cv<-sample(1:100,1)#if constant value is not sdpecyfied and an object needs it - generate it
-#                                                       p<-new(singleRules[[a]]$ruleName,constantVal=cv)} else{
-#                                                             p<-new(singleRules[[a]]$ruleName) #an object doesn't need a constant value 
-#                                                                                                             }       
-#                               return(p)
-#                                                           
-#                               }
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# # A FUNCTION TO COMBINE TWO SINGLE RULES
-# 
-# # 'obj1' is an object of class that inherits from SingleRule
-# # 'obj2' is an object of class that inherits from SingleRule. It will be set as previousRule of object 1.
-# 
-# combineSR<-function(obj1=NULL,obj2=NULL){
-#                     if(!is.null(obj1) && !inherits(obj1,"SingleRule")) stop (paste("argument  obj1", obj1, "should be of class 'SingleRule'or inherit from it. It cannot be of class '", class(obj), "'", sep=""))
-#                     if(!is.null(obj1) && !inherits(obj2,"SingleRule")) stop (paste("argument  obj2", obj2, "should be of class 'SingleRule'or inherit from it. It cannot be of class '", class(obj), "'", sep=""))
-#                     
-#                     if(is.null(obj2)) obj2<-createSR() #create a SingleRule object 'obj2' if it was not delivered as an argument
-#                     if(is.null(obj1)) obj1<-createSR() #create a SingleRule object 'obj1'if it was not delivered as an argument
-#                                             
-#                     obj1@previousRule<-obj2
-#                     
-#                     return(obj1)
-#                       }
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#a list of single rules 
+singleRules<-list(list(ruleName="AddConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
+list(ruleName="MultConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
+list(ruleName="SubsConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
+list(ruleName="DigSumSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
+list(ruleName="NegativeSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")))
+
+
+#a list of double rules
+doubleRules<-list(list(ruleName="AddDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
+list(ruleName="MultDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
+list(ruleName="SubsDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")))
+
+
+
+#A FUNCTION TO CREATE SINGLE RULES
+# 'a1' is an index from table SingleRule (default a=NULL) //if 'a' is NULL it will be generated
+# 'n' how many rules are to be nested (default=NULL menas that I want to generate it automatically let's say from c(0,1,2) 
+# n=0 would mean that I want to create just one rule with nothing nested inside)
+# 'cv1' is a constant value
+# '...' if I would like to add some rules nested I can provide their parameters cv must be always supplied #9even if the function doesn't require that
+
+createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
+      p<-list(...) #arguments for nesting other functions
+      
+      #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
+            
+      if(is.null(a1)) {a1<-sample(1:length(singleRules),1)} #generate 'a' if no is supplied
+      if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
+      if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) 
+                     p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
+                     } # generate 'n' if it is set as null with different probabilities
+      
+   
+      print(paste("a1:",a1))
+      print(paste("cv1:",cv1))
+      print(paste("n:",n))
+      print(p)
+      print("-------------")
+      
+      if("constantVal"%in%singleRules[[a1]]$argumentName){m<-new(singleRules[[a1]]$ruleName,constantVal=cv1)} else{m<-new(singleRules[[a1]]$ruleName)}
+      
+      #m<-new(singleRules[[a1]]$ruleName,constantVal)
+  
+  
+      if(n!=0) {a1<-p[[1]];cv1<-p[[2]];n=n-1;k<-createSR(a1,cv1,n,unlist(p[-c(1,2)])); m@previousRule<-k
+      }else{return(m)}# if there are some more rules to be nested
+  
+      return(m)                                                     
+                                                }
+
+#b<-createSR(a1=1,cv1=1,n=1,a2=2,cv2=2)
+
+
+
+
 # # # A FUNCTION TO CREATE A DOUBLE RULE (a single one)
 # # 
 # # #'a' is an index of the rule on doubleRules list 
@@ -338,44 +322,43 @@ calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 # #           p<-new(doubleRules[[a]]$ruleName)
 # #           return(p)
 # #                     }
-# 
-# 
-# 
-# 
-# 
-# 
-# # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
-# 
-# #'fr' firstRule argument of an object of class doubleRule 
-# #'sr' secondRule argument of an object of class doubleRule
-# #'ns' nextSingle argument of an object of class doubleRule
-# combineDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
-#                               if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
-#                               if(!inheritsm(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
-#                               if(!inherits(sr,"singleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
-#                               if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
-#                               
-#                               
-#                               
-#                               
-#                               
-#                               
-#                               if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
-#                               a<-doubleRules[[a]]$ruleName
-#                               #print(a)
-#                               
-#                               if(is.null(fr)) fr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.5,0.5))# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
-#                                                             
-#                               if(is.null(sr)) sr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7)) #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
-#                               
-#                               if(is.null(ns)) ns<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7))
-#                                                            
-#                               p<-new(a,firstRule=fr$k, secondRule=sr$k,nextSingle=ns$k)
-#                               return(p)
-#                               
-#                                                         }
-# 
-# 
+
+
+
+# A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
+
+# 'a' is index from a list of DoubleRules
+#'fr' firstRule argument of an object of class doubleRule 
+#'sr' secondRule argument of an object of class doubleRule
+#'ns' nextSingle argument of an object of class doubleRule
+#'
+combineDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
+                              if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
+                              if(!inheritsm(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
+                              if(!inherits(sr,"singleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
+                              if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
+                              
+                              
+                              
+                              
+                              
+                              
+                              if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
+                              a<-doubleRules[[a]]$ruleName
+                              #print(a)
+                              
+                              if(is.null(fr)) fr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.5,0.5))# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
+                                                            
+                              if(is.null(sr)) sr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7)) #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
+                              
+                              if(is.null(ns)) ns<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7))
+                                                           
+                              p<-new(a,firstRule=fr$k, secondRule=sr$k,nextSingle=ns$k)
+                              return(p)
+                              
+                                                        }
+
+
 # 
 # 
 # #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
@@ -521,3 +504,5 @@ calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 #                                               }}
 #                   
 # 
+
+
