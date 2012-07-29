@@ -81,7 +81,7 @@ setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
 
 setClass("NegativeSingleRule", contains="SingleRule",S3methods=TRUE)
 
-setMethod("calculateSpecific",signature(x="NegatieSingleRule",y="numeric"),
+setMethod("calculateSpecific",signature(x="NegativeSingleRule",y="numeric"),
           function(x,y){
             return(-y)
           })
@@ -256,7 +256,8 @@ calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 #-------------------------------------------------------------------------------------------
 
 #a list of single rules 
-singleRules<-list(list(ruleName="AddConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
+singleRules<-list(list(ruleName="IdenSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
+list(ruleName="AddConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
 list(ruleName="MultConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
 list(ruleName="SubsConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
 list(ruleName="DigSumSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
@@ -278,50 +279,26 @@ list(ruleName="SubsDoubleRule",argumentName=c("firstRule","secondRule","nextSing
 # '...' if I would like to add some rules nested I can provide their parameters cv must be always supplied #9even if the function doesn't require that
 
 createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
-      p<-list(...) #arguments for nesting other functions
+      p<-list(...)#arguments for nesting other functions
+      p<-unlist(p)
       
       #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
-            
-      if(is.null(a1)) {a1<-sample(1:length(singleRules),1)} #generate 'a' if no is supplied
+      #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
+      
+      if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
       if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
-      if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) 
+      if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
                      p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
                      } # generate 'n' if it is set as null with different probabilities
       
-   
-      print(paste("a1:",a1))
-      print(paste("cv1:",cv1))
-      print(paste("n:",n))
-      print(p)
-      print("-------------")
       
       if("constantVal"%in%singleRules[[a1]]$argumentName){m<-new(singleRules[[a1]]$ruleName,constantVal=cv1)} else{m<-new(singleRules[[a1]]$ruleName)}
       
-      #m<-new(singleRules[[a1]]$ruleName,constantVal)
-  
-  
-      if(n!=0) {a1<-p[[1]];cv1<-p[[2]];n=n-1;k<-createSR(a1,cv1,n,unlist(p[-c(1,2)])); m@previousRule<-k
-      }else{return(m)}# if there are some more rules to be nested
+      if(n!=0) {createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
+      }else{return(m)}
   
       return(m)                                                     
                                                 }
-
-#b<-createSR(a1=1,cv1=1,n=1,a2=2,cv2=2)
-
-
-
-
-# # # A FUNCTION TO CREATE A DOUBLE RULE (a single one)
-# # 
-# # #'a' is an index of the rule on doubleRules list 
-# # createDR<-function(a=NULL){
-# #           if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
-# #           if(is.null(a)) {a<-sample (1:length(doubleRules),1)}
-# #           a<-round(a) # 'a' needs to be an integer 
-# #           
-# #           p<-new(doubleRules[[a]]$ruleName)
-# #           return(p)
-# #                     }
 
 
 
@@ -332,16 +309,11 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 #'sr' secondRule argument of an object of class doubleRule
 #'ns' nextSingle argument of an object of class doubleRule
 #'
-combineDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
+createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
                               if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
-                              if(!inheritsm(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
+                              if(!inherits(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
                               if(!inherits(sr,"singleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
                               if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
-                              
-                              
-                              
-                              
-                              
                               
                               if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
                               a<-doubleRules[[a]]$ruleName
@@ -357,109 +329,112 @@ combineDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
                               return(p)
                               
                                                         }
+ 
+ 
+#A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
+# 'n' is the length of the numeric sequence (default value is 6)
+# 'x1', 'x2' are the first elements of the numeric sequence (you don't always need 'x2')
+sequence<-function(x1,x2=NULL,rule,n=6){
+                                  if(inherits(rule,"DoubleRule") && is.null(x2)) stop (" If you want to use a DoubleRoule you need to specify x2")
+                                  if(class(x1)!="numeric" ||(class(x2)!="NULL" && class(x2)!="numeric")) stop ("arguments 'x1', 'x2' must be of type 'numeric'.")
+                                  if(!inherits(rule,"SingleRule") && !inherits(rule,"DoubleRule")) stop ("'rule' argument must inherit from 'SingleRule' or 'DoubleRule' class")
+                                  if(n<3) stop("sequence must be longer than 3")
+                                  
+                                  k<-list()
+                                  k[1]=x1
+                                  
+                                    
+                                                                    
+                                  if(inherits(rule,"SingleRule")){
+                                                                    for(i in 2:n){
+                                                                                   k[i]<-calculate(x=rule,y=k[[i-1]])                                                                
+                                                                                  }
+                                    
+                                                                  }else{
+                                                                        k[2]=x2
+                                                                        for(i in 3:n){
+                                                                                      k[i]<-calculate(x=rule,y=k[[i-2]],z=k[[i-1]])
+                                                                                      }
+                                    
+                                                                        }
+                                  return(list(k,rule))
+                                                
+                                        }
 
 
-# 
-# 
-# #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
-# # 'n' is the length of the numeric sequence (default value is 6)
-# # 'x1', 'x2' are the first elements of the numeric sequence (you don't always need 'x2')
-# sequence<-function(x1,x2=NULL,rule,n=6){
-#                                   if(inherits(rule,"DoubleRule") && is.null(x2)) stop (" If you want to use a DoubleRoule you need to specify x2")
-#                                   if(class(x1)!="numeric" ||(class(x2)!="NULL" && class(x2)!="numeric")) stop ("arguments 'x1', 'x2' must be of type 'numeric'.")
-#                                   if(!inherits(rule,"SingleRule") && !inherits(rule,"DoubleRule")) stop ("'rule' argument must inherit from 'SingleRule' or 'DoubleRule' class")
-#                                   if(n<3) stop("sequence must be longer than 3")
-#                                   
-#                                   k<-list()
-#                                   k[1]=x1
-#                                   
-#                                     
-#                                                                     
-#                                   if(inherits(rule,"SingleRule")){
-#                                                                     for(i in 2:n){
-#                                                                                    k[i]<-calculate(x=rule,y=k[[i-1]])                                                                
-#                                                                                   }
-#                                     
-#                                                                   }else{
-#                                                                         k[2]=x2
-#                                                                         for(i in 3:n){
-#                                                                                       k[i]<-calculateDouble(x=rule,y=k[[i-2]],z=k[[i-1]])
-#                                                                                       }
-#                                     
-#                                                                         }
-#                                   return(k)
-#                                                 
-#                                         }
-# 
-# 
-# 
-# 
-# # checking if a vector is in any row of the matrix
-# #'mx' is a matrix in which I am searching
-# #'vec' is a vector which is being checked
-# # result TRUE means that there is already such vector in the matrix
-# 
-# duplicate<-function(mx,vec){
-#                           return(any(apply(mx, 1, function(x, want) isTRUE(all.equal(x, want)), vec)))
-#                           }
-# 
-# 
-# 
-# 
-# 
-# #CHECKING IF THE SEQUENCE IS NOT CONSTANT
-# # it returns '0' when teh sequence is constant and '1' when the sequence is not constant
-# # a function examines three last elements of a sequence, so even sequences like 27,9,9,9,9 ... are excluded
-# 
-# conCheck<-function(seq){
-#   if(class(seq)!="list") stop("sequence must be of type 'list'")
-#   
-#   m<-length(seq)
-#   
-#   if(identical(seq[m],seq[m-1]) && identical(seq[m],seq[m-2]) ) {return(0)} else {return(1)}
-#                         }
-# 
-# 
-# 
-# 
-# 
-# 
-# # checking whether the sequence is not constant, numbers are not greater than 1000 or no lesser than -1000
-# check<-function(seqlen,items){
-#         x1<-as.numeric(sample(1:100,1)) #generate the first element of numeric sequence
-#         x2<-as.numeric(sample(1:100,1)) # generate the second element of numeric sequence
-#         m<-sample(c(1,2,3),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
-#           
-#         if(m==1){rule<-createSR()} else{
-#           if(m==2){rule<-combineSR(createSR(),createSR())} else {rule<-combineDR()}}
-#   
-#               
-#         result<-sequence(x1,x2,rule,n=seqlen)
-#           
-#         if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=result)){check(seqlen,items)} else{return(result)}
-#   
-#                   }
-# 
-# 
-# 
-# 
-# # AUTOMATIC TEST GENERATION
-# # random 
-# # 'seqlen' specyfies how long should a single sequence be
-# # 'testlen' specyfies how many sequences (item positions) are there to be in a test
-# automaticTest<-function(testlen,seqlen=6){
-#                                           items<-matrix(NA,testlen,seqlen) #I will store generated items in a matrix
-#                                           rules<- list() # I will keep the rules on a list
-#                                                                                     
-#                                           for(i in 1:testlen){
-#                                                     items[i,]<- unlist(check(seqlen,items))                                                    
-#                                                              }                                                                                       
-#                                                                                   
-#                                           return(items)
-#                                           }
-# 
-# 
-# 
+
+
+ 
+# checking if a vector is in any row of the matrix
+#'mx' is a matrix in which I am searching
+#'vec' is a vector which is being checked
+# result TRUE means that there is already such vector in the matrix
+
+duplicate<-function(mx,vec){
+                          return(any(apply(mx, 1, function(x, want) isTRUE(all.equal(x, want)), vec)))
+                          }
+
+
+
+
+
+#CHECKING IF THE SEQUENCE IS NOT CONSTANT
+# it returns '0' when teh sequence is constant and '1' when the sequence is not constant
+# a function examines three last elements of a sequence, so even sequences like 27,9,9,9,9 ... are excluded
+
+conCheck<-function(seq){
+  
+  if(class(seq)!="list") stop("sequence must be of type 'list'")
+  
+  m<-length(seq)
+  
+  if(identical(seq[m],seq[m-1]) && identical(seq[m],seq[m-2]) ) {return(0)} else {return(1)}
+                        }
+
+
+
+# checking whether the sequence is not constant, numbers are not greater than 1000 or no lesser than -1000
+check<-function(seqlen,items){
+        x1<-as.numeric(sample(1:100,1)) #generate the first element of numeric sequence
+        x2<-as.numeric(sample(1:100,1)) # generate the second element of numeric sequence
+        m<-sample(c(1,2),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
+          
+        if(m==1){rule<-createSR()} else{rule<-createDR()} # if m=1 create singleRule else create doubleRulr
+  
+        result<-sequence(x1,x2,rule,n=seqlen)[[1]]
+        
+        fun<-sequence(x1,x2,rule,n=seqlen)[[2]]
+       
+          
+        if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
+           {check(seqlen,items)} else{return(list(result,fun))}
+  
+                  }
+
+
+
+
+
+
+# AUTOMATIC TEST GENERATION
+# random 
+# 'seqlen' specyfies how long should a single sequence be
+# 'testlen' specyfies how many sequences (item positions) are there to be in a test
+automaticTest<-function(testlen,seqlen=6){
+                                          items<-matrix(NA,testlen,seqlen) #I will store generated items in a matrix
+                                          rules<- list() # I will keep the rules on a list
+                                                                                    
+                                          for(i in 1:testlen){
+                                                    b<-check(seqlen,items)
+                                                    items[i,]<-unlist(b[[1]])
+                                                    rules[i]<-b[2]
+                                                             }                                                                                       
+                                                                                  
+                                          return(list(items,rules))
+                                          }
+
+
+
 # 
 # # p<-new("DigSumSingleRule")
 # # g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=p)
