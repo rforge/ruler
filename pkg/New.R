@@ -394,12 +394,16 @@ conCheck<-function(seq){
 
 
 # checking whether the sequence is not constant, numbers are not greater than 1000 or no lesser than -1000
-check<-function(seqlen,items){
+# type=1 is totally automatic / type=2 generates rules from 'MyRules' list
+check<-function(seqlen,items,type){
         x1<-as.numeric(sample(1:100,1)) #generate the first element of numeric sequence
         x2<-as.numeric(sample(1:100,1)) # generate the second element of numeric sequence
-        m<-sample(c(1,2),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
-          
-        if(m==1){rule<-createSR()} else{rule<-createDR()} # if m=1 create singleRule else create doubleRulr
+        
+        if(type==1){ # type=1 means automatic tests
+        
+                    m<-sample(c(1,2),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
+                    if(m==1){rule<-createSR()} else{rule<-createDR()} } else 
+                      {z<-sample(2:length(MyRules),1); rule<-MyRules[[z]]  }# if m=1 create singleRule else create doubleRulr
   
         result<-sequence(x1,x2,rule,n=seqlen)[[1]]
         
@@ -407,7 +411,7 @@ check<-function(seqlen,items){
        
           
         if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
-           {check(seqlen,items)} else{return(list(result,fun))}
+           {check(seqlen,items,type)} else{return(list(result,fun))}
   
                   }
 
@@ -419,65 +423,52 @@ check<-function(seqlen,items){
 # AUTOMATIC TEST GENERATION
 # random 
 # 'seqlen' specyfies how long should a single sequence be
+# 'type' = 1 everything generated automatically/ type=2 functions generated from the MyRules matrix 
 # 'testlen' specyfies how many sequences (item positions) are there to be in a test
-automaticTest<-function(testlen,seqlen=6){
+automaticTest<-function(testlen,type=1,seqlen=6){
+                                          if(class(type)!="numeric") stop ("argument 'type' must be of class 'numeric'")
                                           items<-matrix(NA,testlen,seqlen) #I will store generated items in a matrix
                                           rules<- list() # I will keep the rules on a list
+                                          noise<-matrix(NA,testlen,5) # 5 noise answers will be stored in this matrix
                                                                                     
                                           for(i in 1:testlen){
-                                                    b<-check(seqlen,items)
-                                                    items[i,]<-unlist(b[[1]])
+                                                    b<-check(seqlen,items,type)
+                                                    items[i,]<-unlist(b[[1]]) # I treat last element as a correct answer
                                                     rules[i]<-b[2]
+                                                    noise[i,] <-sample(c((items[i,seqlen]-6):(items[i,seqlen]+6))[-(seqlen+1)],5) # generate a sample of 5 elements from a set (correct answer-6: correct answer +6) excluding the correct answer
                                                              }                                                                                       
                                                                                   
-                                          return(list(items,rules))
+                                          return(list(items=items,noise=noise,rules=rules))
                                           }
 
 
 
-# 
-# # p<-new("DigSumSingleRule")
-# # g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=p)
-# 
-# 
-#   
-# #getting rule names
-# grn<-function(x){
-#   
-#                   k<-list()
-#                   k[1]<-class(x)[1] #writing a name of class of the object
-#   
-#                   if(inherits(x,"singleRule")){ #if x is a singleRule
-#                                               k[2]<-x@constantVal
-#                                               if(class(x@previousRule)[1] !="SingleRule"){b<-class(x@previousRule)[1]
-#                                                                                           p<-list(k,b)
-#                                                                                           gsrn(x)}
-#                                               } 
-#                   
-#                   if(inherits(x,"doubleRule")){ #if x is a doubleRule
-#                                         
-#                                         if(class(x@firstRule)[1] !="SingleRule") #if firstRule is specyfied
-#                                           {b<-class(x@firstRule)
-#                                            p<-list(k,firstRule=b)
-#                                            gsrn(x)
-#                                            }
-#                                         
-#                                         if(class(x@secondRule)[1] !="SingleRule") #if secondRule is specyfied
-#                                         {b<-class(x@secondRule)
-#                                          p<-list(k,secondRule=b)
-#                                          gsrn(x)
-#                                         }
-#                                         
-#                                         
-#                                           if(class(x@nextSingle)[1] !="SingleRule") #if nextSingle is specyfied
-#                                         {b<-class(x@nextSungle)
-#                                          p<-list(k,nextSingle=b)
-#                                          gsrn(x)
-#                                         }else{p<-k;return(p)}
-#                                         
-#                                         
-#                                               }}
-#                   
-# 
+
+#--------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------- rules defined by a user----------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------
+
+#LIST OF USER'S RULES
 
 
+# Verification table - in which I will store results of the rules
+# starting values are always 10 and 20, constantVal=14, seqlen=6 
+# I check whether sequence generated for those values are identical for a new rule - if so - I won't add a new rule to the list
+
+VerifTable<-matrix(NA,1,6)
+
+MyRules<-list(NA)
+
+AddRule<-function(rule){
+                      if(!inherits(rule,"SingleRule") && !inherits(rule,"DoubleRule")) stop (paste("new Rule must be an object of class 'SingleRule' od 'DoubleRule'. It cannot be of class",class(rule)))
+  
+                      s<-sequence(x1=10,x2=20,rule,n=6)
+                      
+                      if(duplicate(VerifTable,unlist(s[[1]]))==TRUE){stop ("There already is a rule that gives the same result.")} else{
+                                      VerifTable<<-rbind(unlist(s[[1]]),VerifTable)
+                                      MyRules[length(MyRules)+1]<<-rule
+                                      print("Your rule succesfully added tp 'MyRule' list")
+                                        }
+                      } 
+                                                                    
+ 
