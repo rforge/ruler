@@ -472,3 +472,54 @@ AddRule<-function(rule){
                       } 
                                                                     
  
+#---------------------------------------------------------------------------
+#------function to print objects of class SingleRule and DoubleRule---------
+#---------------------------------------------------------------------------
+
+h<-new("AddConstSingleRule")
+
+
+p<-new("AddConstSingleRule", constantVal=6)
+q<-new("MultConstSingleRule", constantVal=10, previousRule=p)
+g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=q)
+
+
+calculate(q,4)# (4+6)*10=100
+
+
+n<-new("SubsDoubleRule")
+calculate(n,10,12) #10-12=-2
+
+p<-new("DigSumSingleRule")
+g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=p)
+
+
+j<-new("DigSumSingleRule")
+
+
+print.SingleRule<-function(x){
+                                pr<-function(x){
+                                                cat(paste("\nname:", class(x)[1]))
+                                                if("constantVal"%in%slotNames(x)) {cat(paste(", constant value: ", x@constantVal))} 
+                                                }
+                                pr(x)
+                                
+                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; pr(x)}
+                                
+                              }
+
+
+
+print.DoubleRule<-function(x){
+                              x1=x
+                                             
+                                                             
+                                cat(class(x1)[1])
+                                
+                                if("firstRule"%in%slotNames(x)){cat("\n FIRST RULE:"); x<-x@firstRule;print.SingleRule(x)}
+                                x=x1
+                                if("secondRule"%in%slotNames(x)){cat("\n SECOND RULE:"); x<-x@secondRule;print.SingleRule(x)}
+                                x=x1
+                                if("nextSingle"%in%slotNames(x)){cat("\n NEXT SINGLE:"); x<-x@nextSingle;print.SingleRule(x)}
+                            
+                                }
