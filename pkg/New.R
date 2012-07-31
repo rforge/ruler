@@ -159,7 +159,34 @@ setMethod("calculateSpecific",signature(x="SubsDoubleRule", y="numeric", z="nume
             return(y-z)
           })
 
+#[4] DIVIDING TWO NUMBERS (Philipp)
 
+setClass("DivDoubleRule",contains="DoubleRule",S3methods=TRUE)
+
+setMethod("calculateDoubleSpecific", 
+          signature(x="DivDoubleRule", y="numeric", z="numeric"),
+          function(x,y,z){
+            return(y%/%z)
+          })
+
+#[5] MODULO (Philipp)
+
+setClass("ModuloDoubleRule",contains="DoubleRule",S3methods=TRUE)
+
+setMethod("calculateDoubleSpecific", 
+          signature(x="ModuloDoubleRule", y="numeric", z="numeric"),
+          function(x,y,z){
+            return(y%%z)
+          })
+
+#[6] EXPONENTIAL FUNCTION (Philipp)
+setClass("ExpDoubleRule", contains="DoubleRule",S3methods=TRUE)
+
+setMethod("calculateDoubleSpecific", 
+          signature(x="ExpDoubleRule", y="numeric", z="numeric"),
+          function(x,y,z){
+            return(y^z)
+          })
 
 
 
@@ -256,18 +283,11 @@ calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 #-------------------------------------------------------------------------------------------
 
 #a list of single rules 
-singleRules<-list(list(ruleName="IdenSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
-list(ruleName="AddConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-list(ruleName="MultConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-list(ruleName="SubsConstSingleRule",argumentName=c("previousRule","constantVal"), argumentType= c("SingleRule","numeric")),
-list(ruleName="DigSumSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")),
-list(ruleName="NegativeSingleRule",argumentName=c("previousRule"), argumentType= c("SingleRule")))
+singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","SubsConstSingleRule","DigSumSingleRule","NegativeSingleRule")
 
 
 #a list of double rules
-doubleRules<-list(list(ruleName="AddDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
-list(ruleName="MultDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")),
-list(ruleName="SubsDoubleRule",argumentName=c("firstRule","secondRule","nextSingle"), argumentType= c("SingleRule","SingleRule","SingleRule")))
+doubleRules<-list("AddDoubleRule","MultDoubleRule","SubsDoubleRule")
 
 
 
@@ -292,7 +312,7 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
                      } # generate 'n' if it is set as null with different probabilities
       
       
-      if("constantVal"%in%singleRules[[a1]]$argumentName){m<-new(singleRules[[a1]]$ruleName,constantVal=cv1)} else{m<-new(singleRules[[a1]]$ruleName)}
+      if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
       
       if(n!=0) {createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
       }else{return(m)}
@@ -316,7 +336,7 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
                               if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
                               
                               if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
-                              a<-doubleRules[[a]]$ruleName
+                              a<-doubleRules[[a]]
                               #print(a)
                               
                               if(is.null(fr)) fr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.5,0.5))# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
@@ -523,3 +543,6 @@ print.DoubleRule<-function(x){
                                 if("nextSingle"%in%slotNames(x)){cat("\n NEXT SINGLE:"); x<-x@nextSingle;print.SingleRule(x)}
                             
                                 }
+
+
+
