@@ -163,7 +163,7 @@ setMethod("calculateSpecific",signature(x="SubsDoubleRule", y="numeric", z="nume
 
 setClass("DivDoubleRule",contains="DoubleRule",S3methods=TRUE)
 
-setMethod("calculateSpecific", 
+setMethod("calculateDoubleSpecific", 
           signature(x="DivDoubleRule", y="numeric", z="numeric"),
           function(x,y,z){
             return(y%/%z)
@@ -173,7 +173,7 @@ setMethod("calculateSpecific",
 
 setClass("ModuloDoubleRule",contains="DoubleRule",S3methods=TRUE)
 
-setMethod("calculateSpecific", 
+setMethod("calculateDoubleSpecific", 
           signature(x="ModuloDoubleRule", y="numeric", z="numeric"),
           function(x,y,z){
             return(y%%z)
@@ -182,7 +182,7 @@ setMethod("calculateSpecific",
 #[6] EXPONENTIAL FUNCTION (Philipp)
 setClass("ExpDoubleRule", contains="DoubleRule",S3methods=TRUE)
 
-setMethod("calculateSpecific", 
+setMethod("calculateDoubleSpecific", 
           signature(x="ExpDoubleRule", y="numeric", z="numeric"),
           function(x,y,z){
             return(y^z)
@@ -217,65 +217,6 @@ setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
             
           })
 
-#-------------------------------------------------------------------------------------------
-#--------------------------- examples ------------------------------------------------------
-#-------------------------------------------------------------------------------------------
-
-p<-new("AddConstSingleRule", constantVal=6)
-calculate(p,4)# 4+6=10 
-
-p<-new("AddConstSingleRule", constantVal=6)
-q<-new("MultConstSingleRule", constantVal=10, previousRule=p)
-calculate(q,4)# (4+6)*10=100
-
-
-#[A]
-n<-new("SubsDoubleRule")
-calculate(n,10,12) #10-12=-2
-
-#[B]
-p<-new("DigSumSingleRule")
-g<-new("AddDoubleRule", firstRule=p)
-calculate(g,12,34) # (1+2)+34=37 // take the digitsum of the first argument and add it to the second one 
-
-#[C]
-p<-new("DigSumSingleRule")
-g<-new("AddDoubleRule", secondRule=p)
-calculate(g,12,34)# 12+(3+4)=19 // take the digitsum of the second argument and add it to the first one
-
-#[D]
-p<-new("DigSumSingleRule")
-g<-new("AddDoubleRule", firstRule=p, secondRule=p)
-calculate(g,12,34)# (1+2)+(3+4)=10 // take the digitsum of the second argument,take the digitsum of the first argument and add them up
-
-#[E]
-p<-new("DigSumSingleRule")
-g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=p)
-calculate(g,12,34) #(1+2)+(3+4)=10, digitSum(10)=1+0=1 // take the digitsum of the second argument,take the digitsum of the first argument. Add those values up. Take the digitSum of the result. 
-
-
-#OTHER EXAMPLES
-r<-new("AddDoubleRule")
-calculate(r,3,2)# 3+2=5 // add two arguments 
-
-k<-new("SubsConstSingleRule",constantVal=1)
-calculate(k,12) #12-1=11
-
-k<-new("SubsConstSingleRule",constantVal=1)
-m<-new("SubsDoubleRule", firstRule=k)
-calculate(m,10,12) #(10-1)-12=-3 //substract 1 from the first argument and substract the second argument from the result
-
-s<-new("MultDoubleRule", firstRule=p) 
-calculate(s,2,2)# (2+6)*2=16 // multiply two arguments
-
-p<-new("DigSumSingleRule")
-s<-new("AddDoubleRule", nextSingle=p)
-calculate(s,11,14) #11+14=25 and 2+5=7 // sume two arguments and take the digitsum of the result
-
-
-p<-new("AddConstSingleRule", constantVal=6)
-s<-new("AddDoubleRule", nextSingle=p)
-calculate(s,11,14) #(11+14)+6=31 // add two arguments and add 6
 
 
 #-------------------------------------------------------------------------------------------
@@ -495,27 +436,6 @@ AddRule<-function(rule){
 #---------------------------------------------------------------------------
 #------function to print objects of class SingleRule and DoubleRule---------
 #---------------------------------------------------------------------------
-
-h<-new("AddConstSingleRule")
-
-
-p<-new("AddConstSingleRule", constantVal=6)
-q<-new("MultConstSingleRule", constantVal=10, previousRule=p)
-g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=q)
-
-
-calculate(q,4)# (4+6)*10=100
-
-
-n<-new("SubsDoubleRule")
-calculate(n,10,12) #10-12=-2
-
-p<-new("DigSumSingleRule")
-g<-new("AddDoubleRule", firstRule=p, secondRule=p, nextSingle=p)
-
-
-j<-new("DigSumSingleRule")
-
 
 print.SingleRule<-function(x){
                                 pr<-function(x){
