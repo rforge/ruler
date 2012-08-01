@@ -315,11 +315,10 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
       if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
       
       if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
-      }else{return(m)}
+      }#else{return(m)}
   
       return(m)                                                     
                                                 }
-
 
 
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
@@ -526,7 +525,7 @@ print.SingleRule<-function(x){
                                                 }
                                 pr(x)
                                 
-                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; pr(x)}
+                                if(class(x@previousRule)!="SingleRule"){x<-x@previousRule; print(x)}
                                 
                               }
 

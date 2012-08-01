@@ -238,32 +238,26 @@ doubleRules<-list("AddDoubleRule","MultDoubleRule","SubsDoubleRule","DivDoubleRu
 # '...' if I would like to add some rules nested I can provide their parameters cv must be always supplied #9even if the function doesn't require that
 
 createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
-      p<-list(...)#arguments for nesting other functions
-      p<-unlist(p)
-      
-      #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
-      #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
-      
-      if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
-      if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
-      if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
-                     p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
-                     } # generate 'n' if it is set as null with different probabilities
-      
-      print(paste("a1",a1))
-      print(paste("cv1",cv1))
-      print(paste("n",n))
-      print(p)
-      print("------------------")
-      
-      if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
-      
-      
-      if(n+1!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
-      }else{return(m)}
+  p<-list(...)#arguments for nesting other functions
+  p<-unlist(p)
   
-      return(m)                                                     
-                                                }
+  #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
+  #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
+  
+  if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
+  if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
+  if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
+                 p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
+  } # generate 'n' if it is set as null with different probabilities
+  
+  
+  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
+  
+  if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
+  }#else{return(m)}
+  
+  return(m)                                                     
+}
 
 m<-createSR(a1=2,cv1=2,n=3,3,3,4,4,5,5)
 
@@ -448,7 +442,7 @@ print.SingleRule<-function(x){
                                                 }
                                 pr(x)
                                 
-                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; pr(x)}
+                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; print(x)}
                                 
                               }
 

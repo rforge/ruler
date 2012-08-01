@@ -39,7 +39,8 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+\code{\link{calculate}}, \code{\linkS4class{SingleRule}}, \code{\link{print}}
+
 \code{\link{calculate}}, a functions to execute the rule
 \code{\linkS4class{SingleRule}}
 }
