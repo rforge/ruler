@@ -5,7 +5,11 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+
+When creating test items test rules can be either combined automatically or
+be generated from the set of rules defined by user (stored on \code{MyRule} list).
+\code{AddRule} is a function to add a rule defined by a user to \code{MyRule} list.
+
 }
 \usage{
 AddRule(rule)
@@ -13,7 +17,7 @@ AddRule(rule)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rule}{
-%%     ~~Describe \code{rule} here~~
+ argument \code{rule} must inherit either form class \code{"SingleRule"} or \code{"DoubleRule"}.
 }
 }
 \details{
@@ -39,31 +43,24 @@ AddRule(rule)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{automaticTest}},
+\code{\link{MyRules}},
+\code{\link{automaticTest}}
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (rule) 
-{
-    if (!inherits(rule, "SingleRule") && !inherits(rule, "DoubleRule")) 
-        stop(paste("new Rule must be an object of class 'SingleRule' od 'DoubleRule'. It cannot be of class", 
-            class(rule)))
-    s <- sequence(x1 = 10, x2 = 20, rule, n = 6)
-    if (duplicate(VerifTable, unlist(s[[1]])) == TRUE) {
-        stop("There already is a rule that gives the same result.")
-    }
-    else {
-        VerifTable <<- rbind(unlist(s[[1]]), VerifTable)
-        MyRules[length(MyRules) + 1] <<- rule
-        print("Your rule succesfully added tp 'MyRule' list")
-    }
-  }
+# 'MyRules' list by default consists only of one element, which is NA.
+
+
+# creating sample rules (this should be done by user)
+n<-new("SubsDoubleRule")
+p<-new("AddConstSingleRule", constantVal=6)
+
+AddRule(n) #"Your rule succesfully added tp 'MyRule' list"
+AddRule(p) #"Your rule succesfully added tp 'MyRule' list"
+AddRule(n)# Error in AddRule(n) : There already is a rule that gives the same result.
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{AddRule}

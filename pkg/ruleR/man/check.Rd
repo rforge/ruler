@@ -2,10 +2,12 @@
 \alias{check}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function \code{check}
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A function that generates numeric sequence (with random starting values) and checks whether it is not constant, 
+elements are not too big (>1000) or too small (-1000<) and if the sequence is unique for the test. 
+Rules to generate sequence are either specyfied by user or combined automatically.
 }
 \usage{
 check(seqlen, items, type)
@@ -13,24 +15,26 @@ check(seqlen, items, type)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{seqlen}{
-%%     ~~Describe \code{seqlen} here~~
+- the length of numeric sequence to be generated
 }
   \item{items}{
-%%     ~~Describe \code{items} here~~
+- a matrix in which previously generated sequences are stored (for checking uniqueness)
 }
   \item{type}{
-%%     ~~Describe \code{type} here~~
+- specifying where to generate rules from. \code{type=1} means that the rules are combined automatically,
+\code{type=2} means that only rules specyfied by user are to be used.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+This function is used by \code{automaticTest} 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Result od \code{check} is a list:
+
+
+\item{$result}{numeric sequence that is later added \code{items} matrix in \code{automaticTest}}
+\item{$fun}{rule used to create the \code{$result} functioned that is later saved to \code{rules} list in \code{automaticTest}}
+
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -45,44 +49,21 @@ check(seqlen, items, type)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{automaticTest}},
+\code{\link{conCheck}},
+\code{\link{AddRule}}
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+m<-matrix(1:6,1,6)
+b<-check(seqlen=6,type=1,items=a)
+unlist(b$result)
+b$fun
 
-## The function is currently defined as
-function (seqlen, items, type) 
-{
-    x1 <- as.numeric(sample(1:100, 1))
-    x2 <- as.numeric(sample(1:100, 1))
-    if (type == 1) {
-        m <- sample(c(1, 2), 1)
-        if (m == 1) {
-            rule <- createSR()
-        }
-        else {
-            rule <- createDR()
-        }
-    }
-    else {
-        z <- sample(2:length(MyRules), 1)
-        rule <- MyRules[[z]]
-    }
-    result <- sequence(x1, x2, rule, n = seqlen)[[1]]
-    fun <- sequence(x1, x2, rule, n = seqlen)[[2]]
-    if (conCheck(result) == 0 || result[length(result)] > 1000 || 
-        result[length(result)] < -1000 || duplicate(mx = items, 
-        vec = unlist(result[[1]]))) {
-        check(seqlen, items, type)
-    }
-    else {
-        return(list(result, fun))
-    }
-  }
+# in this example generating sequence '1 2 3 4 5 6 ' is not allowed
+# as 'm' matrix is specyfied as argument 'items'
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
+
 \keyword{ ~kwd1 }
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

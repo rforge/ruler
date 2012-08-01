@@ -1,6 +1,6 @@
 \name{calculate}
 \alias{calculate}
-%- Also NEED an '\alias' for EACH other topic documented here.
+A function 
 \title{
 %%  ~~function to do ... ~~
 }
@@ -13,24 +13,20 @@ calculate(x, y, z = NULL)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+- an object of class \code{SingleRule} or \code{DoubleRule}
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+- first element of numeric sequence
 }
   \item{z}{
-%%     ~~Describe \code{z} here~~
+- second element of numeric sequence 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+argument \code{z} is ignored if \code{x} inherits from class \code{SingleRule}
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+function returs single value of class \code{numeric}
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -45,18 +41,44 @@ calculate(x, y, z = NULL)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{calculateSpecyfic}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (x, y, z = NULL) 
-{
-    return(y)
-  }
+#[1] for objects of class SingleRule
+
+# a rule adding a constant value '6' to  the element of numeric sequence
+p<-new("AddConstSingleRule", constantVal=6) 
+
+calculate(p,4)# 4+6=10
+
+
+
+#[2]for objects of class DoubleRule
+
+#a rule substracting one element of the sequence from another
+n<-new("SubsDoubleRule")
+
+calculate(n,10,12) #10-12=-2
+
+
+
+#[3] for combined objects
+
+m<-new("DigSumSingleRule")
+r<-new("AddConstSingleRule", constantVal=6)
+g<-new("MultDoubleRule", firstRule=m, secondRule=m, nextSingle=r)
+
+calculate(g,12,34) #27
+
+# rule 'm' (first rule) is executed on the first element of numeric sequence (1+2=3)
+# rule 'm' (secodn rule) is executed on the second element of numeric sequence (3+4=7)
+# rule 'g' is executed on the result of firstRule and secondRule (3*7=21)
+# rule 'r' (nextSingle) is executed on the result of DoubleRule (21+6=27)
+#[(1+2) * (3+4) ]+6 = 27
+
+
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

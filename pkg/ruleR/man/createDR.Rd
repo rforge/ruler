@@ -2,10 +2,10 @@
 \alias{createDR}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A function to generate objects of class DoubleRule.
 }
 \usage{
 createDR(a = NULL, fr = NULL, sr = NULL, ns = NULL)
@@ -13,27 +13,27 @@ createDR(a = NULL, fr = NULL, sr = NULL, ns = NULL)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{a}{
-%%     ~~Describe \code{a} here~~
+an index of \code{DoubleRule} stored on  \code{doubleRules} list to be used while creating new object. If not specyfied it will be generated automatically. 
 }
   \item{fr}{
-%%     ~~Describe \code{fr} here~~
+(first rule) an object of class \code{SingleRule}. This rule will be applied to the first element of numeric sequence. If not specyfied it will be generated automatically. \code{fr=1} means that no additional rule is to be executed on the first argument of numeric sequence.
 }
   \item{sr}{
-%%     ~~Describe \code{sr} here~~
+(second rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. \code{sr=1} means that no additional rule is to be executed on the first element of numeric sequence.
 }
   \item{ns}{
-%%     ~~Describe \code{ns} here~~
+(next single rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. \code{ns=0} means that no additional rule is to be executed on the result of \code{DoubleRule}.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Parameters generated automatically have different probabilities assigned. 
+Because too complicated rules are very difficult to solve, objects of class \code{IdenSingleRule} 
+are generated with greater probability than other.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A function returns an object that inherits from class \code{DoubleRule}. 
+Returned object will be of class corresponding to applied \code{DoubleRule}
+
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -48,41 +48,48 @@ createDR(a = NULL, fr = NULL, sr = NULL, ns = NULL)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\linkS4class{SingleRule}},
+\code{\linkS4class{DoubleRule}},
+\code{\link{createSR()}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (a = NULL, fr = NULL, sr = NULL, ns = NULL) 
-{
-    if (!is.null(a) && a > length(doubleRules)) 
-        stop(paste("The list of doublrRules is shoreter than ", 
-            a, ".Please specify 'a' value, which is smaller than or equal to", 
-            length(doubleRules)))
-    if (!inherits(fr, "singleRule") && !is.null(fr)) 
-        stop(paste("'fr' argument must inherit from class singleRule"))
-    if (!inherits(sr, "singleRule") && !is.null(sr)) 
-        stop(paste("'sr' argument must inherit from class singleRule"))
-    if (!inherits(ns, "singleRule") && !is.null(ns)) 
-        stop(paste("'ns' argument must inherit from class singleRule"))
-    if (is.null(a)) 
-        a <- sample(1:length(doubleRules), 1)
-    a <- doubleRules[[a]]
-    if (is.null(fr)) 
-        fr <- sample(c(k = createSR(), k = new("IdenSingleRule")), 
-            1, prob = c(0.5, 0.5))
-    if (is.null(sr)) 
-        sr <- sample(c(k = createSR(), k = new("IdenSingleRule")), 
-            1, prob = c(0.3, 0.7))
-    if (is.null(ns)) 
-        ns <- sample(c(k = createSR(), k = new("IdenSingleRule")), 
-            1, prob = c(0.3, 0.7))
-    p <- new(a, firstRule = fr$k, secondRule = sr$k, nextSingle = ns$k)
-    return(p)
-  }
+##[1]random combination
+
+m<-createDR()
+print(m)
+
+
+
+##[2]specifying only one argument
+
+m<-createDR(sr=new("NegativeSingleRule"))
+#only secondRule is specyfied
+print(m)
+
+
+##[3]simple 'DoubleRule' object created manually 
+
+b<-createSR(a1=1,n=0)#creating SingleRule that is identical function
+# setting firstRule, secondRule and nextSingle are objects of class 'IdenSingleRule'
+m<-createDR(a=1,fr=b,sr=b,ns=b) 
+print(m)
+
+
+##[4] Nesting many rules
+
+b<-createSR(a1=5,n=2,2,14,3,6)
+print(b) #two nested rules inside a 'SingleRule' b object 
+
+c<-createSR(a1=2,cv=45, n=3,)
+m<-createDR(a=1,fr=b,ns=c)
+
+##note that UNLIMITED number of rules can be nested  !!! 
+
+
+
+
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

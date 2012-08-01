@@ -5,7 +5,7 @@
 \alias{calculate,SingleRule,numeric,ANY-method}
 \title{ ~~ Methods for Function \code{calculate}  ~~}
 \description{
- ~~ Methods for function \code{calculate}  ~~
+ Methods to execute rules on specyfied numeric arguments.
 }
 \section{Methods}{
 \describe{
@@ -15,8 +15,15 @@
 }
 
 \item{\code{signature(x = "SingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+'z' argument is ignored for objects of class "SingleRule"
 }
 }}
+
+
+\seealso{
+\code{\link{calculateSpecyfic-methods}}
+}
+
+
 \keyword{methods}
 \keyword{ ~~ other possible keyword(s) ~~ }

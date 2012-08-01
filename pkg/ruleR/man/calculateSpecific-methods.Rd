@@ -16,61 +16,61 @@
 \alias{calculateSpecific,SubsDoubleRule,numeric,numeric-method}
 \title{ ~~ Methods for Function \code{calculateSpecific}  ~~}
 \description{
- ~~ Methods for function \code{calculateSpecific}  ~~
+ Methods for executing specyfied rules dedicated for every basic rule separately.
 }
 \section{Methods}{
 \describe{
 
 \item{\code{signature(x = "AddConstSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{AddConstSingleRule}
 }
 
 \item{\code{signature(x = "AddDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{AddDoubleRule}
 }
 
 \item{\code{signature(x = "DigSumSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{DigSumSingleRule}
 }
 
 \item{\code{signature(x = "DivDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{DivDoubleRule}
 }
 
 \item{\code{signature(x = "ExpDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{ExpDoubleRule}
 }
 
 \item{\code{signature(x = "IdenSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{IdenSingleRule}
 }
 
 \item{\code{signature(x = "ModuloDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{ModuloDoubleRule}
 }
 
 \item{\code{signature(x = "MultConstSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{MultConstSingleRule}
 }
 
 \item{\code{signature(x = "MultDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{MultDoubleRule}
 }
 
 \item{\code{signature(x = "NegativeSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{NegativeSingleRule}
 }
 
 \item{\code{signature(x = "SingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{SingleRule}
 }
 
 \item{\code{signature(x = "SubsConstSingleRule", y = "numeric", z = "ANY")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{SubsConstSingleRule}
 }
 
 \item{\code{signature(x = "SubsDoubleRule", y = "numeric", z = "numeric")}}{
-%%  ~~describe this method here~~
+method to execute rules on objects of class \code{SubsDoubleRule}
 }
 }}
 \keyword{methods}

@@ -192,8 +192,6 @@ setMethod("calculateSpecific",
 
 #EXECUTING RULES OPERATING ON TWO ARGUMENTS
 
-#calculate <- function(x,y,z){stop ("No function to execute this.")} #throw a mistake, because you should execute just single functions contained by cladd DoubleRule
-
 
 setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
           function(x, y, z){
@@ -252,16 +250,22 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
                      p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
                      } # generate 'n' if it is set as null with different probabilities
       
+      print(paste("a1",a1))
+      print(paste("cv1",cv1))
+      print(paste("n",n))
+      print(p)
+      print("------------------")
       
       if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
       
-      if(n!=0) {createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
+      
+      if(n+1!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
       }else{return(m)}
   
       return(m)                                                     
                                                 }
 
-
+m<-createSR(a1=2,cv1=2,n=3,3,3,4,4,5,5)
 
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
 
@@ -271,25 +275,25 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 #'ns' nextSingle argument of an object of class doubleRule
 #'
 createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
-                              if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
-                              if(!inherits(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
-                              if(!inherits(sr,"singleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
-                              if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
-                              
-                              if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
-                              a<-doubleRules[[a]]
-                              #print(a)
-                              
-                              if(is.null(fr)) fr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.5,0.5))# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
+                    if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
+                    if(!inherits(fr,"SingleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
+                    if(!inherits(sr,"SingleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
+                    if(!inherits(ns,"SingleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
+       
+                    if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
+                    a<-doubleRules[[a]]
+                                       
+                    if(is.null(fr)) fr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.5,0.5))[[1]]# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
                                                             
-                              if(is.null(sr)) sr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7)) #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
+                    if(is.null(sr)) sr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]] #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
                               
-                              if(is.null(ns)) ns<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7))
+                    if(is.null(ns)) ns<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]]
                                                            
-                              p<-new(a,firstRule=fr$k, secondRule=sr$k,nextSingle=ns$k)
-                              return(p)
+                    p<-new(a,firstRule=fr, secondRule=sr,nextSingle=ns)
+                    
+                    return(p)
                               
-                                                        }
+                                                  }
  
  
 #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
@@ -371,8 +375,8 @@ check<-function(seqlen,items,type){
         fun<-sequence(x1,x2,rule,n=seqlen)[[2]]
        
           
-        if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
-           {check(seqlen,items,type)} else{return(list(result,fun))}
+        if(conCheck(result)==0 ||is.na(result[length(result)])|| result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
+           {check(seqlen,items,type)} else{return(list(result=result,fun=fun))}
   
                   }
 

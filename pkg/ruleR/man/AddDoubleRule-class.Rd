@@ -6,18 +6,18 @@
 
 \title{Class \code{"AddDoubleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+ A class for rule which adds two prevous elements of numeric sequence.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("AddDoubleRule", ...)}.
+Objects can be created by calls of the form \code{new("AddDoubleRule",... )}.
 %%  ~~ describe objects here ~~ 
 }
 \section{Slots}{
   \describe{
-    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} - a rule to be executed on the first element of numeric sequence, before executing DoubleRule (doesn't need to be specyfied)}
+    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} - a rule to be executed on the second element of numeric sequence, before executing DoubleRule (doesn't need to be specyfied) }
+    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} - a rule to be executed on the result of DoubleRule (doesn't need to be specyfied) }
+    \item{\code{.S3Class}:}{Object of class \code{"character"}  - S3 methods apply for these objects }
   }
 }
 \section{Extends}{
@@ -41,10 +41,44 @@ Class \code{"\linkS4class{DoubleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}}, 
+\code{\linkS4class{DoubleRule}},
+\code{\linkS4class{SingleRule}}
+
+
+
 }
 \examples{
-showClass("AddDoubleRule")
+
+#[1] simple DoubleRule
+
+p<-new("AddDoubleRule")
+calculate(p,12,5) #12+5=17
+
+
+
+#[2] combining rules
+
+m<-new("DigSumSingleRule") 
+# SingleRule that calculates digitsum of an element of numeric sequence
+
+r<-new("AddConstSingleRule", constantVal=6)
+#a SingleRule that adds constant value '6' to the element of numeric sequence 
+
+f<-new("MultConstSingleRule", constantVal=2)
+#a SingleRule that muliplies an element of a sequence by constant value '4'
+
+g<-new("AddDoubleRule", firstRule=r, secondRule=f, nextSingle=m)
+calculate(g,12,5) #10
+
+## How is rule 'g' executed ?
+## Starting elements are '12' and '5'
+## Rule 'r'(firstRule) is applied to the first element of numeric sequence (12+6=18)
+## Rule 'f'(secondRule) is applied to the second element of numeric sequence (5*2=10)
+## "AddDoubleRule" is executed on the results of firstRule and secondRule (18+10=28)
+## Rule 'm' is applies to the result of DoubleRule (2+8=10)
+
+
 }
 \keyword{classes}
+\keyword{AddDoubleRule}

@@ -2,31 +2,34 @@
 \alias{calculateSpecific}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+calculateSpecific
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+Every rule is an object of separate class, which inherits either from
+\code{SingleRule} or \code{DoubleRule} virtual class. This is why for every rule there is defined
+ \code{calculateSpecific} method specyfying how to transform arguments supplied to 
+function \code{calculate}. }
+
 \usage{
 calculateSpecific(x, y, z = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+- an object of class \code{SingleRule} or \code{DoubleRule}
 }
   \item{y}{
-%%     ~~Describe \code{y} here~~
+- first element of numeric sequence
 }
   \item{z}{
-%%     ~~Describe \code{z} here~~
+- second element of numeric sequence
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+argument \code{z} is ignored if \code{x} inherits from class \code{SingleRule}
 }
 \value{
-%%  ~Describe the value returned
+function returs single value of class \code{numeric}
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
@@ -48,15 +51,17 @@ calculateSpecific(x, y, z = NULL)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (x, y, z = NULL) 
-{
-    return(y)
-  }
+#setClass("ExpDoubleRule", contains="DoubleRule",S3methods=TRUE)
+#
+#setMethod("calculateSpecific", 
+#          signature(x="ExpDoubleRule", y="numeric", z="numeric"),
+#          function(x,y,z){
+#            return(y^z)
+#          })
+
+
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
