@@ -1,0 +1,41 @@
+%\VignetteIndexEntry{Using ruleR as a framework for rule-based item generation}
+%\VignetteKeyword{psychometrics}
+
+\documentclass[a4paper]{article}
+\usepackage{a4wide}
+\usepackage{amsmath,color,amsthm}
+\usepackage{url}
+\usepackage{hyperref}
+%\usepackage{biblatex}
+
+\DeclareMathOperator{\logit}{logit}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\sg}{\sigma}
+
+
+\title{Using \texttt{ruleR} as a framework for rule-based item generation}
+\author{
+Maria Rafalak\\
+mariarafalak@gmail.com
+\and
+Philipp Doebler \\
+      philipp.doebler@googlemail.com}
+
+\begin{document}
+
+\setkeys{Gin}{width=0.6\textwidth}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Number sequences}
+
+\section{Matrix items}
+
+\section{Further development of \texttt{ruleR}}
+
+\bibliography{ruleR}{}
+\bibliographystyle{alpha}
+
+\end{document}
