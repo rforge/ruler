@@ -6,15 +6,16 @@
 
 \title{Class \code{"DigSumSingleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules calculating a sum of digits of a single element of numeric sequence.
+It inherits from class \code{SingleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("DigSumSingleRule", ...)}.
-%%  ~~ describe objects here ~~ 
+
 }
 \section{Slots}{
   \describe{
-    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} ~~ }
+    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} rule to be executed on an element of numeric sequence before \code{DigSumSingleRule}, by default is \code{NULL}}}.
     \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
   }
 }
@@ -39,10 +40,28 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}},
+\code{\link{createSR}},
+\code{\link{createDR}},
+\code{\linkS4class{SingleRule}}
 }
 \examples{
-showClass("DigSumSingleRule")
+
+##[1] simple single rule
+b<-new("DigSumSingleRule")
+print(b)
+
+b<-createSR(a1=5,n=0) #See 'createSR' for details
+print(b)
+
+##[2] combining single rules
+b<-new("DigSumSingleRule",previousRule=new("DigSumSingleRule"))#or b<-createSR(a1=5,cv1=0,n=1,5,0)
+print(b)
+
+#name: DigSumSingleRule
+#name: DigSumSingleRule
+
+calculate(b,785) #2 because 7+8+5=20; 2+0=2
+
 }
 \keyword{classes}

@@ -7,6 +7,7 @@
 \title{Class \code{"AddDoubleRule"}}
 \description{
  A class for rule which adds two prevous elements of numeric sequence.
+ It inherits from class \code{DoubleRule}
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("AddDoubleRule",... )}.
@@ -43,7 +44,9 @@ Class \code{"\linkS4class{DoubleRule}"}, directly.
 \seealso{
 \code{\link{calculate}}, 
 \code{\linkS4class{DoubleRule}},
-\code{\linkS4class{SingleRule}}
+\code{\linkS4class{SingleRule}},
+\code{\link{createSR}},
+\code{\link{createDR}}
 
 
 

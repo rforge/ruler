@@ -5,7 +5,9 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A function checking whether a specyfied vector is already in a specyfied matrix. 
+This function is called by \code{automaticTest} while generating numeric sequences for the test, or
+by \code{AddRule}.
 }
 \usage{
 duplicate(mx, vec)
@@ -13,21 +15,20 @@ duplicate(mx, vec)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mx}{
-%%     ~~Describe \code{mx} here~~
+a matrix in which function \code{duplicate} searches for a specyfied vector
 }
   \item{vec}{
-%%     ~~Describe \code{vec} here~~
+a vector for which a specyfied matrix is searched 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Length of the vector must be equal to the number of columns in the searched matrix.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+This function can return two values
+\item{TRUE}{means that such vector already is in the matrix}
+\item{FALSE}{means that no such vector is in the matrix}
+
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -42,19 +43,17 @@ duplicate(mx, vec)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{automaticTest}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (mx, vec) 
-{
-    return(any(apply(mx, 1, function(x, want) isTRUE(all.equal(x, 
-        want)), vec)))
-  }
+m<-matrix(c(1:5,5:1,c(1,2,5,4,3)),3,5,byrow=TRUE)
+r<-1:5
+g<-c(1:4,4)
+
+duplicate(mx=m,vec=r) # TRUE - there is already such vector in a matrix
+duplicate(mx=m,vec=g) #FALSE - no cuch vector in the matrix
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

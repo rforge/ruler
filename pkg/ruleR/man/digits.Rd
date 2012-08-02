@@ -5,7 +5,8 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+That is a function to separate digits from a number. 
+This function is used in \code{DigSumSingleRule}, which calculates the sum of digits.
 }
 \usage{
 digits(x)
@@ -13,7 +14,7 @@ digits(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+numeric value of which digits are separated
 }
 }
 \details{
@@ -27,7 +28,7 @@ digits(x)
 %% ...
 }
 \references{
-%% ~put references to the literature/web site here ~
+https://stat.ethz.ch/pipermail/r-help/2011-March/270786.html
 }
 \author{
 %%  ~~who you are~~
@@ -39,24 +40,12 @@ digits(x)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{DigSumSingleRule}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x) 
-{
-    if (length(x) > 1) {
-        lapply(x, digits)
-    }
-    else {
-        n <- nchar(x)
-        rev(x\%/\%10^seq(0, length.out = n)\%\%10)
-    }
-  }
+m<-digits(46)
+m[1]#4
+m[2]#6
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

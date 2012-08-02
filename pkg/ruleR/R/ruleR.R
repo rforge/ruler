@@ -259,7 +259,6 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
   return(m)                                                     
 }
 
-m<-createSR(a1=2,cv1=2,n=3,3,3,4,4,5,5)
 
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
 

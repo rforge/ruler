@@ -6,7 +6,8 @@
 
 \title{Class \code{"SubsDoubleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules substracting the second element of numeric sequence from the first one. 
+Objects of this class inherit from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("SubsDoubleRule", ...)}.
@@ -14,10 +15,10 @@ Objects can be created by calls of the form \code{new("SubsDoubleRule", ...)}.
 }
 \section{Slots}{
   \describe{
-    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the first element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied.}
+    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the second element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied. }
+    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"}  \code{SingleRule} to be executed on the result of \code{DoubleRule}. This doesn't need to be specyfied. }
+    \item{\code{.S3Class}:}{Object of class \code{"character"} S3 methods apply for these objects}
   }
 }
 \section{Extends}{
@@ -41,10 +42,18 @@ Class \code{"\linkS4class{DoubleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}},
+\code{\linkS4class{DoubleRule}},
+\code{\linkS4class{SingleRule}},
+\code{\link{createSR}},
+\code{\link{createDR}}
 }
 \examples{
-showClass("SubsDoubleRule")
+
+m<-new("SubsDoubleRule") 
+print(m)
+
+calculate(m,20,7) # 20-7=13
+
 }
 \keyword{classes}

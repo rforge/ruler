@@ -5,19 +5,36 @@
 %%   ~~ data name/kind ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+A list of basic \code{DoubleRule}'s implemented in ruleR. 
+Refering to the index of rules on this list, combining rules is executed. 
+Only names of the rules are stored on the list.
 }
-\usage{data(doubleRules)}
-\format{
-  The format is:
-List of 6
- $ : chr "AddDoubleRule"
- $ : chr "MultDoubleRule"
- $ : chr "SubsDoubleRule"
- $ : chr "DivDoubleRule"
- $ : chr "ModuloDoubleRule"
- $ : chr "ExpDoubleRule"
+
+
+%- maybe also 'usage' for other objects documented here.
+
+\arguments{
+  \item{doubleRules[1]}{
+"AddDoubleRule"
 }
+  \item{doubleRules[2]}{
+"MultDoubleRule"
+}
+  \item{doubleRules[3]}{
+"SubsDoubleRule"
+}
+  \item{doubleRules[4]}{
+"DivDoubleRule"
+}
+  \item{doubleRules[5]}{
+"ModuloDoubleRule"
+}
+  \item{doubleRules[6]}{
+"ExpDoubleRule"
+}
+
+}
+
 \details{
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
@@ -28,7 +45,6 @@ List of 6
 %%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
-data(doubleRules)
-## maybe str(doubleRules) ; plot(doubleRules) ...
+doubleRules
 }
 \keyword{datasets}

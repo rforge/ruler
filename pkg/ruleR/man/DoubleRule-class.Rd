@@ -6,18 +6,20 @@
 
 \title{Class \code{"DoubleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules operating on two elements of numeric sequence.
+It is a virtual class - so no objects of this class are generated. 
+All classes for specyfic rules operating on two arguiments (ex. \code{AddDoubleRule},\code{DivDoubleRule} etc.)
+inherit from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("DoubleRule", ...)}.
 %%  ~~ describe objects here ~~ 
 }
 \section{Slots}{
   \describe{
-    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{firstRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the first element of numeric sequence (before the \code{DoubleRule}).This doesn't need to be specyfied. }
+    \item{\code{secondRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the second element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied. }
+    \item{\code{nextSingle}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the result of \code{DoubleRule}.This doesn't need to be specyfied.}
+    \item{\code{.S3Class}:}{Object of class \code{"character"} Object of class \code{"character"} S3 methods apply for these objects }
   }
 }
 \section{Methods}{
@@ -38,10 +40,18 @@ Objects can be created by calls of the form \code{new("DoubleRule", ...)}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{doubleRules}},
+\code{\linkS4class{AddDoubleRule}},
+\code{\linkS4class{MultDoubleRule}},
+\code{\linkS4class{SubsDoubleRule}},
+\code{\linkS4class{DivDoubleRule}},
+\code{\linkS4class{ModuloDoubleRule}},
+\code{\linkS4class{ExpDoubleRule}},
+\code{\link{createSR}},
+\code{\link{createDR}}
+
 }
 \examples{
-showClass("DoubleRule")
+
 }
 \keyword{classes}

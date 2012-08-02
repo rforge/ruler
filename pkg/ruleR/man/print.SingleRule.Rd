@@ -5,7 +5,7 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+a function defined to print objects of class \code{SingleRule}
 }
 \usage{
 print.SingleRule(x)
@@ -13,7 +13,7 @@ print.SingleRule(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+an object of class \code{SingleRule}
 }
 }
 \details{
@@ -39,28 +39,16 @@ print.SingleRule(x)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{createSR}},
+\code{\link{createDR}},
+\code{\linkS4class{SingleRule}},
+\code{\linkS4class{DoubleRule}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (x) 
-{
-    pr <- function(x) {
-        cat(paste("\nname:", class(x)[1]))
-        if ("constantVal" \%in\% slotNames(x)) {
-            cat(paste(", constant value: ", x@constantVal))
-        }
-    }
-    pr(x)
-    if (!class(x@previousRule) == "SingleRule") {
-        x <- x@previousRule
-        pr(x)
-    }
-  }
+b<-createSR(a1=5,cv1=0,n=2,2,14,3,6)
+print(b)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

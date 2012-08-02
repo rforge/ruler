@@ -45,7 +45,8 @@ AddRule(rule)
 \seealso{
 \code{\link{automaticTest}},
 \code{\link{MyRules}},
-\code{\link{automaticTest}}
+\code{\link{createSR}},
+\code{\link{createDR}}
 
 }
 \examples{

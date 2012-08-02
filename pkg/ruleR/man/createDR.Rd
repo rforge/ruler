@@ -16,13 +16,13 @@ createDR(a = NULL, fr = NULL, sr = NULL, ns = NULL)
 an index of \code{DoubleRule} stored on  \code{doubleRules} list to be used while creating new object. If not specyfied it will be generated automatically. 
 }
   \item{fr}{
-(first rule) an object of class \code{SingleRule}. This rule will be applied to the first element of numeric sequence. If not specyfied it will be generated automatically. \code{fr=1} means that no additional rule is to be executed on the first argument of numeric sequence.
+(first rule) an object of class \code{SingleRule}. This rule will be applied to the first element of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{firstRule} argument in object of class \code{DoubleRule}, \code{fr} must be defined as identical function \code{IdenSingleRule} (\code{fr=createSR("IdenSingleRule",n=0)}). For details see example [3].
 }
   \item{sr}{
-(second rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. \code{sr=1} means that no additional rule is to be executed on the first element of numeric sequence.
+(second rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{secondRule} argument in object of class \code{DoubleRule}, \code{sr} must be defined as identical function \code{IdenSingleRule} (\code{sr=createSR("IdenSingleRule",n=0)}). For details see example [3].
 }
   \item{ns}{
-(next single rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. \code{ns=0} means that no additional rule is to be executed on the result of \code{DoubleRule}.
+(next single rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{nextSingle} argument in object of class \code{DoubleRule}, \code{ns} must be defined as identical function \code{IdenSingleRule} (\code{sr=createSR("IdenSingleRule",n=0)}). For details see example [3].
 }
 }
 \details{
@@ -32,7 +32,7 @@ are generated with greater probability than other.
 }
 \value{
 A function returns an object that inherits from class \code{DoubleRule}. 
-Returned object will be of class corresponding to applied \code{DoubleRule}
+Returned object will be of class corresponding to applied \code{DoubleRule}.
 
 }
 \references{
@@ -50,39 +50,72 @@ Returned object will be of class corresponding to applied \code{DoubleRule}
 \seealso{
 \code{\linkS4class{SingleRule}},
 \code{\linkS4class{DoubleRule}},
-\code{\link{createSR()}}
+\code{\link{createSR()}},
+\code{\link{calculate()}}
 }
 \examples{
 
-##[1]random combination
+##[1] DoubleRule object with random combination of rules
 
 m<-createDR()
 print(m)
 
 
-
-##[2]specifying only one argument
+##[2]DoubleRule object with only one argument specyfied
 
 m<-createDR(sr=new("NegativeSingleRule"))
-#only secondRule is specyfied
+#only secondRule argument is specyfied, all other arguments are generated automatically
 print(m)
 
 
-##[3]simple 'DoubleRule' object created manually 
+##[3]simple 'DoubleRule' object created manually (no nested rules)
 
 b<-createSR(a1=1,n=0)#creating SingleRule that is identical function
 # setting firstRule, secondRule and nextSingle are objects of class 'IdenSingleRule'
 m<-createDR(a=1,fr=b,sr=b,ns=b) 
+#altrnatively 'm<-createDR(a=1,fr=new("IdenSingleRule"),sr=new("IdenSingleRule"),ns=new("IdenSingleRule"))'
 print(m)
 
 
 ##[4] Nesting many rules
 
-b<-createSR(a1=5,n=2,2,14,3,6)
+b<-createSR(a1=5,cv1=0,n=2,2,14,3,6)
 print(b) #two nested rules inside a 'SingleRule' b object 
 
-c<-createSR(a1=2,cv=45, n=3,)
-m<-createDR(a=1,fr=b,ns=c)
+#name: DigSumSingleRule #basic rule
+#name: AddConstSingleRule, constant value:  14 #first nested rule
+#name: MultConstSingleRule, constant value:  6 #second nested rule
+
+
+c<-createSR(a1=2,cv=45, n=3) # I want to nest three SingleRules 
+(no parameters for nested rules are specyfied - program generates them )
+print(c)
+
+#name: AddConstSingleRule, constant value:  45
+#name: SubsConstSingleRule, constant value:  10 
+# first nested rule (generated automatically - it will be different for every generation)
+#name: AddConstSingleRule, constant value:  10 
+# second nested rule (generated automatically- it will be different for every generation)
+#name: MultConstSingleRule, constant value:  58 
+# third nested rule (generated automatically- it will be different for every generation)
+
+
+m<-createDR(a=1,fr=b,ns=c) #combining DoubleRule with SingleRules
+print(m)
+
+#AddDoubleRule
+# FIRST RULE:
+#name: DigSumSingleRule
+#name: AddConstSingleRule, constant value:  14
+#name: MultConstSingleRule, constant value:  6
+# SECOND RULE:
+#name: IdenSingleRule
+# NEXT SINGLE:
+#name: AddConstSingleRule, constant value:  45
+#name: SubsConstSingleRule, constant value:  10
+#name: AddConstSingleRule, constant value:  10
+#name: MultConstSingleRule, constant value:  58
+
 
 ##note that UNLIMITED number of rules can be nested  !!! 
 

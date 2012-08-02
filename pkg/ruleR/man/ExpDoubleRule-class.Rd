@@ -6,18 +6,20 @@
 
 \title{Class \code{"ExpDoubleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules calculating an exponential function using two elements of numeric sequence
+(treating the second element as an exponent and first element as a base). 
+Objects of this class inherit from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("ExpDoubleRule", ...)}.
-%%  ~~ describe objects here ~~ 
+
 }
 \section{Slots}{
   \describe{
-    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{firstRule}:}{Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the first element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied. }
+    \item{\code{secondRule}:}{Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the second element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied. }
+    \item{\code{nextSingle}:}{Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the result of \code{DoubleRule}. This doesn't need to be specyfied.}
+    \item{\code{.S3Class}:}{Object of class \code{"character"} S3 methods apply for these objects }
   }
 }
 \section{Extends}{
@@ -41,10 +43,18 @@ Class \code{"\linkS4class{DoubleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}},
+\code{\linkS4class{DoubleRule}},
+\code{\linkS4class{SingleRule}},
+\code{\link{createSR}},
+\code{\link{createDR}}
 }
 \examples{
-showClass("ExpDoubleRule")
+
+m<-new("ExpDoubleRule")
+print(m)
+
+calculate(m,2,4) #2^4=16
+
 }
 \keyword{classes}

@@ -6,7 +6,8 @@
 
 \title{Class \code{"NegativeSingleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules which create a negative value from single element of numeric sequence.
+ Objects of this class inherit from \code{SingleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("NegativeSingleRule", ...)}.
@@ -14,8 +15,8 @@ Objects can be created by calls of the form \code{new("NegativeSingleRule", ...)
 }
 \section{Slots}{
   \describe{
-    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} -  a rule that will be executed before \code{NegativeSingleRule} (this is an argument used to combine different rules together)}
+    \item{\code{.S3Class}:}{Object of class \code{"character"} -  S3 methods apply to this object }
   }
 }
 \section{Extends}{
@@ -39,10 +40,18 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}}, 
+\code{\link{createSR}},
+\code{\link{createDR}},
+\code{\linkS4class{SingleRule}},
+\code{\linkS4class{DoubleRule}}
+
 }
 \examples{
-showClass("NegativeSingleRule")
+m<-new("NegativeSingleRule") #or m<-createSR(a1=6,n=0)
+print(m)
+
+calculate(m,4)#-4
+
 }
 \keyword{classes}

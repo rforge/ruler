@@ -5,13 +5,12 @@
 %%   ~~ data name/kind ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+A list on which combined rules defined by user are stored. By default this list contains one \code{NA} value.
+Rules can be added to this list by function \code{AddRule}.
 }
 \usage{data(MyRules)}
 \format{
-  The format is:
-List of 1
- $ : logi NA
+
 }
 \details{
 %%  ~~ If necessary, more details than the __description__ above ~~
@@ -22,8 +21,28 @@ List of 1
 \references{
 %%  ~~ possibly secondary sources and usages ~~
 }
+
+\seealso{
+\code{\link{AddRule}},
+\code{\link{automaticTest}},
+\code{\link{createSR}},
+\code{\link{createDR}}
+}
+
+
 \examples{
-data(MyRules)
-## maybe str(MyRules) ; plot(MyRules) ...
+MyRules
+
+m<-createSR()
+print(m)
+AddRule(m)#"Your rule succesfully added tp 'MyRule' list"
+
+MyRules
+AddRule(m) #Error in AddRule(m) : There already is a rule that gives the same result.
+
+k<-createDR()
+print(k)
+AddRule(k)#"Your rule succesfully added tp 'MyRule' list"
+
 }
 \keyword{datasets}

@@ -6,7 +6,9 @@
 
 \title{Class \code{"IdenSingleRule"}}
 \description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
+A class for rules which return not modyfied input.
+Used mainly in \code{automaticTest} to define no futher operations.
+Objects of this class inherit from \code{SingleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("IdenSingleRule", ...)}.
@@ -14,8 +16,8 @@ Objects can be created by calls of the form \code{new("IdenSingleRule", ...)}.
 }
 \section{Slots}{
   \describe{
-    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} ~~ }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{previousRule}:}{Object of class \code{"SingleRule"}  -  a rule that will be executed before \code{IdenSingleRule} (this is an argument used to combine different rules together)}
+    \item{\code{.S3Class}:}{Object of class \code{"character"} -  S3 methods apply to this object }
   }
 }
 \section{Extends}{
@@ -39,10 +41,15 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
+\code{\link{calculate}},
+\code{\link{automaticTest}}, 
+\code{\linkS4class{SingleRule}},
+\code{\linkS4class{DoubleRule}},
+\code{\link{createSR}},
+\code{\link{createDR}}
 }
 \examples{
-showClass("IdenSingleRule")
+m<-new("IdenSingleRule")
+print(m)
 }
 \keyword{classes}

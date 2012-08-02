@@ -5,7 +5,10 @@
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A function to generate numeric sequence of specyfied lenght.
+Is used in \code{automaticTest} but can be used separately.
+Note that this function doesn't check for constant sequence or
+too big/small elements in numeric sequence!
 }
 \usage{
 sequence(x1, x2 = NULL, rule, n = 6)
@@ -13,27 +16,27 @@ sequence(x1, x2 = NULL, rule, n = 6)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x1}{
-%%     ~~Describe \code{x1} here~~
+first element of numeric sequence
 }
   \item{x2}{
-%%     ~~Describe \code{x2} here~~
+second element of numeric sequence (if applied rule doesn't need second element, it will be overwritten)
 }
   \item{rule}{
-%%     ~~Describe \code{rule} here~~
+a rule you want to apply. It needs to inherit either from class \code{SingleRule} or \code{DoubleRule}
 }
   \item{n}{
-%%     ~~Describe \code{n} here~~
+length of numeric sequence, by default \code{n=6}
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+function returns a list containing of:
+
+\item{sequence[[1]] }{numeric sequence as a list}
+\item{sequence[[2]]}{rule used to generate the sequence}
+
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -48,41 +51,26 @@ sequence(x1, x2 = NULL, rule, n = 6)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{automaticTest}},
+\code{\link{conCheck}},
+\code{\link{check}},
+\code{\link{createSR}},
+\code{\link{createDR}}
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+b<-createSR(a1=5,cv1=0,n=1,2,14) 
+# creating a rule I want to use in generating numeric sequence
 
-## The function is currently defined as
-function (x1, x2 = NULL, rule, n = 6) 
-{
-    if (inherits(rule, "DoubleRule") && is.null(x2)) 
-        stop(" If you want to use a DoubleRoule you need to specify x2")
-    if (class(x1) != "numeric" || (class(x2) != "NULL" && class(x2) != 
-        "numeric")) 
-        stop("arguments 'x1', 'x2' must be of type 'numeric'.")
-    if (!inherits(rule, "SingleRule") && !inherits(rule, "DoubleRule")) 
-        stop("'rule' argument must inherit from 'SingleRule' or 'DoubleRule' class")
-    if (n < 3) 
-        stop("sequence must be longer than 3")
-    k <- list()
-    k[1] = x1
-    if (inherits(rule, "SingleRule")) {
-        for (i in 2:n) {
-            k[i] <- calculate(x = rule, y = k[[i - 1]])
-        }
-    }
-    else {
-        k[2] = x2
-        for (i in 3:n) {
-            k[i] <- calculate(x = rule, y = k[[i - 2]], z = k[[i - 
-                1]])
-        }
-    }
-    return(list(k, rule))
-  }
+m<-sequence(x1=1,x2=3,rule=b,n=10)
+
+unlist(m[1]) #1  6  2  7  3  8  4  9  5 10
+print(m[2])
+
+#name: DigSumSingleRule
+#name: AddConstSingleRule, constant value:  14
+
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

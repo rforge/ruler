@@ -5,19 +5,34 @@
 %%   ~~ data name/kind ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+A list of basic \code{SingleRule}'s implemented in ruleR. 
+Refering to the index of rules on this list, combining rules is executed. 
+Only names of the rules are stored on the list.
 }
 \usage{data(singleRules)}
-\format{
-  The format is:
-List of 6
- $ : chr "IdenSingleRule"
- $ : chr "AddConstSingleRule"
- $ : chr "MultConstSingleRule"
- $ : chr "SubsConstSingleRule"
- $ : chr "DigSumSingleRule"
- $ : chr "NegativeSingleRule"
+\arguments{
+  \item{doubleRules[1]}{
+"IdenSingleRule"
 }
+  \item{doubleRules[2]}{
+"AddConstSingleRule"
+}
+  \item{doubleRules[3]}{
+"MultConstSingleRule"
+}
+  \item{doubleRules[4]}{
+"SubsConstSingleRule"
+}
+  \item{doubleRules[5]}{
+"DigSumSingleRule"
+}
+  \item{doubleRules[6]}{
+"NegativeSingleRule"
+}
+
+}
+
+
 \details{
 %%  ~~ If necessary, more details than the __description__ above ~~
 }
@@ -28,7 +43,6 @@ List of 6
 %%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
-data(singleRules)
-## maybe str(singleRules) ; plot(singleRules) ...
+singleRules
 }
 \keyword{datasets}
