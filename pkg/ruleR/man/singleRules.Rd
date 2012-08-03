@@ -2,7 +2,7 @@
 \alias{singleRules}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
+list of available basic \code{SingleRule}s
 }
 \description{
 A list of basic \code{SingleRule}'s implemented in ruleR. 
@@ -20,13 +20,11 @@ Only names of the rules are stored on the list.
   \item{doubleRules[3]}{
 "MultConstSingleRule"
 }
+
   \item{doubleRules[4]}{
-"SubsConstSingleRule"
-}
-  \item{doubleRules[5]}{
 "DigSumSingleRule"
 }
-  \item{doubleRules[6]}{
+  \item{doubleRules[5]}{
 "NegativeSingleRule"
 }
 

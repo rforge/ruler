@@ -2,7 +2,7 @@
 \alias{print.SingleRule}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function
 }
 \description{
 a function defined to print objects of class \code{SingleRule}

@@ -2,7 +2,7 @@
 \alias{createDR}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-
+function to create objects of class \code{Doublerule}
 }
 \description{
 A function to generate objects of class DoubleRule.
@@ -50,8 +50,8 @@ Returned object will be of class corresponding to applied \code{DoubleRule}.
 \seealso{
 \code{\linkS4class{SingleRule}},
 \code{\linkS4class{DoubleRule}},
-\code{\link{createSR()}},
-\code{\link{calculate()}}
+\code{\link{createSR}},
+\code{\link{calculate}}
 }
 \examples{
 

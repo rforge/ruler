@@ -2,7 +2,7 @@
 \alias{sequence}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function
 }
 \description{
 A function to generate numeric sequence of specyfied lenght.

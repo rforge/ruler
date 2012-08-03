@@ -45,7 +45,6 @@ Objects can be created by calls of the form \code{new("SingleRule", ...)}.
 \code{\linkS4class{IdenSingleRule}},
 \code{\linkS4class{AddConstSingleRule}},
 \code{\linkS4class{MultConstSingleRule}},
-\code{\linkS4class{SubsConstSingleRule}},
 \code{\linkS4class{DigSumSingleRule}},
 \code{\linkS4class{NegativeSingleRule}},
 \code{\link{createSR}},

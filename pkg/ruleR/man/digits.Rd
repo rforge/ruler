@@ -2,7 +2,7 @@
 \alias{digits}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+a function to separate digits from a number
 }
 \description{
 That is a function to separate digits from a number. 
@@ -40,7 +40,7 @@ https://stat.ethz.ch/pipermail/r-help/2011-March/270786.html
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{DigSumSingleRule}}
+\code{\linkS4class{DigSumSingleRule}}
 }
 \examples{
 m<-digits(46)

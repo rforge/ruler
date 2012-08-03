@@ -46,17 +46,7 @@ setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
             return(x@constantVal*y)
           })
 
-#[3] SUBSTRACTING A CONSTANT
 
-setClass("SubsConstSingleRule",
-         contains="SingleRule",
-         representation(constantVal="numeric"),
-         S3methods=TRUE)
-
-setMethod("calculateSpecific",signature(x="SubsConstSingleRule",y="numeric"),
-          function(x,y){
-            return(y-x@constantVal)
-          })
 
 #[4] DIGITSUM
 digits <- function(x) {
@@ -222,7 +212,7 @@ setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
 #-------------------------------------------------------------------------------------------
 
 #a list of single rules 
-singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","SubsConstSingleRule","DigSumSingleRule","NegativeSingleRule")
+singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","DigSumSingleRule","NegativeSingleRule")
 
 
 #a list of double rules
@@ -245,7 +235,7 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
   #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
   
   if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
-  if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
+  if(is.null(cv1)) {cv1<-sample(-100:100,1)} # generate a constant value if no is supplied
   if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
                  p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
   } # generate 'n' if it is set as null with different probabilities
@@ -368,7 +358,7 @@ check<-function(seqlen,items,type){
         fun<-sequence(x1,x2,rule,n=seqlen)[[2]]
        
           
-        if(conCheck(result)==0 ||is.na(result[length(result)])|| result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
+        if(conCheck(result)==0 ||any(is.na(result))|| max(unlist(result))>1000 || min(unlist(result))< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
            {check(seqlen,items,type)} else{return(list(result=result,fun=fun))}
   
                   }

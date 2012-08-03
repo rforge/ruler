@@ -1,16 +1,14 @@
 \name{check}
 \alias{check}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-function \code{check}
+\title{function \code{check}
 }
-\description{
-A function that generates numeric sequence (with random starting values) and checks whether it is not constant, 
-elements are not too big (>1000) or too small (-1000<) and if the sequence is unique for the test. 
+\description{A function that generates numeric sequence (with random starting values) and checks whether it is not constant, 
+elements are not too big (>1000) or too small (-1000<) and if the sequence is unique for the test or contains
+any \code{NA} values. 
 Rules to generate sequence are either specyfied by user or combined automatically.
 }
-\usage{
-check(seqlen, items, type)
+\usage{check(seqlen, items, type)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -2,10 +2,10 @@
 \alias{createSR}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+functions to create objects of class \code{SingleRule}
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+function to create objects of class \code{SingleRule}
 }
 \usage{
 createSR(a1 = NULL, cv1 = NULL, n = NULL, ...)
@@ -16,7 +16,7 @@ createSR(a1 = NULL, cv1 = NULL, n = NULL, ...)
 an index of \code{SingleRule} stored on  \code{singleRules} list to be used while creating new object. If not specyfied it will be generated automatically.
 }
   \item{cv1}{
-a constant value to be used with \code{singleRules[[a1]]} rule. If not specyfied it will be generated automatically (from range 1:100). 
+a constant value to be used with \code{singleRules[[a1]]} rule. If not specyfied it will be generated automatically (from range -100:100). 
 }
   \item{n}{
 argument defining how many rules are to be nested. If \code{n=0} a simple \code{SingleRule} object is created (with no nested rules).
@@ -52,8 +52,8 @@ Returned object will be of class corresponding to applied \code{SingleRule}.
 \seealso{
 \code{\linkS4class{SingleRule}},
 \code{\linkS4class{DoubleRule}},
-\code{\link{createDR()}},
-\code{\link{calculate()}}
+\code{\link{createDR}},
+\code{\link{calculate}}
 
 }
 \examples{

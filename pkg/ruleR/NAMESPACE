@@ -16,6 +16,5 @@ exportClasses(
      "MultDoubleRule",
      "NegativeSingleRule",
      "SingleRule",
-     "SubsConstSingleRule",
      "SubsDoubleRule" 
 )

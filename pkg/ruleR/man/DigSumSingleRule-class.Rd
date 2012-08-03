@@ -15,8 +15,8 @@ Objects can be created by calls of the form \code{new("DigSumSingleRule", ...)}.
 }
 \section{Slots}{
   \describe{
-    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} rule to be executed on an element of numeric sequence before \code{DigSumSingleRule}, by default is \code{NULL}}}.
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} rule to be executed on an element of numeric sequence before \code{DigSumSingleRule}, by default is \code{NULL}}.
+    \item{\code{.S3Class}:}{Object of class \code{"character"} -  S3 methods apply to this object }
   }
 }
 \section{Extends}{

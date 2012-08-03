@@ -2,7 +2,7 @@
 \alias{doubleRules}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
+list of available basic \code{DoubleRule}s
 }
 \description{
 A list of basic \code{DoubleRule}'s implemented in ruleR. 

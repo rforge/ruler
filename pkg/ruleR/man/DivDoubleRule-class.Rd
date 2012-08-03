@@ -6,7 +6,7 @@
 
 \title{Class \code{"DivDoubleRule"}}
 \description{
-A class for rules deviding first element of numeric sequence by the second one. 
+A class for rules deviding first element of numeric sequence by the second one and returning a whole number. 
 It inherits from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{
@@ -54,6 +54,9 @@ m<-new("DivDoubleRule")
 print(m)
 
 calculate(m,20,10) #20/10=2
+
+calculate(m,4,3) #1 because 3*1+1=4
+
 
 }
 \keyword{classes}

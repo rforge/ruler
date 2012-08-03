@@ -2,7 +2,7 @@
 \alias{duplicate}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function
 }
 \description{
 A function checking whether a specyfied vector is already in a specyfied matrix. 

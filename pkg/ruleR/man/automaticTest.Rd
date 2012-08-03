@@ -2,7 +2,7 @@
 \alias{automaticTest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function to generate test with specyfied characteristics
 }
 \description{
 Function to generate desired amount of test items (numeric sequence of specyfied length).

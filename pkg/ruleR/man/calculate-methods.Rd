@@ -21,7 +21,7 @@
 
 
 \seealso{
-\code{\link{calculateSpecyfic-methods}}
+\code{\link{calculateSpecific-methods}}
 }
 
 

@@ -1,11 +1,10 @@
 \name{calculate}
 \alias{calculate}
-A function 
-\title{
-%%  ~~function to do ... ~~
+
+\title{A function to calculate a rule on given object
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+A function to calculate a rule on given element
 }
 \usage{
 calculate(x, y, z = NULL)
@@ -41,7 +40,7 @@ function returs single value of class \code{numeric}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{calculateSpecyfic}}
+\code{\link{calculateSpecific}}
 }
 \examples{
 

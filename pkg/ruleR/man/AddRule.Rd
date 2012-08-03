@@ -2,7 +2,7 @@
 \alias{AddRule}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+function to add rules specyfied by user to a list
 }
 \description{
 

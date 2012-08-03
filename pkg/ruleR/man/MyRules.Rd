@@ -2,7 +2,7 @@
 \alias{MyRules}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
+list of rules specyfied by user
 }
 \description{
 A list on which combined rules defined by user are stored. By default this list contains one \code{NA} value.

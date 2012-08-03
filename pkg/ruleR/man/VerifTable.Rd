@@ -2,7 +2,7 @@
 \alias{VerifTable}
 \docType{data}
 \title{
-%%   ~~ data name/kind ... ~~
+a matrix
 }
 \description{
 A table in which numeric sequences generated for arguments \code{x1=10},
