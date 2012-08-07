@@ -60,7 +60,8 @@ setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
 
 #[4] DIGITSUM
 digits <- function(x) {
-  if(length(x) > 1 ) {
+    x<-abs(x)
+    if(length(x) > 1 ) {
     lapply(x, digits)
   } else {
     n <- nchar(x)
@@ -244,7 +245,7 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
   } # generate 'n' if it is set as null with different probabilities
   
   
-  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
+  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1,previousRule=new("IdenSingleRule"))} else{m<-new(singleRules[[a1]],previousRule=new("IdenSingleRule"))}
   
   if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
   }#else{m@previousRule<-new("IdenSingleRule")}
@@ -388,8 +389,9 @@ automaticTest<-function(testlen,type=1,seqlen=6){
                                                     rules[i]<-b[2]
                                                     noise[i,] <-sample(c((items[i,seqlen]-6):(items[i,seqlen]+6))[-(seqlen+1)],5) # generate a sample of 5 elements from a set (correct answer-6: correct answer +6) excluding the correct answer
                                                              }                                                                                       
-                                                                                  
+                                            
                                           return(list(items=items,noise=noise,rules=rules))
+                                                                                    
                                           }
 
 
