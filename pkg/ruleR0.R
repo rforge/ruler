@@ -21,16 +21,6 @@ setMethod("calculateSpecific",signature(x="SingleRule", y="numeric"),
 
 
 
-
-#[0] IDENTICAL FUNCTION (input=output) used in random sequence generation
-setClass("IdenSingleRule",contains="SingleRule",S3methods=TRUE)
-
-setMethod("calculateSpecific",signature(x="IdenSingleRule",y="numeric"),
-          function(x,y){
-            return(y)
-          })
-
-
 #[1] RULE 1 - ADDING A CONSTANT 
 
 setClass("AddConstSingleRule",
@@ -56,7 +46,17 @@ setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
             return(x@constantVal*y)
           })
 
+#[3] SUBSTRACTING A CONSTANT
 
+setClass("SubsConstSingleRule",
+         contains="SingleRule",
+         representation(constantVal="numeric"),
+         S3methods=TRUE)
+
+setMethod("calculateSpecific",signature(x="SubsConstSingleRule",y="numeric"),
+          function(x,y){
+            return(y-x@constantVal)
+          })
 
 #[4] DIGITSUM
 digits <- function(x) {
@@ -87,6 +87,13 @@ setMethod("calculateSpecific",signature(x="NegativeSingleRule",y="numeric"),
           })
 
 
+#[4] IDENTICAL FUNCTION (input=output) used in random sequence generation
+setClass("IdenSingleRule",contains="SingleRule",S3methods=TRUE)
+
+setMethod("calculateSpecific",signature(x="IdenSingleRule",y="numeric"),
+          function(x,y){
+            return(y)
+          })
 
 
 
@@ -185,6 +192,8 @@ setMethod("calculateSpecific",
 
 #EXECUTING RULES OPERATING ON TWO ARGUMENTS
 
+#calculate <- function(x,y,z){stop ("No function to execute this.")} #throw a mistake, because you should execute just single functions contained by cladd DoubleRule
+
 
 setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
           function(x, y, z){
@@ -215,7 +224,7 @@ setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
 #-------------------------------------------------------------------------------------------
 
 #a list of single rules 
-singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","DigSumSingleRule","NegativeSingleRule")
+singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","SubsConstSingleRule","DigSumSingleRule","NegativeSingleRule")
 
 
 #a list of double rules
@@ -231,26 +240,27 @@ doubleRules<-list("AddDoubleRule","MultDoubleRule","SubsDoubleRule","DivDoubleRu
 # '...' if I would like to add some rules nested I can provide their parameters cv must be always supplied #9even if the function doesn't require that
 
 createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
-  p<-list(...)#arguments for nesting other functions
-  p<-unlist(p)
+      p<-list(...)#arguments for nesting other functions
+      p<-unlist(p)
+      
+      #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
+      #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
+      
+      if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
+      if(is.null(cv1)) {cv1<-sample(1:100,1)} # generate a constant value if no is supplied
+      if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
+                     p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
+                     } # generate 'n' if it is set as null with different probabilities
+      
+      
+      if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
+      
+      if(n!=0) {createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
+      }else{return(m)}
   
-  #if(!is.null(n) && length(p)!=2*n) stop (paste("parameters of functions to be nested do not match n=",n))
-  #for(i in seq(1,length(p),by=2)){if(k[i]>length(p)) stop (paste("List of rules is shorter than ",k[i]))}
-  
-  if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
-  if(is.null(cv1)) {cv1<-sample(-100:100,1)} # generate a constant value if no is supplied
-  if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
-                 p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
-  } # generate 'n' if it is set as null with different probabilities
-  
-  
-  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1)} else{m<-new(singleRules[[a1]])}
-  
-  if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
-  }#else{m@previousRule<-new("IdenSingleRule")}
-  
-  return(m)                                                     
-}
+      return(m)                                                     
+                                                }
+
 
 
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
@@ -261,25 +271,25 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 #'ns' nextSingle argument of an object of class doubleRule
 #'
 createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
-                    if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
-                    if(!inherits(fr,"SingleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
-                    if(!inherits(sr,"SingleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
-                    if(!inherits(ns,"SingleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
-       
-                    if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
-                    a<-doubleRules[[a]]
-                                       
-                    if(is.null(fr)) fr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.5,0.5))[[1]]# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
+                              if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
+                              if(!inherits(fr,"singleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
+                              if(!inherits(sr,"singleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
+                              if(!inherits(ns,"singleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
+                              
+                              if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
+                              a<-doubleRules[[a]]
+                              #print(a)
+                              
+                              if(is.null(fr)) fr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.5,0.5))# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
                                                             
-                    if(is.null(sr)) sr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]] #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
+                              if(is.null(sr)) sr<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7)) #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
                               
-                    if(is.null(ns)) ns<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]]
+                              if(is.null(ns)) ns<-sample(c(k=createSR(),k=new("IdenSingleRule")),1,prob=c(0.3,0.7))
                                                            
-                    p<-new(a,firstRule=fr, secondRule=sr,nextSingle=ns)
-                    
-                    return(p)
+                              p<-new(a,firstRule=fr$k, secondRule=sr$k,nextSingle=ns$k)
+                              return(p)
                               
-                                                  }
+                                                        }
  
  
 #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
@@ -361,8 +371,8 @@ check<-function(seqlen,items,type){
         fun<-sequence(x1,x2,rule,n=seqlen)[[2]]
        
           
-        if(conCheck(result)==0 ||any(is.na(result))|| max(unlist(result))>1000 || min(unlist(result))< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
-           {check(seqlen,items,type)} else{return(list(result=result,fun=fun))}
+        if(conCheck(result)==0 || result[length(result)]>1000 || result[length(result)]< -1000||duplicate(mx=items,vec=unlist(result[[1]])))
+           {check(seqlen,items,type)} else{return(list(result,fun))}
   
                   }
 
@@ -434,7 +444,7 @@ print.SingleRule<-function(x){
                                                 }
                                 pr(x)
                                 
-                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; print(x)}
+                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; pr(x)}
                                 
                               }
 
