@@ -28,6 +28,19 @@ Philipp Doebler \\
 \maketitle
 
 \section{Introduction}
+The success of a psychological test is largely determined by the quality of its items. In classic linear testing, the number of items needed to measure a single latent trait with acceptable reliability is often in the range of 20 to 60 items. While it is certainly possible to construct this number of items with the help of heuristics it is often possible to indentify rules governing the item construction process. For example for the classic Advanced Progressive Matrices Test (\cite{raven1962advanced}) five (broad) rules used in its construction have been identified (\cite{carpenter1990one}). These rules and their combinations are used on the rows and/or columns of a matrix resulting in many different stimuli.
+
+Also number sequences used in intelligence tests are often derived from basic rules like addition and subtraction (of constants or two previous numbers), multiplication and the digitsum (sum of the digits of a number).
+
+Recently \emph{automated item generation} (AIG) has been explored in various contexts (TODO: Citations). Here the idea is to identify the underlying template or rule(s) that constitute an item and to generate new items (potentially infinetly many) of the same type from that. Two main approaches can be identified: \emph{item cloning} (IC) and \emph{rule-based item generation} (RIG). The first approach uses an existing item (a parent), typically with known psychometric qualities, and produces a clone (a child) of that item by changing its \emph{surface features}, e.g. in a statistics exam for university students, the cover story of the example is changed, but the student is nevertheless to make the same calculations (TODO: citation). RIG on the other hand focuses on the rules that govern the item construction process. Once the rules and their relations (and their relation to surface features of items) are known, a new item can be generated from a (combination of) rule(s). Often it is possible to predict the difficulty of an item by using an LLTM (TODO: citation fisher and applications of LLTM in AIG).
+
+There are several situations in which automated item generation is favourable:
+\begin{enumerate}
+\item Linear tests, especially in high stakes situations like college admission, are often used only in one year since the test security can not be guaranteed once the test has been exposed to a large population. Here automated item generation leads to tests for which the answers can not be learnt by heart.
+\item Computer adaptive testing (CAT; \cite{elements} TODO: add more citations) relies on large pools to cover a wide range of potential person abilities. It is often expensive to produce items, so automating the process is certainly desirable here. Also if the psychometric properties of parent items or rules are known, the CAT algorithm can generate items on the fly.
+\end{enumerate}
+
+While the identification of rules does not directly imply that an rule-based generation is possible it is a necessary step. The \texttt{ruleR} package provides a framework to generate number sequence items and matrix type items in \texttt{R}. While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example by the concerto testing platform (\cite{concerto}).
 
 \section{Number sequences}
 
