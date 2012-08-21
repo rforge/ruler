@@ -16,7 +16,7 @@
 \title{Using \texttt{ruleR} as a framework for rule-based item generation}
 \author{
 Maria Rafalak\\
-mariarafalak@gmail.com
+m.rafalak@practest.com.pl
 \and
 Philipp Doebler \\
       philipp.doebler@googlemail.com}
@@ -28,26 +28,33 @@ Philipp Doebler \\
 \maketitle
 
 \section{Introduction}
-The success of a psychological test is largely determined by the quality of its items. In classic linear testing, the number of items needed to measure a single latent trait with acceptable reliability is often in the range of 20 to 60 items. While it is certainly possible to construct this number of items with the help of heuristics it is often possible to indentify rules governing the item construction process. For example for the classic Advanced Progressive Matrices Test (\cite{raven1962advanced}) five (broad) rules used in its construction have been identified (\cite{carpenter1990one}). These rules and their combinations are used on the rows and/or columns of a matrix resulting in many different stimuli.
+The success of a psychological test is largely determined by the quality of its items. In classic linear testing, the number of items needed to measure a single latent trait with acceptable reliability is often in the range of 20 to 60 items. While it is certainly possible to construct this number of items with the help of heuristics it is often possible to indentify rules governing the item construction process. For example for the classic Advanced Progressive Matrices Test (\cite{raven1962advanced}) five (broad) rules used in its construction have been identified (\cite{carpenter1990one}). These rules and their combinations are used on the rows and/or columns of a matrix resulting in many different stimuli. Also number sequences used in intelligence tests are often derived from basic rules like addition and subtraction (of constants or two previous numbers), multiplication and the digitsum (sum of the digits of a number).
 
-Also number sequences used in intelligence tests are often derived from basic rules like addition and subtraction (of constants or two previous numbers), multiplication and the digitsum (sum of the digits of a number).
-
-Recently \emph{automated item generation} (AIG) has been explored in various contexts (TODO: Citations). Here the idea is to identify the underlying template or rule(s) that constitute an item and to generate new items (potentially infinetly many) of the same type from that. Two main approaches can be identified: \emph{item cloning} (IC) and \emph{rule-based item generation} (RIG). The first approach uses an existing item (a parent), typically with known psychometric qualities, and produces a clone (a child) of that item by changing its \emph{surface features}, e.g. in a statistics exam for university students, the cover story of the example is changed, but the student is nevertheless to make the same calculations (TODO: citation). RIG on the other hand focuses on the rules that govern the item construction process. Once the rules and their relations (and their relation to surface features of items) are known, a new item can be generated from a (combination of) rule(s). Often it is possible to predict the difficulty of an item by using an LLTM (TODO: citation fisher and applications of LLTM in AIG).
+Recently \emph{automated item generation} (AIG; \cite{irvine2002item}) has been explored in various applied contexts (\cite{arendasy2005automatic, arendasy2006automatic, holling2009automatic, holling2010rule, zeuchrule}). The main idea of AIG is to identify the underlying template or rule(s) that constitute an item and to generate new items (potentially infinetly many) using the template or rule(s).  Two main approaches can be identified: \emph{item cloning} (IC) and \emph{rule-based item generation} (RIG). The first approach uses an existing item (a parent), typically with known psychometric qualities, and produces a clone (a child) of that item by changing its \emph{surface features} (or incidentals). For example in a statistics exam for university students, the cover story of the example is changed, but the student is nevertheless to make the same calculations (e.g. \cite{holling2009automatic}). RIG on the other hand focuses on the rules (sometimes called radicals) that govern the item construction process. Once the rules and their relations (and their relation to surface features of items) are known, a new item can be generated from a (combination of) rule(s). Often it is possible to predict the difficulty of an item by using a linear logistic test model or a relative (LLTM; \cite{fischer1973linear}; \cite{geerlings2011modeling}).
 
 There are several situations in which automated item generation is favourable:
 \begin{enumerate}
-\item Linear tests, especially in high stakes situations like college admission, are often used only in one year since the test security can not be guaranteed once the test has been exposed to a large population. Here automated item generation leads to tests for which the answers can not be learnt by heart.
-\item Computer adaptive testing (CAT; \cite{elements} TODO: add more citations) relies on large pools to cover a wide range of potential person abilities. It is often expensive to produce items, so automating the process is certainly desirable here. Also if the psychometric properties of parent items or rules are known, the CAT algorithm can generate items on the fly.
+\item Linear tests, especially in high stakes situations like college admission, are often used only in one year since the test security can not be guaranteed once the test has been exposed to a large population (\cite{arendasy2012using}). Here automated item generation leads to tests for which the answers can not be learnt by heart.
+\item Computer adaptive testing (CAT; \cite{elements}; \cite{van2000computerized}; \cite{wainer2000}) relies on large pools to cover a wide range of potential person abilities. It is often expensive to produce items, so automating the process is certainly desirable here. Also if the psychometric properties of parent items or rules are known, the CAT algorithm can generate items on the fly.
 \end{enumerate}
 
-The identification of rules is not the same as an implementation of a rule-based item generation algorithm, but it is a necessary step. In the following we will identify some rules for number sequence items and matrix type items and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items and matrix type items with the ability to extend the system. 
+The identification of rules is not the same as an implementation of a rule-based item generation algorithm, but it is a necessary step. Besides providing a basis for RIG, an analysis of the cognitive task at hand is a result of this identification. Another side product is that a suitable psychometric model can sometimes be found after such an analysis. 
+
+In the following we identify some rules for number sequence items and matrix type items and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items and matrix type items with the ability to extend the system. The package uses S4 classes to represent rules and is written with the understanding that the user will eventually want to extend the existing possibilities.
 
 While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example in the form of the concerto testing platform (\cite{concerto}). Several \texttt{R} packages are worth mentioning in this context: \texttt{catR} (\cite{catR}), which provides functionality for computer adaptive testing, \texttt{ltm} (\cite{ltm}), which can be used to perform a range of psychometric analyses and \texttt{RMySQL} (\cite{RMySQL}) which handles the interaction of \texttt{R} and MySQL databases.
 
 \section{Number sequences}
+Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used to generate number sequences, we explain some of the ideas. 
+
+\subsection{Number sequence items and their cognitive analysis}
+
+
+\subsection{Using \texttt{ruleR} to generate number sequence items}
 
 
 \section{Matrix items}
+
 
 \section{Further development of \texttt{ruleR}}
 
