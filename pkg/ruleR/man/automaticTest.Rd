@@ -2,16 +2,16 @@
 \alias{automaticTest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function to generate test with specyfied characteristics
+Generate test with specified characteristics
 }
 \description{
-Function to generate desired amount of test items (numeric sequence of specyfied length).
+Function to generate a desired amount of test items (numeric sequence of specified length).
 Items can be created using automatically combined rules, or using only the
-rules specyfied by the user (stored on \code{MyRules} list).
-Function /code{automaticTest}is also checking the uniqueness of generated sequences and prevents constat sequences
+rules specified by the user (stored on \code{MyRules} list).
+Function \code{automaticTest} is also checking the uniqueness of generated sequences and prevents constat sequences
 to be generated.
 For every numeric sequence \code{automaticTest} returns the list of rules used to create it
-as well as 'noise' answers (in case muliple choice is needed in the test)
+as well as 'noise' answers (distractors) in case muliple choice is needed in the test.
 }
 \usage{
 automaticTest(testlen, type = 1, seqlen = 6)

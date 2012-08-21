@@ -6,7 +6,7 @@
 
 \title{Class \code{"AddConstSingleRule"}}
 \description{
- A class for rules which add a specyfied constant value to the previous element of numeric sequence.
+ A class for rules which add a specified constant value to the previous element of numeric sequence.
  Objects of this class inherit from \code{SingleRule}.
 }
 \section{Objects from the Class}{
@@ -32,7 +32,7 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 %%  ~~put references to the literature/web site here~~
 }
 \author{
-%%  ~~who you are~~
+Maria Rafalak <m.rafalak@practest.com.pl>
 }
 \note{
 %%  ~~further notes~~
@@ -48,19 +48,20 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 
 }
 \examples{
-##[1]A rule that adds 4 to the previous element of numeric sequence
+##[1] A rule that adds 4 to the previous element of numeric sequence
 
-m<-new("AddConstSingleRule",constantVal=4) #or m<-createSR(a1=2,cv1=4,n=0)
+m <- new("AddConstSingleRule",constantVal=4) #or 
+m <- createSR(a1=2,cv1=4,n=0)
 print(m)
 
 
-##[2]combining rules
+##[2] combining rules
 
-p<-new("DigSumSingleRule") # a rule that calculates digitsum of a given element
-m<-new("AddConstSingleRule",constantVal=5, previousRule=p)
+p <- new("DigSumSingleRule") # a rule that calculates digitsum of a given element
+m <- new("AddConstSingleRule",constantVal=5, previousRule=p)
 
-# or in one step  m<-createSR(a1=2,cv1=5,n=1,5,0)
-
+# or in one step:  
+# m <- createSR(a1=2, cv1=5, n=1, 5, 0)
 print(m)
 
 }

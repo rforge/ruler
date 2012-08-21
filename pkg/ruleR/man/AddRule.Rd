@@ -2,10 +2,9 @@
 \alias{AddRule}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function to add rules specyfied by user to a list
+Add rules specified by user to a list
 }
 \description{
-
 When creating test items test rules can be either combined automatically or
 be generated from the set of rules defined by user (stored on \code{MyRule} list).
 \code{AddRule} is a function to add a rule defined by a user to \code{MyRule} list.
