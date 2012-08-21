@@ -40,9 +40,12 @@ There are several situations in which automated item generation is favourable:
 \item Computer adaptive testing (CAT; \cite{elements} TODO: add more citations) relies on large pools to cover a wide range of potential person abilities. It is often expensive to produce items, so automating the process is certainly desirable here. Also if the psychometric properties of parent items or rules are known, the CAT algorithm can generate items on the fly.
 \end{enumerate}
 
-While the identification of rules does not directly imply that an rule-based generation is possible it is a necessary step. The \texttt{ruleR} package provides a framework to generate number sequence items and matrix type items in \texttt{R}. While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example by the concerto testing platform (\cite{concerto}).
+The identification of rules is not the same as an implementation of a rule-based item generation algorithm, but it is a necessary step. In the following we will identify some rules for number sequence items and matrix type items and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items and matrix type items with the ability to extend the system. 
+
+While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example in the form of the concerto testing platform (\cite{concerto}). Several \texttt{R} packages are worth mentioning in this context: \texttt{catR} (\cite{catR}), which provides functionality for computer adaptive testing, \texttt{ltm} (\cite{ltm}), which can be used to perform a range of psychometric analyses and \texttt{RMySQL} (\cite{RMySQL}) which handles the interaction of \texttt{R} and MySQL databases.
 
 \section{Number sequences}
+
 
 \section{Matrix items}
 
