@@ -6,6 +6,23 @@
 \usepackage{amsmath,color,amsthm}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Define block styles
+\tikzstyle{rule} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=2em, node distance = 1.5cm]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{input} = [draw, ellipse,fill=red!20, node distance=1.5cm,
+    minimum height=2em]
+    
+
+
+
+
 %\usepackage{biblatex}
 
 \DeclareMathOperator{\logit}{logit}
@@ -48,6 +65,91 @@ While \texttt{R} itself is not a frontend for computer based testing, it's appli
 Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used to generate number sequences, we explain some of the ideas. 
 
 \subsection{Number sequence items and their cognitive analysis}
+
+
+%
+%\begin{tikzpicture}[node distance = 1cm, auto]
+%    % Place nodes
+%    \node [rule] (fibrule) {Fibonacci};
+%    \node [input, above right of=fibrule] (y_n) {$y_n$};
+%    \node [input, above left of=fibrule] (y_n_1) {$y_{n-1}$};
+%    \node [input, below of=fibrule] (y_np1) {$y_{n+1}$};
+%    % Draw edges
+%    \path [line] (y_n) -- (fibrule);
+%    \path [line] (y_n_1) -- (fibrule);
+%    \path [line] (fibrule) -- (y_np1);
+%\end{tikzpicture}
+
+\begin{figure}
+        \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (fibrule) {Fibonacci};
+    \node [input, above right of=fibrule] (y_n) {$y_n$};
+    \node [input, above left of=fibrule] (y_n_1) {$y_{n-1}$};
+    \node [rule, below of=fibrule] (cs) {digitsum};
+    \node [input, below of=cs] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (fibrule);
+    \path [line] (y_n_1) -- (fibrule);
+    \path [line] (fibrule) -- (cs);
+    \path [line] (cs) -- (y_np1);
+\end{tikzpicture}
+                \caption{Rule A}
+                \label{fig:A}
+        \end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (fibrule) {Fibonacci};
+    \node [rule, above right of=fibrule] (cs2) {digitsum};
+    \node [input, above of=cs2] (y_n) {$y_n$};
+    \node [input, left of=y_n] (y_n_1) {$y_{n-1}$};
+    \node [input, below of=fibrule] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (cs2);
+    \path [line] (y_n_1) -- (fibrule);
+    \path [line] (cs2) -- (fibrule);
+    \path [line] (fibrule) -- (y_np1);
+\end{tikzpicture}
+                \caption{Rule B}
+                \label{fig:B}
+        \end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.3\textwidth}
+                \centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (fibrule) {Fibonacci};
+    \node [rule, above left of=fibrule] (cs1) {digitsum};
+    \node [rule, above right of=fibrule] (cs2) {digitsum};
+    \node [input, above of=cs2] (y_n) {$y_n$};
+    \node [input, above of=cs1] (y_n_1) {$y_{n-1}$};
+    \node [input, below of=fibrule] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (cs2);
+    \path [line] (y_n_1) -- (cs1);
+    \path [line] (cs1) -- (fibrule);
+    \path [line] (cs2) -- (fibrule);
+    \path [line] (fibrule) -- (y_np1);
+\end{tikzpicture}
+                \caption{Rule C}
+                \label{fig:C}
+        \end{subfigure}
+        \caption{Three different ways to combine the Fibonacci and digitsum rules}\label{threeways}
+\end{figure}
+
+
+
+
+
+
+
 
 
 \subsection{Using \texttt{ruleR} to generate number sequence items}
