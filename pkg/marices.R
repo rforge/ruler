@@ -37,40 +37,120 @@ backGr<-list(vertical6,cross)#background shapes
 
 
 createVp<-function(size){ 
-              vlist<-vector(mode="list",length=0)
-              v0<-viewport(layout=grid.layout(size, size, respect= diag(size)),name="vp00")
+  vlist<-vector(mode="list",length=0)
+  v0<-viewport(layout=grid.layout(size, size, respect= diag(size)),name="vp00")
   
   
-                    for(i in 1:size){
-                                  rowlist<-vector(mode="list",length=size)
-                                  pushViewport(v0) #general viewport for whole grid
+  for(i in 1:size){
+    rowlist<-vector(mode="list",length=size)
+    pushViewport(v0) #general viewport for whole grid
     
-                                  for(j in 1:size){
-                                              rowlist[[j]]<-vpStack(v0,viewport(layout.pos.col=i,layout.pos.row=j,clip="on", name=paste("vp",i,j,sep="")))                                          
-                                                  }
+    for(j in 1:size){
+      rowlist[[j]]<-vpStack(v0,viewport(layout.pos.col=i,layout.pos.row=j,clip="on", name=paste("vp",i,j,sep="")))                                          
+    }
     
-                                  vlist<-c(vlist,rowlist)
-                                      }
-              return(vlist) # a list of viewpoints for samll grids
-                      }
+    vlist<-c(vlist,rowlist)
+  }
+  return(vlist) # a list of viewpoints for samll grids
+}
 
 
 #------------------------------- GENERATING PICTURES---------------------------------------------------------------------------------
-firstMatrix<-function(size=3){  
+# firstMatrix<-function(size=3){  
+#   
+#   m<-createVp(size=size) #viewports where to draw small pictures
+#   pic<-vector(mode="list", length=size^2) # I will save small Grobs
+#   
+#   for(i in 1:size^2){    
+#     foreground<-gTree( children=gList(foreGr[[sample(1:length(foreGr),1)]]),name=paste("foreground",i,sep="")) #figure in the foreground
+#     background<-gTree(children=gList(backGr[[sample(1:length(backGr),1)]]),name=paste("background",i,sep="")) #figure in the background
+#     picture<-gTree(children=gList(background,foreground), name=paste("picture",i,sep="")) #object consisting of foregroung and background
+#     pic[[i]]<-picture                                 
+#   }
+#   
+#   j<-list(); j[[1]]<-m; j[[2]]<-pic
+#   return(j) #returning a list of gTrees and their viewports, all the nine small pictures are generated at first                 
+# }
+
+
+#function returning indexes of m matrix of objects forming columns and rows
+#'size' size of a matrix
+index<-function(size){
+  imat<-matrix(NA,size,size)
+  for(i in 1:size){
+    for(j in 1:size){
+      imat[i,j]<-i+(j-1)*size
+    }
+  }
+  return(imat)
+}
+
+
+
+#function thet gives indexes of pictures 
+dir_index<-function(direction,which,size){
+                                          imat<-index(size)#a matrix of all indexes
+                                          if(direction==1){ #columns
+                                                          k<-imat[,which]
+                                                          }
   
-                             m<-createVp(size=size) #viewports where to draw small pictures
-                             pic<-vector(mode="list", length=size^2) # I will save small Grobs
-  
-                            for(i in 1:size^2){    
-                                    foreground<-gTree( children=gList(foreGr[[sample(1:length(foreGr),1)]]),name=paste("foreground",i,sep="")) #figure in the foreground
-                                    background<-gTree(children=gList(backGr[[sample(1:length(backGr),1)]]),name=paste("background",i,sep="")) #figure in the background
-                                    picture<-gTree(children=gList(background,foreground), name=paste("picture",i,sep="")) #object consisting of foregroung and background
-                                    pic[[i]]<-picture                                 
-                                              }
-  
-                              j<-list(); j[[1]]<-m; j[[2]]<-pic
-                              return(j) #returning a list of gTrees and their viewports, all the nine small pictures are generated at first                 
-                              }
+                                          if(direction==2){ #rows
+                                                          k<-imat[which,]
+                                                          }
+                                                              
+                                          return(k)
+                                          }
+
+
+#FUNCTION FOR FILLING IN SHAPE MATRIX
+#'mtofill' matrix to be filled with shapes
+#'size' of a matrix
+#'direction' 1 is for columns, 2 is for rows // where to fix shapes
+fill_in_matrix<-function(direction,mtofill,size){
+                                          fg<-vector(mode="list", length=size^2) #a list of foreground shapes
+                                          bg<-vector(mode="list", length=size^2)#a list of background shapes                                          
+                                          if(mtofill==2){k=foreGr; mtofill=fg}else{k=backGr;mtofill=bg}
+                                                                                  
+                                                
+                                          for(i in 1:size){                                                             
+                                                        p<-k[[sample(1:length(k),1)]]#generating a picture for foreground
+                                                                                                        
+                                                        if(!is.null(direction)){
+                                                              v<-dir_index(direction=direction,which=i,size=size)#getting indexes of pictures forming a specyfied row/column                                                              
+                                                              for(j in v) mtofill[[j]]<-p                        
+                                                        }else{ for(j in 1:size^2)mtofill[[j]]<-k[[sample(1:length(k),1)]]}
+                                                                         }
+                                          
+                                            return(mtofill)
+                                                                }
+                                       
+                                                  
+
+
+
+
+#'size' of the matrix
+#'f' f=1 fixed foreground in columns, f=2 fixed foreground in rows, f=NULL - foreground random
+#'b' b=1 fixed background in columns, b=2 fixed background in rows, b=NULL - background random
+
+firstMatrix<-function(f=NULL,b=NULL,size=3){
+      m<-createVp(size=size) #viewports where to draw small pictures
+      
+      pic<-vector(mode="list", length=size^2) # a list of pictures (consisting of foregropund and background)
+      
+      
+      fg<-fill_in_matrix(direction=f,mtofill=2,size=size)
+      bg<-fill_in_matrix(direction=b,mtofill=1,size=size)
+      
+      
+      for(i in 1:size^2){
+                        pic[[i]]<-gTree(children=gList(bg[[i]],fg[[i]]), name=paste("picture",i))
+                        }
+      
+      return(list(viewports=m,pictures=pic))
+                                  }
+
+
 
 
 #-------------------------------------------------OBJECTS-----------------------------------------------------------
@@ -98,32 +178,38 @@ setMethod("calculateSpecific",signature(x="SingleRule", y="numeric"),
 
 #------------------------------------------RULES-----------------------------------------------------
 #ROTATION RULE [1]
+
+
+#figure=1 background, fig=2 foreground
+#'progression' do you want to apply progressive rule (if !0 than rotation will be progressive)
+
+
 setClass("Rotation",
          contains="SingleRule",
-         representation(angle="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
+         representation(parVal="numeric",figure="numeric",progression="numeric"), 
          S3methods=TRUE)
 
 
 setMethod("calculateSpecific",signature(x="Rotation", y="gTree"),
           function(x,y){
-                        if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
-                                        fg<-editGrob(fg,vp=viewport(angle=x@angle))
-                                        bkg<-getGrob(y,childNames(y)[1])
-                                        }else{
-                                          bkg<-getGrob(y,childNames(y)[1])
-                                          bkg<-editGrob(bkg,vp=viewport(angle=x@angle))
-                                          fg<-getGrob(y,childNames(y)[2])
-                                        }
-                                        
-                        
-          return(gTree(children=gList(bkg,fg)))
+            if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
+                            fg<-editGrob(fg,vp=viewport(angle=x@parVal))
+                            bkg<-getGrob(y,childNames(y)[1])
+            }else{
+              bkg<-getGrob(y,childNames(y)[1])
+              bkg<-editGrob(bkg,vp=viewport(angle=x@parVal))
+              fg<-getGrob(y,childNames(y)[2])
+            }
+            
+            
+            return(gTree(children=gList(bkg,fg)))
           })
 
 
 #LWD RULE [2]
 setClass("ChangeLwd",
          contains="SingleRule",
-         representation(lwd="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
+         representation(parVal="numeric",figure="numeric",progression="numeric"), #figure=1 background, fig=2 foreground
          S3methods=TRUE)
 
 
@@ -131,14 +217,14 @@ setMethod("calculateSpecific",signature(x="ChangeLwd", y="gTree"),
           function(x,y){
             
             if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
-                            fg<-editGrob(fg,gp=gpar(lwd=x@lwd))
+                            fg<-editGrob(fg,gp=gpar(lwd=x@parVal))
                             bkg<-getGrob(y,childNames(y)[1])
             }else{
               bkg<-getGrob(y,childNames(y)[1])
-              bkg<-editGrob(bkg,gp=gpar(lwd=x@lwd))
+              bkg<-editGrob(bkg,gp=gpar(lwd=x@parVal))
               fg<-getGrob(y,childNames(y)[2])}
-           
-        return(gTree(children=gList(bkg,fg)))
+            
+            return(gTree(children=gList(bkg,fg)))
             
           })
 
@@ -147,18 +233,18 @@ setMethod("calculateSpecific",signature(x="ChangeLwd", y="gTree"),
 #LTY RULE [3]
 setClass("ChangeLty",
          contains="SingleRule",
-         representation(lty="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
+         representation(parVal="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
          S3methods=TRUE)
 
 
 setMethod("calculateSpecific",signature(x="ChangeLty", y="gTree"),
           function(x,y){
             if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
-                            fg<-editGrob(fg,gp=gpar(lty=x@lty))
+                            fg<-editGrob(fg,gp=gpar(lty=x@parVal))
                             bkg<-getGrob(y,childNames(y)[1])
             }else{
               bkg<-getGrob(y,childNames(y)[1])
-              bkg<-editGrob(bkg,gp=gpar(lty=x@lty))
+              bkg<-editGrob(bkg,gp=gpar(lty=x@parVal))
               fg<-getGrob(y,childNames(y)[2])}
             
             return(gTree(children=gList(bkg,fg)))
@@ -168,7 +254,7 @@ setMethod("calculateSpecific",signature(x="ChangeLty", y="gTree"),
 #COLOR RULE[4]
 setClass("ChangeColor",
          contains="SingleRule",
-         representation(color="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
+         representation(parVal="numeric",figure="numeric"), #figure=1 background, fig=2 foreground
          S3methods=TRUE)
 
 
@@ -176,11 +262,11 @@ setClass("ChangeColor",
 setMethod("calculateSpecific",signature(x="ChangeColor", y="gTree"),
           function(x,y){
             if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
-                            fg<-editGrob(fg,gp=gpar(col=x@color))
+                            fg<-editGrob(fg,gp=gpar(col=x@parVal))
                             bkg<-getGrob(y,childNames(y)[1])
             }else{
               bkg<-getGrob(y,childNames(y)[1])
-              bkg<-editGrob(bkg,gp=gpar(col=x@color))
+              bkg<-editGrob(bkg,gp=gpar(col=x@parVal))
               fg<-getGrob(y,childNames(y)[2])}
             
             return(gTree(children=gList(bkg,fg)))
@@ -189,16 +275,16 @@ setMethod("calculateSpecific",signature(x="ChangeColor", y="gTree"),
 #FILL RULE[5]  - ONLY FOR FOREGROUND
 setClass("ChangeFill",
          contains="SingleRule",
-         representation(fill="character",figure="numeric"), #figure=1 background, fig=2 foreground
+         representation(parVal="character",figure="numeric"), #figure=1 background, fig=2 foreground
          S3methods=TRUE)
 
 
 
 setMethod("calculateSpecific",signature(x="ChangeFill", y="gTree"),
           function(x,y){
-                            fg<-getGrob(y,childNames(y)[2])
-                            fg<-editGrob(fg,gp=gpar(fill=x@fill))
-                            bkg<-getGrob(y,childNames(y)[1])
+            fg<-getGrob(y,childNames(y)[2])
+            fg<-editGrob(fg,gp=gpar(fill=x@parVal))
+            bkg<-getGrob(y,childNames(y)[1])
             
             
             return(gTree(children=gList(bkg,fg)))
@@ -281,38 +367,25 @@ setMethod("calculate",signature(x="DoubleRule", y="gTree", z="gTree"),
 
 #------------------------------------------------APPLICATION OF RULES-----------------------------------------------
 
-#function returning indexes of m matrix of objects forming columns and rows
-#'size' size of a matrix
-index<-function(size){
-                       imat<-matrix(NA,size,size)
-                       for(i in 1:size){
-                                        for(j in 1:size){
-                                                        imat[i,j]<-i+(j-1)*size
-                                                        }
-                                      }
-                      return(imat)
-                      }
-
-
 #function creating an empty matrix in which rules for every row and column will be stored
 schedule<-function(size){ 
   
-                        index_m<-index(size) #which pictures are to be changed
-                        rowRules<-vector(mode="list", length=size)
-                        row_index<-vector(mode="list", length=size)#indices of pictures in rows
-                        for(i in 1:size){row_index[[i]]<-index_m[i,]}
-                        rowRules<-list(rowRules=rowRules,row_index=row_index)
-                        
-                        
-                        colRules<-vector(mode="list",length=size)
-                        col_index<-vector(mode="list", length=size)# indices of pictures in columns
-                        for(i in 1:size){col_index[[i]]<-index_m[,i]}
-                        colRules<-list(colRules=colRules,col_index=col_index)
-                        
-                        colrowRules<-list(column=colRules,rows=rowRules)
-                        
-                        return(colrowRules)                        
-                        }
+  index_m<-index(size) #which pictures are to be changed
+  rowRules<-vector(mode="list", length=size)
+  row_index<-vector(mode="list", length=size)#indices of pictures in rows
+  for(i in 1:size){row_index[[i]]<-index_m[i,]}
+  rowRules<-list(rowRules=rowRules,row_index=row_index)
+  
+  
+  colRules<-vector(mode="list",length=size)
+  col_index<-vector(mode="list", length=size)# indices of pictures in columns
+  for(i in 1:size){col_index[[i]]<-index_m[,i]}
+  colRules<-list(colRules=colRules,col_index=col_index)
+  
+  colrowRules<-list(column=colRules,rows=rowRules)
+  
+  return(colrowRules)                        
+}
 
 
 setClassUnion("GrRules", members=c("SingleRule", "DoubleRule"))
@@ -322,78 +395,78 @@ setClassUnion("GrRules", members=c("SingleRule", "DoubleRule"))
 #'rule' can be either an object of class 'SingleRule' or 'DoubleRule'
 #'direction' 1=column, 2=row
 #'which' which row/column to affect by a rule 
+
 setClass("ColRowRule", representation = representation(direction="numeric", which="numeric",rule="GrRules"), S3methods=TRUE)
 setClass("MatrixRulesList", representation = representation(rulelist="list"), S3methods=TRUE)
 
 #function returning an object of class MatrixRulesList" (which basically is a list of objects of class "ColRowRule")
 defineMatrixRules<-function(...){
-                                arglist<-list(...)
-                                rlist<-list()#an empty list on which objects of class ColRowRule will be stored
-                                k=1
-                                for(i in 1:length(arglist)){
-                                                            if(inherits(arglist[[i]],"ColRowRule"))rlist[[k]]<-arglist[[i]]
-                                                            k=k+1                                                             
-                                                            }
-                                                              
-                                return(new("MatrixRulesList",rulelist=rlist))
-                                }
-
-         
+  arglist<-list(...)
+  rlist<-list()#an empty list on which objects of class ColRowRule will be stored
+  k=1
+  for(i in 1:length(arglist)){
+    if(inherits(arglist[[i]],"ColRowRule"))rlist[[k]]<-arglist[[i]]
+    k=k+1                                                             
+  }
+  
+  return(new("MatrixRulesList",rulelist=rlist))
+}
 
 
 
 
-applyMatrixRules<-function(size,rulelist){}
+applyMatrixRules<-function(f,b,size,rulelist){}
 
+setClassUnion("nullORnumeric", members=c("NULL", "numeric"))
 
-setMethod("applyMatrixRules",signature(size="numeric", rulelist="MatrixRulesList"),
-          function(size,rulelist){
-                                m<-firstMatrix(size) #list of pictures and their viepoints(generated randomly)
-                                rules_to_apply<-schedule(size) # a list of rules to apply to particular rowsand columns (as default rule is NULL)
-                                
-                                rl<-rulelist@rulelist # getting the rulelist slot - this is my list of defined rules
-                                
-                                
-                                for(i in 1:length(rl)){ #modifying rules_to_apply list by rules defined in ruleList
-                                                          direction=rl[[i]]@direction
-                                                          which=rl[[i]]@which
-                                                          rule=rl[[i]]@rule
-                                                          
-                                                          rules_to_apply[[direction]][[1]][[which]]<-rule                                           
-                                                        }
-
-                               #executing rules for columns
-                               for(i in 1:length(rules_to_apply[[1]][[1]])){
-                                                                          ind<-rules_to_apply$column$col_index[[i]]
-                                                                          r<-rules_to_apply$column$colRules[[i]]
-                                                                          if(!is.null(r)){
-                                                                                          for(j in ind) m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
-                                                                                          }
-                                                                          }
-                              #executing rules for rows
-                              for(i in 1:length(rules_to_apply[[2]][[1]])){
-                                                                        
-                                                                        ind<-rules_to_apply$rows$row_index[[i]]
-                                                                        r<-rules_to_apply$rows$rowRules[[i]]
-                                                                        if(!is.null(r)){
-                                                                                        for(j in ind) m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
-                                                                                        }
-                                                                        }
-                                
-                                
-                        
-                               return(m)
-                              
+setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size="numeric", rulelist="MatrixRulesList"),
+          function(f,b,size,rulelist){
+            m<-firstMatrix(f,b,size) #list of pictures and their viepoints(generated randomly)
+            rules_to_apply<-schedule(size) # a list of rules to apply to particular rowsand columns (as default rule is NULL)
+            
+            rl<-rulelist@rulelist # getting the rulelist slot - this is my list of defined rules
+            
+            
+            for(i in 1:length(rl)){ #modifying rules_to_apply list by rules defined in ruleList
+              direction=rl[[i]]@direction
+              which=rl[[i]]@which
+              rule=rl[[i]]@rule
+              
+              
+              rules_to_apply[[direction]][[1]][[which]]<-rule                                           
+            }
+            
+            
+            #executing rules for columns
+            for(i in 1:length(rules_to_apply[[1]][[1]])){
+              ind<-rules_to_apply$column$col_index[[i]]
+              r<-rules_to_apply$column$colRules[[i]]
+              if(!is.null(r)){
+                        for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
+                                       if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                              }
+            }
+            
+            #executing rules for rows
+            for(i in 1:length(rules_to_apply[[2]][[1]])){
+              
+              ind<-rules_to_apply$rows$row_index[[i]]
+              r<-rules_to_apply$rows$rowRules[[i]]
+              if(!is.null(r)){
                             
-                                                                      
-                                                                      })
-                                
-                                
-                                
-           
+                            for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
+                                           if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                              }
+            }
             
             
-     
+            
+            return(m)
+            
+            
+            
+          })
+
 
 
 #STEP 1 - create some basic rules
@@ -404,24 +477,26 @@ setMethod("applyMatrixRules",signature(size="numeric", rulelist="MatrixRulesList
 
 
 #STEP 1 and 2
-b<-new("ChangeColor", color=4,figure=2 ) #a rule changing the color of the figure in the foreground to blue
-c<-new("ChangeLwd", lwd=10,figure=2,previousRule=b) # a rule changing the width of lines of figure in foreground and its color to blue
-d<-new("Rotation", angle=-30, figure=1, previousRule=c) # a rule rotating a backround & changing width and color of the foreground figure
+b<-new("ChangeColor", parVal=4,figure=2) #a rule changing the color of the figure in the foreground to blue
+c<-new("ChangeLwd", parVal=1,figure=2,progression=5,previousRule=b) # a rule changing the width of lines of figure in foreground and its color to blue
+d<-new("Rotation", parVal=-30, figure=1,progression=0, previousRule=c) # a rule rotating a backround & changing width and color of the foreground figure
+e<-new("ChangeColor", parVal=7,figure=1)#changing color of the foreground
+f<-new("ChangeLty", parVal=4,figure=2,previousRule=e)#changing "lty" parameter
+g<-new("ChangeColor",parVal=5,figure=2,previousRule=d)
 
 #STEP 3 - specyfying rows and columns for the rules
-d_row1<-new("ColRowRule",direction=2,which=1,rule=d) #rule 'd' will be applied to a first row 
-c_col2<-new("ColRowRule",direction=1,which=2,rule=c) #rule 'c' will be applied to the second column
-b_row3<-new("ColRowRule",direction=2,which=3,rule=b) # rule 'b' will be applied to the third row
+d_row1<-new("ColRowRule",direction=2,which=1,rule=g) #rule 'g' will be applied to a first row 
+c_col2<-new("ColRowRule",direction=2,which=2,rule=c) #rule 'c' will be applied to the second column
+b_row3<-new("ColRowRule",direction=2,which=3,rule=f) # rule 'f' will be applied to the third row
+
 
 #STEP 4
 bbb<-defineMatrixRules(d_row1,c_col2,b_row3)
 
 #STEP 5
 
-m<-applyMatrixRules(size=3, rulelist=bbb)
-
-
-
+m<-applyMatrixRules(f=1,b=2,size=3, rulelist=bbb) # setting foreground figures the same in columns (f=1), and background in rows (b=1)
+m<-applyMatrixRules(f=NULL,b=NULL,size=3,rulelist=bbb)#both foreground and background random
 
 
 #------------------------------------DRAWING MATRIX-------------------------------------------------------------------
@@ -446,3 +521,23 @@ for(i in 1:size^2){
 }
 
 grid.newpage()
+
+
+
+
+
+#------------------------------------
+# get_shape<-function(figure,j){
+#                               k=j-1
+#                               if(figure==1){ 
+#                                 background<- getGrob(m[[2]][[k]], childNames(m[[2]][[k]])[1])#take backround from the previous picture
+#                                 foreground<- getGrob(m[[2]][[j]], childNames(m[[2]][[j]])[2])#leave random foreground
+#                                             } else{ 
+#                                 foreground<-getGrob(m[[2]][[k]], childNames(m[[2]][[k]])[2]) # take foreground from the previous picture
+#                                 backgroubd<- getGrob(m[[2]][[j]], childNames(m[[2]][[j]])[2])#leave random background
+#                                             }
+#                               
+#                               
+#                              return(gTree(children=gList(background,foreground)))
+#                               
+#                               }
