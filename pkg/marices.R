@@ -56,23 +56,6 @@ createVp<-function(size){
 
 
 #------------------------------- GENERATING PICTURES---------------------------------------------------------------------------------
-# firstMatrix<-function(size=3){  
-#   
-#   m<-createVp(size=size) #viewports where to draw small pictures
-#   pic<-vector(mode="list", length=size^2) # I will save small Grobs
-#   
-#   for(i in 1:size^2){    
-#     foreground<-gTree( children=gList(foreGr[[sample(1:length(foreGr),1)]]),name=paste("foreground",i,sep="")) #figure in the foreground
-#     background<-gTree(children=gList(backGr[[sample(1:length(backGr),1)]]),name=paste("background",i,sep="")) #figure in the background
-#     picture<-gTree(children=gList(background,foreground), name=paste("picture",i,sep="")) #object consisting of foregroung and background
-#     pic[[i]]<-picture                                 
-#   }
-#   
-#   j<-list(); j[[1]]<-m; j[[2]]<-pic
-#   return(j) #returning a list of gTrees and their viewports, all the nine small pictures are generated at first                 
-# }
-
-
 #function returning indexes of m matrix of objects forming columns and rows
 #'size' size of a matrix
 index<-function(size){
@@ -144,7 +127,9 @@ firstMatrix<-function(f=NULL,b=NULL,size=3){
       
       
       for(i in 1:size^2){
-                        pic[[i]]<-gTree(children=gList(bg[[i]],fg[[i]]), name=paste("picture",i))
+                        foreground<-gTree(children=gList(fg[[i]]),name=paste("foreground",i,sep=""))
+                        background<-gTree(children=gList(bg[[i]]),name=paste("background",i,sep="i"))
+                        pic[[i]]<-gTree(children=gList(foreground,background), name=paste("picture",i,sep=""))
                         }
       
       return(list(viewports=m,pictures=pic))
@@ -195,12 +180,13 @@ setMethod("calculateSpecific",signature(x="Rotation", y="gTree"),
             if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
                             fg<-editGrob(fg,vp=viewport(angle=x@parVal))
                             bkg<-getGrob(y,childNames(y)[1])
+                            
             }else{
               bkg<-getGrob(y,childNames(y)[1])
               bkg<-editGrob(bkg,vp=viewport(angle=x@parVal))
               fg<-getGrob(y,childNames(y)[2])
+              
             }
-            
             
             return(gTree(children=gList(bkg,fg)))
           })
@@ -219,12 +205,13 @@ setMethod("calculateSpecific",signature(x="ChangeLwd", y="gTree"),
             if(x@figure==2){fg<-getGrob(y,childNames(y)[2])
                             fg<-editGrob(fg,gp=gpar(lwd=x@parVal))
                             bkg<-getGrob(y,childNames(y)[1])
+                            
             }else{
               bkg<-getGrob(y,childNames(y)[1])
               bkg<-editGrob(bkg,gp=gpar(lwd=x@parVal))
-              fg<-getGrob(y,childNames(y)[2])}
-            
-            return(gTree(children=gList(bkg,fg)))
+              fg<-getGrob(y,childNames(y)[2])
+              }
+           return(gTree(children=gList(bkg,fg)))
             
           })
 
@@ -336,7 +323,9 @@ setMethod("calculateSpecific",signature(x="AddTwoPictures", y="gTree", z="gTree"
             bkg2<-getGrob(z, childNames(z)[1])
             fg<-gList(fg1,fg2)
             bkg<-gList(bkg1,bkg2)
-            return(gTree(children=gList(bkg,fg)))
+            foreground<-gTree(children=fg)
+            background<-gTree(children=bkg)
+            return(gTree(children=gList(background,foreground)))
           })
 
 
@@ -442,10 +431,19 @@ setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size=
               ind<-rules_to_apply$column$col_index[[i]]
               r<-rules_to_apply$column$colRules[[i]]
               if(!is.null(r)){
-                        for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
-                                       if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                
+                        if(inherits(r,"SingleRule")){
+                                for(j in ind) m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
+                                       #if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                                                    }
+                        
+                        if(inherits(r,"DoubleRule")){
+                              for(j in ind){ m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j-size]],z=m[[2]][[j-2*size]])
+                                            if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                                          }
                               }
-            }
+                        
+                          }
             
             #executing rules for rows
             for(i in 1:length(rules_to_apply[[2]][[1]])){
@@ -453,10 +451,20 @@ setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size=
               ind<-rules_to_apply$rows$row_index[[i]]
               r<-rules_to_apply$rows$rowRules[[i]]
               if(!is.null(r)){
-                            
+                
+                
+                        if(inherits(r,"SingleRule")){
                             for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
                                            if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
                               }
+                        
+                        if(inherits(r,"DoubleRule")){
+                          for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j-1]],z=m[[2]][[j-2]])
+                                        if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+                          }
+                        
+                        
+                        }
             }
             
             
@@ -469,75 +477,92 @@ setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size=
 
 
 
-#STEP 1 - create some basic rules
-#STEP 2 - combine the rules if neccessary
-#STEP 3 - create an object of RowColRule
-#STEP 4 - make a list of rules you want to apply to your matrix
-#STEP 5 - use the RuleList object to change the pre-generated matrix
-
-
-#STEP 1 and 2
-b<-new("ChangeColor", parVal=4,figure=2) #a rule changing the color of the figure in the foreground to blue
-c<-new("ChangeLwd", parVal=1,figure=2,progression=5,previousRule=b) # a rule changing the width of lines of figure in foreground and its color to blue
-d<-new("Rotation", parVal=-30, figure=1,progression=0, previousRule=c) # a rule rotating a backround & changing width and color of the foreground figure
-e<-new("ChangeColor", parVal=7,figure=1)#changing color of the foreground
-f<-new("ChangeLty", parVal=4,figure=2,previousRule=e)#changing "lty" parameter
-g<-new("ChangeColor",parVal=5,figure=2,previousRule=d)
-
-#STEP 3 - specyfying rows and columns for the rules
-d_row1<-new("ColRowRule",direction=2,which=1,rule=g) #rule 'g' will be applied to a first row 
-c_col2<-new("ColRowRule",direction=2,which=2,rule=c) #rule 'c' will be applied to the second column
-b_row3<-new("ColRowRule",direction=2,which=3,rule=f) # rule 'f' will be applied to the third row
-
-
-#STEP 4
-bbb<-defineMatrixRules(d_row1,c_col2,b_row3)
-
-#STEP 5
-
-m<-applyMatrixRules(f=1,b=2,size=3, rulelist=bbb) # setting foreground figures the same in columns (f=1), and background in rows (b=1)
-m<-applyMatrixRules(f=NULL,b=NULL,size=3,rulelist=bbb)#both foreground and background random
-
-
 #------------------------------------DRAWING MATRIX-------------------------------------------------------------------
 #'|1||4||7|
 #'|2||3||8|
 #'|3||6||9|
 
-size=3
+#size=3
+
+draw_matrix<-function (m){
+                      size=sqrt(length(m[[2]]))
+                      for(i in 1:size^2){
+                      #m<-firstMatrix(size)
+                      pushViewport(m[[1]][[i]])
+                      grid.draw(m[[2]][[i]])
+                      popViewport()
+                                        }
+                          }
 
 
-for(i in 1:size^2){
-  #m<-firstMatrix(size)
-  
-  pushViewport(m[[1]][[i]])
-  
-  #funkcje zmieniajce viewport # after using the function uses popViewport
-  
-  grid.draw(m[[2]][[i]])
-  
-  
-  popViewport()
-}
+#=====================================================================================
+#========EXAMPLES OF USAGE ===========================================================
+#=====================================================================================
+
+
+#STEP 1 - create some basic rules
+#STEP 2 - combine the rules if neccessary
+#STEP 3 - create an object of RowColRule
+#STEP 4 - make a list of rules you want to apply to your matrix
+#STEP 5 - use the RuleList object to change the pre-generated matrix
+#STEP 6 - draw Raven like matrix
+
+
+## EXAMPLE 1 
+
+#[1]
+b<-new("ChangeColor", parVal=4,figure=2) #a rule changing the color of the figure in the foreground to blue
+c<-new("Rotation", parVal=-30, figure=1,progression=0, previousRule=b) # a rule rotating a backround & changing width and color of the foreground figure
+d<-new("ChangeLwd", parVal=1,figure=2,progression=5,previousRule=c) # a rule changing the width of lines of figure in foreground and its color to blue
+
+d_row3<-new("ColRowRule",direction=2,which=3,rule=d) #rule 'd' will be applied to third row
+
+#[2]
+e<-new("ChangeColor", parVal=7,figure=1)#changing color of the foreground
+f<-new("ChangeLty", parVal=4,figure=2,previousRule=e)#changing "lty" parameter
+
+f_row2<-new("ColRowRule",direction=2,which=2,rule=f) #rule 'f' will be applied to second row
+
+#[3]
+g<-new("ChangeColor",parVal=5,figure=2,previousRule=d)
+g_row1<-new("ColRowRule",direction=2,which=1,rule=g)#rule 'f' will be applied to second row
+
+#[4]
+h <-new("ChangeLty", parVal=4,figure=2)
+h_col3<-new("ColRowRule",direction=1,which=3,rule=h)
+
+
+bbb<-defineMatrixRules(d_row3,f_row2,g_row1,h_col3)#creating a list of rules to apply
+m<-applyMatrixRules(f=1,b=2,size=3, rulelist=bbb)#fixing foreground in columns and background in rows
+
+draw_matrix(m)
 
 grid.newpage()
 
 
+##EXAMPLE 2
+
+h<-new("AddTwoPictures") #basic doubleRule for adding two previous pictures
+
+h_col3<-new("ColRowRule",direction=1,which=3,rule=h)# I want to use this rule in third column
+h_row3<-new("ColRowRule",direction=2,which=3,rule=h)# I also want to use this rule in thord row
+
+bbb<-defineMatrixRules(h_col3,h_row3)#creating a list of rules to apply
+m<-applyMatrixRules(f=NULL,b=NULL,size=3, rulelist=bbb) # setting shapes (background and foreground) in rows and columns as random
+
+draw_matrix(m)
+grid.newpage()
 
 
 
-#------------------------------------
-# get_shape<-function(figure,j){
-#                               k=j-1
-#                               if(figure==1){ 
-#                                 background<- getGrob(m[[2]][[k]], childNames(m[[2]][[k]])[1])#take backround from the previous picture
-#                                 foreground<- getGrob(m[[2]][[j]], childNames(m[[2]][[j]])[2])#leave random foreground
-#                                             } else{ 
-#                                 foreground<-getGrob(m[[2]][[k]], childNames(m[[2]][[k]])[2]) # take foreground from the previous picture
-#                                 backgroubd<- getGrob(m[[2]][[j]], childNames(m[[2]][[j]])[2])#leave random background
-#                                             }
-#                               
-#                               
-#                              return(gTree(children=gList(background,foreground)))
-#                               
-#                               }
+##EXAMPLE 3
+
+
+h<-new("AddTwoPictures",nextSingle=f) #basic doubleRule for adding two previous pictures
+h_col3<-new("ColRowRule",direction=1,which=3,rule=h)# I want to use this rule in third column
+h_row3<-new("ColRowRule",direction=2,which=3,rule=h)# I also want to use this rule in thord row
+
+bbb<-defineMatrixRules(h_col3,h_row3)#creating a list of rules to apply
+m<-applyMatrixRules(f=NULL,b=NULL,size=3, rulelist=bbb) # setting shapes (background and foreground) in rows and columns as random
+
+draw_matrix(m)
