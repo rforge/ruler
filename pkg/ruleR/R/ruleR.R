@@ -143,15 +143,15 @@ setMethod("calculateSpecific",signature(x="MultDoubleRule", y="numeric", z="nume
             return(y*z)
           })
 
-#[3] SUBSTRACT TWO PREVIOUS EXPRESSIONS
-
-setClass("SubsDoubleRule",contains="DoubleRule",S3methods=TRUE)
-
-
-setMethod("calculateSpecific",signature(x="SubsDoubleRule", y="numeric", z="numeric"),
-          function(x,y,z){
-            return(y-z)
-          })
+# #[3] SUBSTRACT TWO PREVIOUS EXPRESSIONS
+# 
+# setClass("SubsDoubleRule",contains="DoubleRule",S3methods=TRUE)
+# 
+# 
+# setMethod("calculateSpecific",signature(x="SubsDoubleRule", y="numeric", z="numeric"),
+#           function(x,y,z){
+#             return(y-z)
+#           })
 
 #[4] DIVIDING TWO NUMBERS (Philipp)
 
@@ -220,7 +220,7 @@ singleRules<-list("IdenSingleRule","AddConstSingleRule","MultConstSingleRule","D
 
 
 #a list of double rules
-doubleRules<-list("AddDoubleRule","MultDoubleRule","SubsDoubleRule","DivDoubleRule","ModuloDoubleRule","ExpDoubleRule")
+doubleRules<-list("AddDoubleRule","MultDoubleRule","DivDoubleRule","ModuloDoubleRule","ExpDoubleRule")
 
 
 
@@ -261,6 +261,29 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 
 # A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
 
+
+#preventing from more than one adding constant rule to be applied
+# 'dr' - double rule (string)
+redundancy_ch<-function(fr,sr,ns,a){
+  if(a==1) dr="AddConstSingleRule"
+  if(a==2) dr="MultConstSingleRule"
+  
+  b<-list(fr,sr,ns)
+  vec<-vector(mode="list",length=length(b))
+  for(i in 1:length(b))vec[i]<-inherits(b[[i]],dr) #list of logical values
+  
+  redundancy<-which(vec==TRUE) #showing which elements inherit from class "AddConstSingleRule"
+  length_red<-length(redundancy)
+  if(length_red>=2){b[[redundancy[length_red]]]<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]]
+                    fr<-b[[1]];sr<-b[[2]];ns<-b[[3]];a=a
+                    redundancy_ch(fr,sr,ns,a)
+  }else{return(b)}
+  
+  
+                                      }
+
+
+
 # 'a' is index from a list of DoubleRules
 #'fr' firstRule argument of an object of class doubleRule 
 #'sr' secondRule argument of an object of class doubleRule
@@ -271,16 +294,22 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
                     if(!inherits(fr,"SingleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
                     if(!inherits(sr,"SingleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
                     if(!inherits(ns,"SingleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
-       
-                    if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
-                    a<-doubleRules[[a]]
-                                       
+                                              
                     if(is.null(fr)) fr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.5,0.5))[[1]]# firstRule is chosen from an automatically generated SingleRule or identical rule returning the input
                                                             
-                    if(is.null(sr)) sr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]] #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
+                    if(is.null(sr)) {sr<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]] #because adding more and more rules makes the rule very difficult I would generate identical function with greater probability
+                                     }
                               
                     if(is.null(ns)) ns<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]]
-                                                           
+                                              
+                    if(is.null(a)) a<-sample(1:length(doubleRules),1) #generate an index of a doubleRule from the list of doubleRules
+                    
+                    if(a%in%c(1,2)){k<-redundancy_ch(fr=fr,sr=sr,ns=ns,a=a);fr<-k[[1]];sr<-k[[2]];ns<-k[[3]]}#preventing redundancy
+                    
+                    
+                    a<-doubleRules[[a]]
+                                                             
+                    
                     p<-new(a,firstRule=fr, secondRule=sr,nextSingle=ns)
                     
                     return(p)
@@ -345,7 +374,12 @@ conCheck<-function(seq){
   
   m<-length(seq)
   
-  if(identical(seq[m],seq[m-1]) && identical(seq[m],seq[m-2]) ) {return(0)} else {return(1)}
+  b<-ifelse(identical(seq[m],seq[m-1]),0,
+            ifelse(identical(c(seq[m],seq[m-1]),c(seq[m-2],seq[m-3])),0,
+                   ifelse(identical(c(seq[m],seq[m-1],seq[m-2]),c(seq[m-3],seq[m-4],seq[m-5])),0,1)))
+
+
+  return(b)
                         }
 
 

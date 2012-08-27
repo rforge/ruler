@@ -404,12 +404,31 @@ defineMatrixRules<-function(...){
 
 
 
+#executing the rules from rule list 
+#'direction' 1= columns, 2=rows
+# execute<-function(m,rules_to_apply, direction){
+#   
+#   for(i in 1:length(rules_to_apply[[direction]][[1]])){
+#                     
+#                     ind<-rules_to_apply[[direction]][[2]][[i]]
+#                     r<-rules_to_apply[[direction]][[1]][[i]]
+#     
+#                     if(!is.null(r)){
+#                                     for(j in ind) {m[[2]][[j]]<-calculate(x=r,y=m[[2]][[j]])
+#                                                   if("progression"%in%slotNames(r))r@parVal<-r@parVal+r@progression}
+#                                     }
+#                                                         }
+#                                                     }
+
+
+
 applyMatrixRules<-function(f,b,size,rulelist){}
 
 setClassUnion("nullORnumeric", members=c("NULL", "numeric"))
 
 setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size="numeric", rulelist="MatrixRulesList"),
           function(f,b,size,rulelist){
+            
             m<-firstMatrix(f,b,size) #list of pictures and their viepoints(generated randomly)
             rules_to_apply<-schedule(size) # a list of rules to apply to particular rowsand columns (as default rule is NULL)
             
@@ -424,7 +443,9 @@ setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size=
               
               rules_to_apply[[direction]][[1]][[which]]<-rule                                           
             }
-            
+                        
+#             execute(m,rules_to_apply,direction=1) #executing rules for columns
+#             execute(m,rules_to_apply,direction=2) #executing rules for rows
             
             #executing rules for columns
             for(i in 1:length(rules_to_apply[[1]][[1]])){
@@ -470,9 +491,7 @@ setMethod("applyMatrixRules",signature(f="nullORnumeric",b="nullORnumeric",size=
             
             
             return(m)
-            
-            
-            
+                     
           })
 
 
