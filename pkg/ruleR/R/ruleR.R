@@ -104,10 +104,10 @@ setMethod("calculate",signature(x="SingleRule", y="numeric"), #both [1] and [2] 
           function(x, y){
             result<-y 
             if(!is.null(x@previousRule)){ # if there are some rules nested inside 'x'
-              result <- calculate(x@previousRule,result) 
-            }
+                                        result <- calculate(x@previousRule,result) 
+                                        }
             return(calculateSpecific(x,result)) # if there are no more nested functions, execute
-          })
+                        })
 
 #-------------------------------------------------------------------------------------------
 #------------------------------------------------DoubleRules--------------------------------
@@ -241,14 +241,19 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
   if(is.null(a1)) {a1<-sample(2:length(singleRules),1)} #generate 'a' if no is supplied (we don't want to generate a=1 because it is identical function)
   if(is.null(cv1)) {cv1<-sample(-100:100,1)} # generate a constant value if no is supplied
   if(is.null(n)){n<-sample(c(0,1,2),1,prob=c(3/6,2/6,1/6)) #nesting more than two rules would be impossible to guess
-                 p<-as.vector(matrix(replicate(n,c(sample(1:length(singleRules),1),sample(1:100,1))),1,2*n))
-  } # generate 'n' if it is set as null with different probabilities
+                 k<-1:length(singleRules) #preventing nesting the same rules of the same class together
+                 r<-sample(k[-a1],n,replace=FALSE)#generating rules to be nested
+                 co<-sample(1:100,n) # generating constant values for nested rules
+                 p<-as.vector(rbind(r,co))
+                
+                 } # generate 'n' if it is set as null with different probabilities
   
   
-  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1,previousRule=new("IdenSingleRule"))} else{m<-new(singleRules[[a1]],previousRule=new("IdenSingleRule"))}
+  if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1,previousRule=new("IdenSingleRule"))
+  }else{m<-new(singleRules[[a1]],previousRule=new("IdenSingleRule"))}
   
-  if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)]); m@previousRule<-k
-  }#else{m@previousRule<-new("IdenSingleRule")}
+  if(n!=0) {k<-createSR(p[[1]],p[[2]],n-1,p[-c(1,2)])
+            m@previousRule<-k}#else{m@previousRule<-new("IdenSingleRule")}
   
   return(m)                                                     
 }
@@ -353,9 +358,10 @@ check<-function(seqlen,items,type){
         
         if(type==1){ # type=1 means automatic tests
         
-                    m<-sample(c(1,2),1) #if m=1 I will create a singleRule, if m=2 rule will be a combination of singleRules, if m=3 rule is a doubleRule
-                    if(m==1){rule<-createSR()} else{rule<-createDR()} } else 
-                      {z<-sample(2:length(MyRules),1); rule<-MyRules[[z]]  }# if m=1 create singleRule else create doubleRulr
+                    m<-sample(c(1,2),1) 
+                    if(m==1){rule<-createSR()} else{rule<-createDR()} # if m=1 create singleRule else create doubleRulre
+        
+        } else{z<-sample(2:length(MyRules),1); rule<-MyRules[[z]] }
   
         result<-sequence(x1,x2,rule,n=seqlen)[[1]]
         
