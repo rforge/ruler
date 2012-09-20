@@ -8,11 +8,11 @@ function
 A function that check whether generated number sequence is constant.
 }
 \usage{
-conCheck(seq)
+conCheck(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{seq}{
+  \item{x}{
 numeric sequence as a list
 }
 }
@@ -43,12 +43,9 @@ Function can return two values:
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-conCheck(seq=list(1,1,1,1)) #0
-conCheck(seq=list(1,2,3,4)) #1
-
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
+\keyword{internal}
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

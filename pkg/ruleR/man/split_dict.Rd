@@ -1,28 +1,22 @@
-\name{createSR}
-\alias{createSR}
+\name{split_dict}
+\alias{split_dict}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-createSR
+split_dict
 }
 \description{
-A function to create objects of class \code{SingleRule}
+function getting a list of SingleRules out of all available rules.
 }
 \usage{
-createSR(a1 = NULL, cv1 = NULL, n = NULL, ...)
+split_dict(itemDictionary, type)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{a1}{
-is an index from table SingleRule (default a=NULL) //if 'a' is NULL it will be generated
+  \item{itemDictionary}{
+%%     ~~Describe \code{itemDictionary} here~~
 }
-  \item{cv1}{
-is a constant value
-}
-  \item{n}{
-how many rules are to be nested (default=NULL menas that I want to generate it automatically let's say from c(0,1,2)
-}
-  \item{\dots}{
-if I would like to add some rules nested I can provide their parameters cv must be always supplied
+  \item{type}{
+%%     ~~Describe \code{type} here~~
 }
 }
 \details{
@@ -51,12 +45,28 @@ if I would like to add some rules nested I can provide their parameters cv must 
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-createSR(a1=2,cv1=1,n=0)
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
 
-createSR(a1=2,cv1=4,n=1,c(2,15))
-
+## The function is currently defined as
+function (itemDictionary, type) 
+{
+    lista <- list()
+    if (type == 1) {
+        b <- "SingleRule"
+    }
+    else {
+        b <- "DoubleRule"
+    }
+    for (i in 1:length(itemDictionary)) {
+        if (inherits(itemDictionary[[i]]@rule, b)) 
+            lista <- c(lista, itemDictionary[[i]])
+    }
+    return(lista)
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
+\keyword{internal}
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

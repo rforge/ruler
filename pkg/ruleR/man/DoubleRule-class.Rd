@@ -2,7 +2,6 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{DoubleRule-class}
-\alias{calculate,DoubleRule,numeric,numeric-method}
 
 \title{Class \code{"DoubleRule"}}
 \description{
@@ -43,10 +42,6 @@ inherit from class \code{DoubleRule}.
 \code{\link{doubleRules}},
 \code{\linkS4class{AddDoubleRule}},
 \code{\linkS4class{MultDoubleRule}},
-\code{\linkS4class{SubsDoubleRule}},
-\code{\linkS4class{DivDoubleRule}},
-\code{\linkS4class{ModuloDoubleRule}},
-\code{\linkS4class{ExpDoubleRule}},
 \code{\link{createSR}},
 \code{\link{createDR}}
 

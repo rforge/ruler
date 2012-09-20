@@ -46,7 +46,7 @@ an object of class \code{DoubleRule}
 
 }
 \examples{
-b<-createSR(a1=5,cv1=0,n=2,2,14,3,6)
+b<-createSR(a1=2,cv1=0,n=2,2,14,3,6)
 c<-createSR(a1=2,cv=45, n=3)
 m<-createDR(a=1,fr=b,ns=c)
 

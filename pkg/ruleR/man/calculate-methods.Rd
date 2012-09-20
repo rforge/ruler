@@ -1,8 +1,8 @@
 \name{calculate-methods}
 \docType{methods}
 \alias{calculate-methods}
-\alias{calculate,DoubleRule,numeric,numeric-method}
-\alias{calculate,SingleRule,numeric,ANY-method}
+%\alias{calculate,DoubleRule,numeric,numeric-method}
+%\alias{calculate,SingleRule,numeric,ANY-method}
 \title{ ~~ Methods for Function \code{calculate}  ~~}
 \description{
  Methods to execute rules on specyfied numeric arguments.

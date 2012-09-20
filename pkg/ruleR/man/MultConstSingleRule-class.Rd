@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{MultConstSingleRule-class}
-\alias{calculateSpecific,MultConstSingleRule,numeric,ANY-method}
+%\alias{calculateSpecific,MultConstSingleRule,numeric,ANY-method}
 
 \title{Class \code{"MultConstSingleRule"}}
 \description{
@@ -48,7 +48,7 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 \code{\link{createDR}}
 }
 \examples{
-m<-new("MultConstSingleRule",constantVal=4) #or m<-createSR(a1=3,cv1=4,n=0)
+m<-new("MultConstSingleRule",constantVal=4,previousRule=new("IdenSingleRule")) #or m<-createSR(a1=3,cv1=4,n=0)
 print(m)
 
 calculate(m,50)#50*4=200

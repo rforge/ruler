@@ -1,14 +1,14 @@
-\name{print.SingleRule}
-\alias{print.SingleRule}
+\name{extract_single_comment}
+\alias{extract_single_comment}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+extract_single_comment
 }
 \description{
-a function defined to print objects of class \code{SingleRule}
+A function to print single argument rules in common language.
 }
 \usage{
-print.SingleRule(x)
+extract_single_comment(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,15 +39,16 @@ an object of class \code{SingleRule}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{createSR}},
-\code{\link{createDR}},
 \code{\linkS4class{SingleRule}},
-\code{\linkS4class{DoubleRule}}
+\code{\linkS4class{DoubleRule}},
+\code{\link{extract_double_comment}},
+\code{\link{createTest}}
+
 }
 \examples{
 
-b<-createSR(a1=2,cv1=0,n=2,2,14,3,6)
-print(b)
+#m<-createTest(1,chain=0,exact=1)
+#extract_single_comment(m[[2]][[1]])
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

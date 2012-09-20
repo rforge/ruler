@@ -1,20 +1,16 @@
-\name{singleRules}
-\alias{singleRules}
+\name{b}
+\alias{b}
 \docType{data}
 \title{
-singleRules
+b
 }
 \description{
-a list of available objects of class \code{SingleRule}
+b
 }
-\usage{singleRules}
+\usage{b}
 \format{
   The format is:
-List of 4
- $ : chr "IdenSingleRule"
- $ : chr "AddConstSingleRule"
- $ : chr "MultConstSingleRule"
- $ : chr "DigSumSingleRule"
+ list()
 }
 \details{
 %%  ~~ If necessary, more details than the __description__ above ~~
@@ -26,7 +22,8 @@ List of 4
 %%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
-data(singleRules)
-## maybe str(singleRules) ; plot(singleRules) ...
+
 }
 \keyword{datasets}
+\keyword{internal}
+

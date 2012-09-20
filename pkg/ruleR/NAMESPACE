@@ -1,0 +1,18 @@
+exportPattern("^[[:alpha:]]+")
+exportMethods(
+    "calculate",
+    "calculateSpecific" 
+)
+exportClasses(
+    "AddConstSingleRule",
+     "AddDoubleRule",
+     "DictionaryRule",
+     "DigSumSingleRule",
+     "DoubleRule",
+     "IdenSingleRule",
+     "MultConstSingleRule",
+     "MultDoubleRule",
+     "Rule",
+     "SingleRule",
+     "vecORnull" 
+)

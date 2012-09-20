@@ -63,7 +63,7 @@ print(m)
 
 ##[2]DoubleRule object with only one argument specyfied
 
-m<-createDR(sr=new("NegativeSingleRule"))
+m<-createDR(sr=new("AddConstSingleRule",constantVal=3,previousRule=new("IdenSingleRule")))
 #only secondRule argument is specyfied, all other arguments are generated automatically
 print(m)
 
@@ -79,16 +79,24 @@ print(m)
 
 ##[4] Nesting many rules
 
-b<-createSR(a1=5,cv1=0,n=2,2,14,3,6)
+b<-createSR(a1=2,cv1=1,n=2,2,14,3,6)
 print(b) #two nested rules inside a 'SingleRule' b object 
 
-#name: DigSumSingleRule #basic rule
-#name: AddConstSingleRule, constant value:  14 #first nested rule
-#name: MultConstSingleRule, constant value:  6 #second nested rule
+#An object of class "AddConstSingleRule"
+#Slot "constantVal":
+#[1] 1
+
+#Slot "previousRule":
+
+#name: AddConstSingleRule, constant value:  14
+#name: MultConstSingleRule, constant value:  6
+#name: IdenSingleRule
+#Slot ".S3Class":
+#[1] "AddConstSingleRule" "SingleRule"
 
 
 c<-createSR(a1=2,cv=45, n=3) # I want to nest three SingleRules 
-(no parameters for nested rules are specyfied - program generates them )
+#(no parameters for nested rules are specyfied - program generates them )
 print(c)
 
 #name: AddConstSingleRule, constant value:  45

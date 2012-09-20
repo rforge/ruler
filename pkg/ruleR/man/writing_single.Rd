@@ -1,19 +1,19 @@
-\name{print.SingleRule}
-\alias{print.SingleRule}
+\name{writing_single}
+\alias{writing_single}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+writing_single
 }
 \description{
-a function defined to print objects of class \code{SingleRule}
+A function used to print rules (\code{SingleRule})
 }
 \usage{
-print.SingleRule(x)
+writing_single(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-an object of class \code{SingleRule}
+%%     ~~Describe \code{x} here~~
 }
 }
 \details{
@@ -39,18 +39,28 @@ an object of class \code{SingleRule}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{createSR}},
-\code{\link{createDR}},
-\code{\linkS4class{SingleRule}},
-\code{\linkS4class{DoubleRule}}
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
 
-b<-createSR(a1=2,cv1=0,n=2,2,14,3,6)
-print(b)
-
+## The function is currently defined as
+function (x) 
+{
+    b <<- c(b, list(ws(x)))
+    if (!inherits(x@previousRule, "IdenSingleRule")) {
+        x <- x@previousRule
+        writing_single(x)
+    }
+    else {
+        return(b)
+        break
+    }
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
+\keyword{internal}
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

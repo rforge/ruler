@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{AddConstSingleRule-class}
-\alias{calculateSpecific,AddConstSingleRule,numeric,ANY-method}
+%\alias{calculateSpecific,AddConstSingleRule,numeric,ANY-method}
 
 \title{Class \code{"AddConstSingleRule"}}
 \description{
@@ -50,14 +50,14 @@ Maria Rafalak <m.rafalak@practest.com.pl>
 \examples{
 ##[1] A rule that adds 4 to the previous element of numeric sequence
 
-m <- new("AddConstSingleRule",constantVal=4) #or 
+m <- new("AddConstSingleRule",constantVal=4,previousRule=new("IdenSingleRule")) #or 
 m <- createSR(a1=2,cv1=4,n=0)
 print(m)
 
 
 ##[2] combining rules
 
-p <- new("DigSumSingleRule") # a rule that calculates digitsum of a given element
+p <- new("DigSumSingleRule",previousRule=new("IdenSingleRule")) # a rule that calculates digitsum of a given element
 m <- new("AddConstSingleRule",constantVal=5, previousRule=p)
 
 # or in one step:  

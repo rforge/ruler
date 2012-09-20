@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{IdenSingleRule-class}
-\alias{calculateSpecific,IdenSingleRule,numeric,ANY-method}
+%\alias{calculateSpecific,IdenSingleRule,numeric,ANY-method}
 
 \title{Class \code{"IdenSingleRule"}}
 \description{
@@ -42,7 +42,6 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 
 \seealso{
 \code{\link{calculate}},
-\code{\link{automaticTest}}, 
 \code{\linkS4class{SingleRule}},
 \code{\linkS4class{DoubleRule}},
 \code{\link{createSR}},

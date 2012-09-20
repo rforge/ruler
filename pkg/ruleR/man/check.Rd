@@ -3,28 +3,24 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{function \code{check}
 }
-\description{A function that generates numeric sequence (with random starting values) and checks whether it is not constant, 
-elements are not too big (>1000) or too small (-1000<) and if the sequence is unique for the test or contains
-any \code{NA} values. 
-Rules to generate sequence are either specyfied by user or combined automatically.
+\description{function checking if generated sequence is constant, or has elements greater/smaller than the limit set by user.
 }
-\usage{check(seqlen, items, type)
+\usage{check(items,result,element_range)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{seqlen}{
-- the length of numeric sequence to be generated
-}
   \item{items}{
-- a matrix in which previously generated sequences are stored (for checking uniqueness)
+a list of already generated items
 }
-  \item{type}{
-- specifying where to generate rules from. \code{type=1} means that the rules are combined automatically,
-\code{type=2} means that only rules specyfied by user are to be used.
+  \item{result}{numeric sequence thatis to be checked
+
+}
+  \item{element_range}{
+maximum and minimum values of elements of the numeric sequence
 }
 }
 \details{
-This function is used by \code{automaticTest} 
+Function compares result with elements of list \code{items} that have the same length as 'result'argument
 }
 \value{
 Result od \code{check} is a list:
@@ -47,21 +43,13 @@ Result od \code{check} is a list:
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{automaticTest}},
-\code{\link{conCheck}},
-\code{\link{AddRule}}
+\code{\link{createTest}}
 
 }
 \examples{
-m<-matrix(1:6,1,6)
-b<-check(seqlen=6,type=1,items=a)
-unlist(b$result)
-b$fun
 
-# in this example generating sequence '1 2 3 4 5 6 ' is not allowed
-# as 'm' matrix is specyfied as argument 'items'
 
 }
 
-\keyword{ ~kwd1 }
+\keyword{internal}
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

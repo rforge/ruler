@@ -1,19 +1,19 @@
-\name{print.SingleRule}
-\alias{print.SingleRule}
+\name{extract_double_comment}
+\alias{extract_double_comment}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+extract_double_commen
 }
 \description{
-a function defined to print objects of class \code{SingleRule}
+A function to print double argument rules in common language.
 }
 \usage{
-print.SingleRule(x)
+extract_double_comment(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-an object of class \code{SingleRule}
+is an object of class \code{DoubleRule}
 }
 }
 \details{
@@ -39,16 +39,18 @@ an object of class \code{SingleRule}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{createSR}},
-\code{\link{createDR}},
 \code{\linkS4class{SingleRule}},
-\code{\linkS4class{DoubleRule}}
+\code{\linkS4class{DoubleRule}},
+\code{\link{extract_single_comment}},
+\code{\link{createTest}}
+
 }
 \examples{
 
-b<-createSR(a1=2,cv1=0,n=2,2,14,3,6)
-print(b)
+b<-createTest(1,chain=0,exact=4,del=0)
+extract_double_comment(b[[2]][[1]])
 
+  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,5 +1,5 @@
-\name{sequence}
-\alias{sequence}
+\name{sequenceR}
+\alias{sequenceR}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 function
@@ -11,22 +11,20 @@ Note that this function doesn't check for constant sequence or
 too big/small elements in numeric sequence!
 }
 \usage{
-sequence(x1, x2 = NULL, rule, n = 6)
+sequenceR(start,rule,seqlen)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x1}{
-first element of numeric sequence
-}
-  \item{x2}{
-second element of numeric sequence (if applied rule doesn't need second element, it will be overwritten)
+  \item{start}{
+range from which starting values are generated
 }
   \item{rule}{
-a rule you want to apply. It needs to inherit either from class \code{SingleRule} or \code{DoubleRule}
+rule that is to be used to generate numeric sequence
 }
-  \item{n}{
-length of numeric sequence, by default \code{n=6}
+  \item{seqlen}{
+the length of the numeric sequence (default value is 6)
 }
+
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -34,8 +32,8 @@ length of numeric sequence, by default \code{n=6}
 \value{
 function returns a list containing of:
 
-\item{sequence[[1]] }{numeric sequence as a list}
-\item{sequence[[2]]}{rule used to generate the sequence}
+\item{sequenceR[[1]] }{numeric sequence as a list}
+\item{sequenceR[[2]]}{rule used to generate the sequence}
 
 }
 \references{
@@ -51,7 +49,6 @@ function returns a list containing of:
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{automaticTest}},
 \code{\link{conCheck}},
 \code{\link{check}},
 \code{\link{createSR}},
@@ -59,17 +56,7 @@ function returns a list containing of:
 
 }
 \examples{
-b<-createSR(a1=5,cv1=0,n=1,2,14) 
-# creating a rule I want to use in generating numeric sequence
-
-m<-sequence(x1=1,x2=3,rule=b,n=10)
-
-unlist(m[1]) #1  6  2  7  3  8  4  9  5 10
-print(m[2])
-
-#name: DigSumSingleRule
-#name: AddConstSingleRule, constant value:  14
-
+sequenceR(rule=new("AddConstSingleRule",constantVal=1,previousRule=new("IdenSingleRule")),start=99,seqlen=6)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

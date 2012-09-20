@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{MultDoubleRule-class}
-\alias{calculateSpecific,MultDoubleRule,numeric,numeric-method}
+%\alias{calculateSpecific,MultDoubleRule,numeric,numeric-method}
 
 \title{Class \code{"MultDoubleRule"}}
 \description{

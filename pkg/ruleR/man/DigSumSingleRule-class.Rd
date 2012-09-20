@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{DigSumSingleRule-class}
-\alias{calculateSpecific,DigSumSingleRule,numeric,ANY-method}
+%\alias{calculateSpecific,DigSumSingleRule,numeric,ANY-method}
 
 \title{Class \code{"DigSumSingleRule"}}
 \description{
@@ -51,7 +51,7 @@ Class \code{"\linkS4class{SingleRule}"}, directly.
 b<-new("DigSumSingleRule")
 print(b)
 
-b<-createSR(a1=5,n=0) #See 'createSR' for details
+b<-createSR(a1=4,n=0) #See 'createSR' for details
 print(b)
 
 ##[2] combining single rules

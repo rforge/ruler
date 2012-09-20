@@ -43,7 +43,7 @@ This function can return two values
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{automaticTest}}
+
 }
 \examples{
 
@@ -57,5 +57,5 @@ duplicate(mx=m,vec=g) #FALSE - no cuch vector in the matrix
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
+\keyword{internal}
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -1,19 +1,19 @@
-\name{print.SingleRule}
-\alias{print.SingleRule}
+\name{generate_cv}
+\alias{generate_cv}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+generate_cv
 }
 \description{
-a function defined to print objects of class \code{SingleRule}
+function generating constantVal for singleRules from specyfied range
 }
 \usage{
-print.SingleRule(x)
+generate_cv(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-an object of class \code{SingleRule}
+an object of class DictionaryRule
 }
 }
 \details{
@@ -39,16 +39,21 @@ an object of class \code{SingleRule}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{createSR}},
-\code{\link{createDR}},
-\code{\linkS4class{SingleRule}},
-\code{\linkS4class{DoubleRule}}
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
 
-b<-createSR(a1=2,cv1=0,n=2,2,14,3,6)
-print(b)
-
+## The function is currently defined as
+function (x) 
+{
+    if (length(x@range) == 1) 
+        x@range <- rep(x@range, 2)
+    cv <- sample(x@range, 1)
+    return(cv)
+  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -47,25 +47,16 @@ function returs single value of class \code{numeric}
 #[1] for objects of class SingleRule
 
 # a rule adding a constant value '6' to  the element of numeric sequence
-p<-new("AddConstSingleRule", constantVal=6) 
+p<-new("AddConstSingleRule", constantVal=6, previousRule=new("IdenSingleRule")) 
 
 calculate(p,4)# 4+6=10
 
 
 
-#[2]for objects of class DoubleRule
+#[2] for combined objects
 
-#a rule substracting one element of the sequence from another
-n<-new("SubsDoubleRule")
-
-calculate(n,10,12) #10-12=-2
-
-
-
-#[3] for combined objects
-
-m<-new("DigSumSingleRule")
-r<-new("AddConstSingleRule", constantVal=6)
+m<-new("DigSumSingleRule",previousRule=new("IdenSingleRule"))
+r<-new("AddConstSingleRule", constantVal=6,previousRule=new("IdenSingleRule"))
 g<-new("MultDoubleRule", firstRule=m, secondRule=m, nextSingle=r)
 
 calculate(g,12,34) #27

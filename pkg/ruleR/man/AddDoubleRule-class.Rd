@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{AddDoubleRule-class}
-\alias{calculateSpecific,AddDoubleRule,numeric,numeric-method}
+%\alias{calculateSpecific,AddDoubleRule,numeric,numeric-method}
 
 \title{Class \code{"AddDoubleRule"}}
 \description{
@@ -62,13 +62,13 @@ calculate(p,12,5) #12+5=17
 
 #[2] combining rules
 
-m <- new("DigSumSingleRule") 
+m <- new("DigSumSingleRule",previousRule=new("IdenSingleRule")) 
 # SingleRule that calculates digitsum of an element of numeric sequence
 
-r <- new("AddConstSingleRule", constantVal=6)
+r <- new("AddConstSingleRule", constantVal=6,previousRule=new("IdenSingleRule"))
 # a SingleRule that adds constant value '6' to the element of numeric sequence 
 
-f <- new("MultConstSingleRule", constantVal=2)
+f <- new("MultConstSingleRule", constantVal=2,previousRule=new("IdenSingleRule"))
 # a SingleRule that muliplies an element of a sequence by constant value '4'
 
 g <- new("AddDoubleRule", firstRule=r, secondRule=f, nextSingle=m)
