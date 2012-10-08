@@ -11,6 +11,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{booktabs}
 
 % Define block styles
 \tikzstyle{rule} = [rectangle, draw, fill=blue!20, 
@@ -39,6 +40,7 @@ Philipp Doebler \\
       philipp.doebler@googlemail.com}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \setkeys{Gin}{width=0.6\textwidth}
 
@@ -57,15 +59,56 @@ There are several situations in which automated item generation is favourable:
 
 The identification of rules is not the same as an implementation of a rule-based item generation algorithm, but it is a necessary step. Besides providing a basis for RIG, an analysis of the cognitive task at hand is a result of this identification. Another side product is that a suitable psychometric model can sometimes be found after such an analysis. 
 
-In the following we identify some rules for number sequence items and matrix type items and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items and matrix type items with the ability to extend the system. The package uses S4 classes to represent rules and is written with the understanding that the user will eventually want to extend the existing possibilities.
+In the following we identify some rules for number sequence items %and matrix type items 
+and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items. %and matrix type items with the ability to extend the system. 
+The package uses S4 classes to represent rules and is written with the understanding that the user will eventually want to extend the existing possibilities; this vignette demonstrates an extension.
 
 While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example in the form of the concerto testing platform (\cite{concerto}). Several \texttt{R} packages are worth mentioning in this context: \texttt{catR} (\cite{catR}), which provides functionality for computer adaptive testing, \texttt{ltm} (\cite{ltm}), which can be used to perform a range of psychometric analyses and \texttt{RMySQL} (\cite{RMySQL}) which handles the interaction of \texttt{R} and MySQL databases.
 
 \section{Number sequences}
-Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used to generate number sequences, we explain some of the ideas. 
+Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used to generate number sequences, we explain some of the ideas behind the package.
 
 \subsection{Number sequence items and their cognitive analysis}
+The analysis of number sequence items often focuses on their psychometric properties, be it those derived from classical test theory (\cite{lord1968statistical}) or from item response theory (IRT; \cite{hambleton1995fundamentals,van1997handbook,embretson2000item,baker2004item}). CTT and IRT have developed precise notions of difficulty (and discriminatory power) of items. Interesting questions though remain: What determines the difficulty of an item? Can the difficutly be predicted from the way the item is constructed? 
 
+A statistical approach towards an answer to these questions is provided by the linear logistic test model (LLTM, \cite{fischer1973linear}), or more generally by explanatory IRT models (\cite{de2004explanatory}). These models have been developed to explain item properties from intrinsic item features (and other variables). An analysis with such models requires to study the underlying cognitive process to isolate relevant item features.
+
+For the cognitive analysis of number sequence items, we will focus on the radicals (basic rules) and their relationships\footnote{For the sake of brevity we will not discuss the influence of the magnitude of the numbers here.}. Table \ref{tab:radicals} lists some possible radicals. We will assume that the examinee is familiar with the radicals and knows that they can be combined. Solving a number sequence item then involves combining the known radicals and checking which combination generates the sequence at hand. 
+
+As an example we study some combinations of the Fibonacci rule and the digit sum rule. The next element in a Fibonacci sequence is formed by adding up the two previous element. Each such sequence needs two \emph{seeds} to get started. Taking 1 and another 1 as seeds results in the following sequence:
+\[
+1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+\]
+The digit sum is formed by adding up all the digits of a number. For example, the digit sum of 23 is $2+3=5$. Figure \ref{fig:A} shows one way to combine the Fibonacci and digit sum rule: after the sum of the two previous numbers is calculated, the digit sum is formed. Using 23 and 4 as seeds, we obtain the following sequence:
+\[
+23, 4, 9, 4, 4, 8, 3, 2, 5, 7, 3, 1, 4, 5, 9, 5, ...
+\]
+But there are other ways to combine the Fibonacci and digit sum rule, we could for example first caculate the digit sum of both numbers and then apply the Fibonacci rule, as shown in Figure \ref{fig:C}. Again using 23 and 4 as seeds we get the following sequence:
+\[
+23, 4, 9, 13, 13, 8, 12, 11, 5, 7, 12, ...
+\]
+The two combinations result in sequences which differ after the third element and both are more difficult than pure Fibonacci items.  Yet another way to combine rules is shown in Figure \ref{fig:B}. Probably the items one could make out of these sequences will have different psychometric properties. To handle the fact that not only the presence of the radicals influences the difficulty but also the (partial) order in which they are applied, \texttt{ruleR} proposes a tree structure\footnote{We thank G. Gediga for this idea.} to describe the combinations of radicals.
+
+\begin{table}
+ \begin{center}
+  \caption{Some radicals and possible combinations}\label{tab:radicals}
+  \begin{tabular}{lcc}
+   \toprule
+   radical                         & arity & term\\ \midrule
+   negation ($\mathrm{neg})$       & 1     &  $-a$ \\
+   addition ($\mathrm{add})$       & 2     &  $a + b$\\
+   digit sum ($\mathrm{digitsum}$) & 1     & sum of the digits of $a$ (base 10) \\ \midrule
+   combination                             & arity & $y_{i+1} = $ \\ \midrule
+   add a constant                          & 1     & $\mathrm{add}(y_i,c)$ \\
+   subtract a constant                     & 1     & $\mathrm{add}(y_i, \mathrm{neg}(c))$\\
+   add the digitsum of $y_i$ and $y_{i-1}$ & 2     & $\mathrm{add}(y_i, \mathrm{digitsum}(y_i))$\\
+   add a constant to the digitsum          & 1     & $\mathrm{add}(c, \mathrm{digitsum}(y_i))$\\
+   digitsum after adding a constant        & 1     & $\mathrm{digitsum}(\mathrm{add}(y_i,c))$\\
+   digitsum after Fibonacci                & 2     & $\mathrm{digitsum}(\mathrm{add}(y_{i-1},y_i))$\\
+  \bottomrule
+  \end{tabular}
+ \end{center}
+\end{table}
 
 %
 %\begin{tikzpicture}[node distance = 1cm, auto]
@@ -146,19 +189,19 @@ Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used t
 
 
 
-
-
-
-
-
-
 \subsection{Using \texttt{ruleR} to generate number sequence items}
 
 
-\section{Matrix items}
+
+%\section{Matrix items}
 
 
 \section{Further development of \texttt{ruleR}}
+
+Mention matrix items.
+
+The tree structure provided by \texttt{ruleR} might seem overly complex at first glance, but they are well-suited for a later cognitive analysis of items and RIG.
+
 
 \bibliography{ruleR}{}
 \bibliographystyle{alpha}

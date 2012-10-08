@@ -75,7 +75,10 @@ setClass("DigSumSingleRule", contains="SingleRule",S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
           function(x,y){
-            return(sum(digits(y)))
+            if(length(y) == 1){return(sum(digits(y)))   ## only for one argument
+                               }else{
+            return(unlist(lapply(digits(y),sum))) ## properly vectorized
+            }
           })
 
 #[5] NEGATIVE 
