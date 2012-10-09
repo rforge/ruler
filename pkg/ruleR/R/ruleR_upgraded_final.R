@@ -93,8 +93,6 @@ setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
 
 
 
-
-
 #EXECUTING RULES REFERING TO SINGLE ARGUMENT
 
 
@@ -213,6 +211,13 @@ setMethod("calculate",signature(x="DoubleRule", y="numeric", z="numeric"),
             
           })
 
+# ---------------------------INTERTWINED RULES ----------------------------------------------------------
+# -------------- different fules for odd and different for even element of numeric sequence -------------
+#--------------------------------------------------------------------------------------------------------
+
+setClass("IntertwinedRule",  
+         representation = representation(odd_rule="SingleRule",even_rule="SingleRule"),
+         S3methods=TRUE)
 
 
 #--------------------------------------------------------------------------------------------------------------------
@@ -261,30 +266,6 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 }
 
 
-# A FUNCTION TO COMBINE DOUBLE RULES - it generates all parameters automatically 
-
-
-# #preventing from more than one adding constant rule to be applied
-# # 'dr' - double rule (string)
-# redundancy_ch<-function(fr,sr,ns,a){
-#   if(a==1) dr="AddConstSingleRule"
-#   if(a==2) dr="MultConstSingleRule"
-#   
-#   b<-list(fr,sr,ns)
-#   vec<-vector(mode="list",length=length(b))
-#   for(i in 1:length(b))vec[i]<-inherits(b[[i]],dr) #list of logical values
-#   
-#   redundancy<-exact[vec==TRUE] #showing exact elements inherit from class "AddConstSingleRule"
-#   length_red<-length(redundancy)
-#   if(length_red>=2){b[[redundancy[length_red]]]<-sample(c(createSR(),new("IdenSingleRule")),1,prob=c(0.3,0.7))[[1]]
-#                     fr<-b[[1]];sr<-b[[2]];ns<-b[[3]];a=a
-#                     redundancy_ch(fr,sr,ns,a)
-#   }else{return(b)}
-#   
-#   
-#                                       }
-
-
 
 # 'a' is index from a list of DoubleRules
 #'fr' firstRule argument of an object of class doubleRule 
@@ -319,45 +300,92 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
 #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
 # 'seqlen' is the length of the numeric sequence (default value is 6)
 # 'start' - range from which starting values are generated
-sequenceR<-function(start,rule,seqlen, random = TRUE){
-                                  if(seqlen<4) stop("sequence must be longer than 4")
-                                  
-                                  
-                                  if(length(start)==1){ #generating starting elements of numeric sequence
-                                    x1<-start;x2<-start
-                                  }else{
-                                    if(random){
-                                    start<-sample(start,2)
-                                        x1<-start[1]
-                                        x2<-start[2]
-                                    }else{
-                                      x1<-start[1]
-                                      x2<-start[2]
-                                    }
-                                  }
-                                  
-                                  
-                                  
-                                  k<-list()
-                                  k[1]=x1
-                                  
-                                    
-                                                                    
-                                  if(inherits(rule,"SingleRule")){
-                                                                    for(i in 2:seqlen){
-                                                                                   k[i]<-calculate(x=rule,y=k[[i-1]])                                                                
-                                                                                  }
-                                    
-                                                                  }else{
-                                                                        k[2]=x2
-                                                                        for(i in 3:seqlen){
-                                                                                      k[i]<-calculate(x=rule,y=k[[i-2]],z=k[[i-1]])
-                                                                                      }
-                                    
-                                                                        }
-                                  return(list(k,rule))
-                                                
-                                        }
+
+
+
+
+setMethod("sequenceR",signature(start="vector",rule="SingleRule",seqlen="numeric", random ="logical"),
+          function(start,rule,seqlen, random = TRUE){
+                      
+            
+            if(length(start)==1){ #generating starting elements of numeric sequence
+              x1<-start;x2<-start
+            }else{
+              if(random){
+                start<-sample(start,2)
+                x1<-start[1]
+                x2<-start[2]
+              }else{
+                x1<-start[1]
+                x2<-start[2]
+              }
+            }
+            
+            k<-list()
+            k[1]=x1
+            
+            
+            for(i in 2:seqlen){
+              k[i]<-calculate(x=rule,y=k[[i-1]])                                                                
+            }
+            return(list(k,rule))
+          })
+
+
+setMethod("sequenceR",signature(start="vector",rule="DoubleRule",seqlen="numeric", random ="logical"),
+          function(start,rule,seqlen, random = TRUE){
+                        
+            
+            if(length(start)==1){ #generating starting elements of numeric sequence
+              x1<-start;x2<-start
+            }else{
+              if(random){
+                start<-sample(start,2)
+                x1<-start[1]
+                x2<-start[2]
+              }else{
+                x1<-start[1]
+                x2<-start[2]
+              }
+            }
+            
+            
+            
+            k<-list()
+            k[1]=x1
+            k[2]=x2
+            
+            for(i in 3:seqlen){
+              k[i]<-calculate(x=rule,y=k[[i-2]],z=k[[i-1]])
+            }
+                      
+            return(list(k,rule))
+          })
+
+
+
+setMethod("sequenceR",signature(start="vector",rule="IntertwinedRule",seqlen="numeric", random ="logical"),
+          function(start,rule,seqlen, random = TRUE){         
+                    
+            
+            odd_list<-sequenceR(start=start,rule=rule@odd_rule,seqlen=seqlen%/%2,random=random)[[1]]
+            print(odd_list)
+            even_list<-sequenceR(start=start,rule=rule@even_rule,seqlen=seqlen%/%2,random=random)[[1]]
+            print(even_list)
+
+            
+            k<-unlist(mapply(c,odd_list, even_list, SIMPLIFY=FALSE))
+            print(k)
+            if(seqlen%%2==1)k<-c(k,calculate(rule@odd_rule,k[[length(k)-1]]))#if sequence length is an odd number
+
+            
+            
+            return(list(k,rule))
+          })
+
+
+
+
 
 
 
@@ -392,34 +420,7 @@ conCheck<-function(x){
 
 
 
-#--------------------------------------------------------------------------------------------------------------------------------
-#---------------------------------------- rules defined by a user----------------------------------------------------------------
-#--------------------------------------------------------------------------------------------------------------------------------
 
-# #LIST OF USER'S RULES
-# 
-# 
-# # Verification table - in which I will store results of the rules
-# # starting values are always 10 and 20, constantVal=14, seqlen=6 
-# # I check whether sequence generated for those values are identical for a new rule - if so - I won't add a new rule to the list
-# 
-# VerifTable<-matrix(NA,1,6)
-# 
-# MyRules<-list(NA)
-# 
-# AddRule<-function(rule){
-#                       if(!inherits(rule,"SingleRule") && !inherits(rule,"DoubleRule")) stop (paste("new Rule must be an object of class 'SingleRule' od 'DoubleRule'. It cannot be of class",class(rule)))
-#   
-#                       s<-sequenceR(x1=10,x2=20,rule,n=6)
-#                       
-#                       if(duplicate(VerifTable,unlist(s[[1]]))==TRUE){stop ("There already is a rule that gives the same result.")} else{
-#                                       VerifTable<<-rbind(unlist(s[[1]]),VerifTable)
-#                                       MyRules[length(MyRules)+1]<<-rule
-#                                       print("Your rule succesfully added tp 'MyRule' list")
-#                                         }
-#                       } 
-#                                                                     
-#  
 #---------------------------------------------------------------------------
 #------function to print objects of class SingleRule and DoubleRule---------
 #---------------------------------------------------------------------------
@@ -849,12 +850,6 @@ extract_double_comment<-function(x){
 
 
 
-
-
-
-
-
-
 #[[1] ]"AddConstSingleRule"
 # 
 # [[2]]
@@ -877,3 +872,8 @@ print.Rule<-function(x){
                         if(inherits(x,"SingleRule")) extract_single_comment(x)
                         if(inherits(x,"DoubleRule")) extract_double_comment(x)
                         }
+
+
+
+
+
