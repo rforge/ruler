@@ -91,7 +91,7 @@ The two combinations result in sequences which differ after the third element an
 
 \begin{table}
  \begin{center}
-  \caption{Some radicals and possible combinations}\label{tab:radicals}
+  \caption{Some radicals and som possible combinations}\label{tab:radicals}
   \begin{tabular}{lcc}
    \toprule
    radical                         & arity & term\\ \midrule
@@ -190,15 +190,50 @@ The two combinations result in sequences which differ after the third element an
 
 
 \subsection{Using \texttt{ruleR} to generate number sequence items}
+We show how to use \texttt{ruleR} in an interactive R session, assuming that readers know some basic R. The \texttt{ruleR} package does intentionally not hide all traces of S4 classes, since it is expected users will want to write their own extensions. Good starting points to learn about S4 classes are \cite{chambers2006how} or the vignette of the \texttt{Brobdingnag} package \cite{brob}, but we will try to be fairly detailed.
 
+Since you are reading this document, you probably have already obtained \texttt{ruleR}. The most recent (development) version is available from R-forge at \url{http://r-forge.r-project.org/projects/ruler/} and can be installed in an interactive R session by typing
+<<eval=FALSE>>=
+install.packages("ruleR", repos="http://R-Forge.R-project.org")
+@
+More stable versions are available via CRAN. As usual we load the package by
+<<>>=
+library(ruleR)
+@
+If you get stuck, you might try
+<<>>=
+help(ruleR)
+@
+Some rules for number sequences only need the current element to calculate the next, while others like the Fibonacci rule need the previous two elements. For this reason \texttt{ruleR} knows \emph{single rules} and \emph{double rules}. Let's have a look at the \texttt{list} of single rules
+<<>>=
+singleRules
+@
+and double rules
+<<>>=
+doubleRules
+@
+Not that many, but remember we can assemble new rules from these radicals. Before doing that, we define some basic building blocks by
+<<>>=
+idrule <- new("IdenSingleRule")
+add5 <- new("AddConstSingleRule", constantVal = 5, previousRule = idrule)
+mult2 <- new("MultConstSingleRule", constantVal = 2, previousRule = idrule)
+neg <- new("MultConstSingleRule", constantVal = -1, previousRule = idrule)
+DS <- new("DigSumSingleRule")
+@
+We can already calculate with these rules:
+<<>>=
+calculate(add5, 11)
+@
 
-
-%\section{Matrix items}
-
+\subsubsection{Combining single rules}
+Figure \ref{combsingle} shows how 
 
 \section{Further development of \texttt{ruleR}}
 
 Mention matrix items.
+
+The \texttt{ruleR} package can be used as a back-end in a computerized testing system. 
+
 
 The tree structure provided by \texttt{ruleR} might seem overly complex at first glance, but they are well-suited for a later cognitive analysis of items and RIG.
 

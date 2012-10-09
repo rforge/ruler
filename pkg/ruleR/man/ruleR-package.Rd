@@ -106,5 +106,4 @@ for(i in 1:length(m[[2]])){
                           }
 ## SEE \code{createTest} function for more detail
 
-
-                          
+}

@@ -2,7 +2,7 @@
 \alias{extract_double_comment}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-extract_double_commen
+extract_double_comment
 }
 \description{
 A function to print double argument rules in common language.

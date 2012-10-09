@@ -292,7 +292,7 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
 #'ns' nextSingle argument of an object of class doubleRule
 #'
 createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
-                    if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doublrRules is shoreter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
+                    if(!is.null(a) && a>length(doubleRules)) stop (paste("The list of doubleRules is shorter than ",a, ".Please specify 'a' value, which is smaller than or equal to",length(doubleRules)))
                     if(!inherits(fr,"SingleRule") && !is.null(fr))stop(paste("'fr' argument must inherit from class singleRule"))
                     if(!inherits(sr,"SingleRule") && !is.null(sr))stop(paste("'sr' argument must inherit from class singleRule"))
                     if(!inherits(ns,"SingleRule") && !is.null(ns))stop(paste("'ns' argument must inherit from class singleRule"))
@@ -319,15 +319,21 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
 #A FUNCTION TO GENERATE NUMERIC SEQUENCE OF DECLARED LENGTH
 # 'seqlen' is the length of the numeric sequence (default value is 6)
 # 'start' - range from which starting values are generated
-sequenceR<-function(start,rule,seqlen){
+sequenceR<-function(start,rule,seqlen, random = TRUE){
                                   if(seqlen<4) stop("sequence must be longer than 4")
                                   
                                   
                                   if(length(start)==1){ #generating starting elements of numeric sequence
                                     x1<-start;x2<-start
-                                  }else{start<-sample(start,2)
+                                  }else{
+                                    if(random){
+                                    start<-sample(start,2)
                                         x1<-start[1]
                                         x2<-start[2]
+                                    }else{
+                                      x1<-start[1]
+                                      x2<-start[2]
+                                    }
                                   }
                                   
                                   
@@ -352,7 +358,6 @@ sequenceR<-function(start,rule,seqlen){
                                   return(list(k,rule))
                                                 
                                         }
-
 
 
 

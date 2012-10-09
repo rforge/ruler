@@ -20,18 +20,18 @@ Only names of the rules are stored on the list.
   \item{doubleRules[2]}{
 "MultDoubleRule"
 }
-  \item{doubleRules[3]}{
-"SubsDoubleRule"
-}
-  \item{doubleRules[4]}{
-"DivDoubleRule"
-}
-  \item{doubleRules[5]}{
-"ModuloDoubleRule"
-}
-  \item{doubleRules[6]}{
-"ExpDoubleRule"
-}
+%  \item{doubleRules[3]}{
+%"SubsDoubleRule"
+%}
+%  \item{doubleRules[4]}{
+%"DivDoubleRule"
+%}
+%  \item{doubleRules[5]}{
+%"ModuloDoubleRule"
+%}
+%  \item{doubleRules[6]}{
+%"ExpDoubleRule"
+%}
 
 }
 
