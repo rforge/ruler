@@ -302,6 +302,10 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
 # 'start' - range from which starting values are generated
 
 
+sequenceR<-function(start,rule,seqlen, random=TRUE)
+  {
+  return(a)}
+
 
 
 setMethod("sequenceR",signature(start="vector",rule="SingleRule",seqlen="numeric", random ="logical"),
@@ -369,18 +373,15 @@ setMethod("sequenceR",signature(start="vector",rule="IntertwinedRule",seqlen="nu
                     
             
             odd_list<-sequenceR(start=start,rule=rule@odd_rule,seqlen=seqlen%/%2,random=random)[[1]]
-            print(odd_list)
-            even_list<-sequenceR(start=start,rule=rule@even_rule,seqlen=seqlen%/%2,random=random)[[1]]
-            print(even_list)
-
             
+            even_list<-sequenceR(start=start,rule=rule@even_rule,seqlen=seqlen%/%2,random=random)[[1]]
+                        
             k<-unlist(mapply(c,odd_list, even_list, SIMPLIFY=FALSE))
-            print(k)
             if(seqlen%%2==1)k<-c(k,calculate(rule@odd_rule,k[[length(k)-1]]))#if sequence length is an odd number
 
             
             
-            return(list(k,rule))
+            return(list(as.list(k),rule))
           })
 
 
