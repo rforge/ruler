@@ -187,8 +187,6 @@ The two combinations result in sequences which differ after the third element an
         \caption{Three different ways to combine the Fibonacci and digitsum rules}\label{threeways}
 \end{figure}
 
-
-
 \subsection{Using \texttt{ruleR} to generate number sequence items}
 We show how to use \texttt{ruleR} in an interactive R session, assuming that readers know some basic R. The \texttt{ruleR} package does intentionally not hide all traces of S4 classes, since it is expected users will want to write their own extensions. Good starting points to learn about S4 classes are \cite{chambers2006how} or the vignette of the \texttt{Brobdingnag} package \cite{brob}, but we will try to be fairly detailed.
 
@@ -200,7 +198,7 @@ More stable versions are available via CRAN. As usual we load the package by
 <<>>=
 library(ruleR)
 @
-If you get stuck, you might try
+If you get stuck, you can try
 <<>>=
 help(ruleR)
 @
@@ -220,22 +218,201 @@ mult2 <- new("MultConstSingleRule", constantVal = 2, previousRule = idrule)
 neg <- new("MultConstSingleRule", constantVal = -1, previousRule = idrule)
 DS <- new("DigSumSingleRule")
 @
-We can already calculate with these rules:
+The \texttt{new} function is used to create S4 objects. The digit sum and the identity rules do not need any other information beyond the name of the object, while the multiplication and addition of a constant rule do need a constant value. One must also specify (the trivial) identity rule as the \texttt{previousRule} and we will see below how changing this argument results in combinations of single rules. We can calculate the next element with these simple rules:
 <<>>=
 calculate(add5, 11)
+calculate(mult2, 23)
+@
+Since only the next element is given by \texttt{calculate}, it should not really be used. The \texttt{sequenceR} function is much better suited. It outputs a list, whose first component is a number sequence (again as a list) and the second is the rule used.  Let's only display the sequence using \texttt{unlist}:
+<<>>=
+unlist(sequenceR(11, add5, 6)[[1]])
+unlist(sequenceR(2, neg, 6)[[1]])
+@
+\subsubsection{Combining single rules}
+Figure \ref{fig:combsingle} shows how single rules are combined. Basically one plugs an existing single rule into another. Clearly the order matters, as the following example using the radicals \texttt{add5} and \texttt{DS} shows which is also depicted in Figures \ref{fig:add5DS} and \ref{fig:DSadd5}:
+<<>>=
+DSadd5 <- new("AddConstSingleRule", constantVal = 5, previousRule = DS)
+add5DS <- new("DigSumSingleRule", previousRule = add5)
+unlist(sequenceR(11, DSadd5, 6)[[1]])
+unlist(sequenceR(11, add5DS, 6)[[1]])
 @
 
-\subsubsection{Combining single rules}
-Figure \ref{combsingle} shows how 
+\begin{figure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}[node distance = 1cm, auto]
+      % Place nodes
+      \node [rule] (rule1) {\small\texttt{SingleRule1}};
+      \node [input, above  of=rule1] (y_n) {$y_n$};
+      \node [rule, below of=rule1] (rule2) {\small\texttt{SingleRule2}};
+      \node [input, below of=rule2] (y_np1) {$y_{n+1}$};
+      % Draw edges
+      \path [line] (y_n) -- (rule1);
+      \path [line] (rule1) -- (rule2);
+      \path [line] (rule2) -- (y_np1);
+    \end{tikzpicture}
+    \caption{Combining two (abstract) single rules}
+    \label{fig:abssingle}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}[node distance = 1cm, auto]
+      % Place nodes
+      \node [rule] (rule1) {\texttt{add5}};
+      \node [input, above  of=rule1] (y_n) {$y_n$};
+      \node [rule, below of=rule1] (rule2) {\texttt{DS}};
+      \node [input, below of=rule2] (y_np1) {$y_{n+1}$};
+      % Draw edges
+      \path [line] (y_n) -- (rule1);
+      \path [line] (rule1) -- (rule2);
+      \path [line] (rule2) -- (y_np1);
+    \end{tikzpicture}
+    \caption{Combining \texttt{add5} and \texttt{DS} this way ...}
+    \label{fig:add5DS}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \begin{tikzpicture}[node distance = 1cm, auto]
+      % Place nodes
+      \node [rule] (rule1) {\texttt{DS}};
+      \node [input, above  of=rule1] (y_n) {$y_n$};
+      \node [rule, below of=rule1] (rule2) {\texttt{add5}};
+      \node [input, below of=rule2] (y_np1) {$y_{n+1}$};
+      % Draw edges
+      \path [line] (y_n) -- (rule1);
+      \path [line] (rule1) -- (rule2);
+      \path [line] (rule2) -- (y_np1);
+    \end{tikzpicture}
+    \caption{... and combining \texttt{DS} and \texttt{add5} the other way round.}
+    \label{fig:DSadd5}
+  \end{subfigure}
+  \caption{Combining single rules}\label{fig:combsingle}
+\end{figure}
 
-\section{Further development of \texttt{ruleR}}
+\subsubsection{Combinations involving double rules}
+Let's create a Fibonacci rule:
+<<>>=
+fib <- new("AddDoubleRule", firstRule = idrule, secondRule = idrule, 
+           nextSingle = idrule)
+unlist(sequenceR(c(1,1), fib, 6)[[1]])
+@
+Note that \texttt{sequenceR} does not need an argument of length 2; if we had only specified a single integer it would have been repeated. Also note that \texttt{sequenceR} has a \texttt{random} argument which when set to \texttt{TRUE} samples from the first argument without replacement. From the arguments of the call to \texttt{new} above one can already guess that single rules are used in three places. Figure \ref{fig:comdouble} displays the abstract pattern and two examples. Note that arbitrary complex single rules can be used in this construction process, so it is very easy to make very complex number sequence items this way. One example using radicals in all three places is:
+<<>>=
+complex <- new("AddDoubleRule", firstRule = add5, secondRule = mult2, 
+           nextSingle = DS)
+unlist(sequenceR(c(1,1), complex, 6)[[1]])
+@
 
-Mention matrix items.
+\begin{figure}
+\begin{subfigure}[b]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (doublerule) {\texttt{doubleRule}};
+    \node [rule, above left of=doublerule] (firstRule) {\texttt{firstRule}};
+    \node [rule, above right of=doublerule] (secondRule) {\texttt{secondRule}};
+    \node [input, above of=secondRule] (y_n) {$y_n$};
+    \node [input, above of=firstRule] (y_n_1) {$y_{n-1}$};
+    \node [rule, below of=doublerule] (nextSingle) {\texttt{nextSingle}};
+    \node [input, below of=nextSingle] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (secondRule);
+    \path [line] (y_n_1) -- (firstRule);
+    \path [line] (secondRule) -- (doublerule);
+    \path [line] (firstRule) -- (doublerule);
+    \path [line] (doublerule) -- (nextSingle);
+    \path [line] (nextSingle) -- (y_np1);
+\end{tikzpicture}
+\caption{\texttt{firstRule}, \texttt{secondRule} and \texttt{nextSingle} arguments}
+\label{fig:absdouble}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (doublerule) {\texttt{AddDouble Rule}};
+    \node [rule, above left of=doublerule] (firstRule) {\texttt{idrule}};
+    \node [rule, above right of=doublerule] (secondRule) {\texttt{idrule}};
+    \node [input, above of=secondRule] (y_n) {$y_n$};
+    \node [input, above of=firstRule] (y_n_1) {$y_{n-1}$};
+    \node [rule, below of=doublerule] (nextSingle) {\texttt{idrule}};
+    \node [input, below of=nextSingle] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (secondRule);
+    \path [line] (y_n_1) -- (firstRule);
+    \path [line] (secondRule) -- (doublerule);
+    \path [line] (firstRule) -- (doublerule);
+    \path [line] (doublerule) -- (nextSingle);
+    \path [line] (nextSingle) -- (y_np1);
+\end{tikzpicture}
+\caption{Fibonacci rule (object called \texttt{fib})}
+\label{fig:fib}
+\end{subfigure}        
+\begin{subfigure}[b]{0.3\textwidth}
+\centering
+\begin{tikzpicture}[node distance = 1cm, auto]
+    % Place nodes
+    \node [rule] (doublerule) {\texttt{AddDouble Rule}};
+    \node [rule, above left of=doublerule] (firstRule) {\texttt{add5}};
+    \node [rule, above right of=doublerule] (secondRule) {\texttt{mult2}};
+    \node [input, above of=secondRule] (y_n) {$y_n$};
+    \node [input, above of=firstRule] (y_n_1) {$y_{n-1}$};
+    \node [rule, below of=doublerule] (nextSingle) {\texttt{DS}};
+    \node [input, below of=nextSingle] (y_np1) {$y_{n+1}$};
+    % Draw edges
+    \path [line] (y_n) -- (secondRule);
+    \path [line] (y_n_1) -- (firstRule);
+    \path [line] (secondRule) -- (doublerule);
+    \path [line] (firstRule) -- (doublerule);
+    \path [line] (doublerule) -- (nextSingle);
+    \path [line] (nextSingle) -- (y_np1);
+\end{tikzpicture}
+\caption{A more complex example (object called \texttt{complex})}
+\label{fig:complex}
+\end{subfigure}        
+\caption{Building double rules}\label{fig:combdouble}
+\end{figure}
 
-The \texttt{ruleR} package can be used as a back-end in a computerized testing system. 
+Single and double rules can be creared with the \texttt{createSR} and \texttt{createDR} functions, which will refer to the \texttt{singleRules} and \texttt{doubleRules} lists. Changing these lists has to be done with some care!
+ 
+ \subsubsection{Advanced features}
+ The package features functions to check sequences (for example \texttt{conCheck}, \texttt{check} and \texttt{duplicate}). Random generation of tests is done via \texttt{createTest} which uses a dictionary of rules in the process. The user is able to control the level of nesting (i.e. the number of rules in the dictionary to be combined) as well as the length of the number sequences, starting values, constants and the range of elements. Also the uniqueness of sequences can be analysed with the help of the package, i.e. help is provided to answer the question: Does any other combination of rules generate this sequence?
+ 
+ One last function we would like to demonstrate can come in handy when natural language is needed to describe sequences, for example when providing feedback to examinees. To describe a rule in natural language use \verb+extract_single_comment+ and \verb+extract_double_comment+; the complex example above then gives
+<<>>=
+extract_double_comment(complex)
+@
 
+\subsection{Extending \texttt{ruleR} number sequences}
+As an example we extend \texttt{ruleR} by a modulo single rule. The modulo operation is the remainder of a division. For example 18 modulo 7 is 4 and 15 modulo 12 is 3. If we want to use this as a new single rule, we need a new class which contains \texttt{SingleRule}. We need a constant value representing the number by which we divide and we need a \texttt{calculateSpecific} method on which everything else is based:
+<<>>=
+setClass("ModuloSingleRule",
+         contains="SingleRule",
+         representation(constantVal="numeric"),
+         S3methods=TRUE)
 
-The tree structure provided by \texttt{ruleR} might seem overly complex at first glance, but they are well-suited for a later cognitive analysis of items and RIG.
+setMethod("calculateSpecific",signature(x="ModuloSingleRule", y="numeric"),
+          function(x,y){
+            return(y%%x@constantVal)
+          })
+@
+We can now define a new radical:
+<<>>=
+mod7 <- new("ModuloSingleRule", constantVal = 7, previousRule = idrule)
+@
+and use this to construct a single rule:
+<<>>=
+mult2mod7 <- new("ModuloSingleRule", constantVal = 7, previousRule = mult2)
+add5mod12 <- new("ModuloSingleRule", constantVal = 12, previousRule = add5)
+unlist(sequenceR(1,mult2mod7,6)[[1]])
+unlist(sequenceR(1,add5mod12,6)[[1]])
+@
+
+\section{Closing remarks}
+The tree structure provided by \texttt{ruleR} might seem overly complex at first glance, but they are well-suited for a later cognitive analysis of items and RIG.  
+
+\subsection{Further development of \texttt{ruleR}}
+One class of intelligence test items which often follows rules are matrix items, which we plan to add next.
 
 
 \bibliography{ruleR}{}
