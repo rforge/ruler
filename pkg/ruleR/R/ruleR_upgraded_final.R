@@ -36,6 +36,7 @@ setMethod("calculateSpecific",signature(x="IdenSingleRule",y="numeric"),
 setClass("AddConstSingleRule",
          contains="SingleRule",
          representation(constantVal="numeric"),
+         prototype(previousRule=new("IdenSingleRule")),
          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="AddConstSingleRule", y="numeric"),
@@ -49,6 +50,7 @@ setMethod("calculateSpecific",signature(x="AddConstSingleRule", y="numeric"),
 setClass("MultConstSingleRule",
          contains="SingleRule",
          representation(constantVal="numeric"),
+         prototype(previousRule=new("IdenSingleRule")),
          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
@@ -71,7 +73,11 @@ digits <- function(x) {
 
 
 
-setClass("DigSumSingleRule", contains="SingleRule",S3methods=TRUE)
+setClass("DigSumSingleRule",
+         contains="SingleRule",
+         representation(constantVal="numeric"),
+         prototype(previousRule=new("IdenSingleRule")),
+         S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
           function(x,y){
@@ -120,23 +126,30 @@ setMethod("calculate",signature(x="SingleRule", y="numeric"), #both [1] and [2] 
 # nextSingle - operation to be executed at the result of function DoubleRule
 
 
-setClass("DoubleRule", representation = representation(firstRule="SingleRule", secondRule="SingleRule",nextSingle="SingleRule"),
+setClass("DoubleRule", 
+         representation = representation(firstRule="SingleRule", secondRule="SingleRule",nextSingle="SingleRule"),
+         prototype(firstRule=new("IdenSingleRule"),secondRule=new("IdenSingleRule"),nextSingle=new("IdenSingleRule")),
          S3methods=TRUE)
 
 
 
 #[1] ADD TWO PREVIOUS EXPRESSIONS
 
-setClass("AddDoubleRule", contains="DoubleRule",S3methods=TRUE)
+setClass("AddDoubleRule",
+         contains="DoubleRule",
+          S3methods=TRUE)
 
-setMethod("calculateSpecific",signature(x="AddDoubleRule", y="numeric", z="numeric"),
+setMethod("calculateSpecific",
+          signature(x="AddDoubleRule", y="numeric", z="numeric"),
           function(x,y,z){
             return(y+z)
           })
 
 #[2] MULTIPLY TWO PREVIOUS EXPRESSIONS 
 
-setClass("MultDoubleRule",contains="DoubleRule",S3methods=TRUE)
+setClass("MultDoubleRule",
+         contains="DoubleRule",         
+         S3methods=TRUE)
 
 
 setMethod("calculateSpecific",signature(x="MultDoubleRule", y="numeric", z="numeric"),
@@ -460,11 +473,14 @@ print.DoubleRule<-function(x){
 
 # 'range' of constant value user want to use (it can be a vector (ex. sequence with min value, max value and step)) 
 
+setClassUnion(name="Rule", members=c("SingleRule","DoubleRule"))
+setClassUnion(name="vecORnull", members=c("vector","NULL"))
+
+
 setClass("DictionaryRule",representation(rule="Rule",range="vecORnull"),S3methods=TRUE)
 
 
-setClassUnion(name="Rule", members=c("SingleRule","DoubleRule"))
-setClassUnion(name="vecORnull", members=c("vector","NULL"))
+
 
 #make a list of objects of class DirectRules and send the list to createItems function and name it as you wish
 
