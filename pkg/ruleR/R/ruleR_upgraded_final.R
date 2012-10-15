@@ -5,7 +5,7 @@
 #VIRTUAL CLASS FOR RULES OPERATING ON SINGLE ARGUMENTS
 
 setClass("SingleRule",  
-         representation = representation(previousRule="SingleRule"),
+         representation = representation(previousRule="SingleRule",description="character"),
          S3methods=TRUE)
 
 
@@ -71,6 +71,11 @@ digits <- function(x) {
   }
 }
 
+setClass("DigSumSingleRule",
+         contains="SingleRule",
+         representation(description="character"),
+         prototype(previousRule=new("IdenSingleRule"),description="Multiply previous element by value "),
+         S3methods=TRUE)
 
 
 setClass("DigSumSingleRule",
@@ -83,8 +88,8 @@ setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
           function(x,y){
             if(length(y) == 1){return(sum(digits(y)))   ## only for one argument
                                }else{
-            return(unlist(lapply(digits(y),sum))) ## properly vectorized
-            }
+            return(unlist(lapply(digits(y),sum)))} ## properly vectorized
+            
           })
 
 #[5] NEGATIVE 
@@ -315,27 +320,23 @@ createDR<-function(a=NULL,fr=NULL,sr=NULL,ns=NULL){
 # 'start' - range from which starting values are generated
 
 
-sequenceR<-function(start,rule,seqlen, random=TRUE)
+sequenceR<-function(start,rule,seqlen)
   {
   return(a)}
 
 
 
-setMethod("sequenceR",signature(start="vector",rule="SingleRule",seqlen="numeric", random ="logical"),
-          function(start,rule,seqlen, random = TRUE){
+setMethod("sequenceR",signature(start="vector",rule="SingleRule",seqlen="numeric"),
+          function(start,rule,seqlen){
                       
             
             if(length(start)==1){ #generating starting elements of numeric sequence
               x1<-start;x2<-start
             }else{
-              if(random){
                 start<-sample(start,2)
                 x1<-start[1]
                 x2<-start[2]
-              }else{
-                x1<-start[1]
-                x2<-start[2]
-              }
+                            
             }
             
             k<-list()
@@ -349,25 +350,21 @@ setMethod("sequenceR",signature(start="vector",rule="SingleRule",seqlen="numeric
           })
 
 
-setMethod("sequenceR",signature(start="vector",rule="DoubleRule",seqlen="numeric", random ="logical"),
-          function(start,rule,seqlen, random = TRUE){
+setMethod("sequenceR",signature(start="vector",rule="DoubleRule",seqlen="numeric"),
+          function(start,rule,seqlen){
                         
             
             if(length(start)==1){ #generating starting elements of numeric sequence
               x1<-start;x2<-start
             }else{
-              if(random){
+              
                 start<-sample(start,2)
                 x1<-start[1]
                 x2<-start[2]
-              }else{
-                x1<-start[1]
-                x2<-start[2]
-              }
+             
             }
             
-            
-            
+                        
             k<-list()
             k[1]=x1
             k[2]=x2
@@ -381,13 +378,13 @@ setMethod("sequenceR",signature(start="vector",rule="DoubleRule",seqlen="numeric
 
 
 
-setMethod("sequenceR",signature(start="vector",rule="IntertwinedRule",seqlen="numeric", random ="logical"),
-          function(start,rule,seqlen, random = TRUE){         
+setMethod("sequenceR",signature(start="vector",rule="IntertwinedRule",seqlen="numeric"),
+          function(start,rule,seqlen){         
                     
             
-            odd_list<-sequenceR(start=start,rule=rule@odd_rule,seqlen=seqlen%/%2,random=random)[[1]]
+            odd_list<-sequenceR(start=start,rule=rule@odd_rule,seqlen=seqlen%/%2)[[1]]
             
-            even_list<-sequenceR(start=start,rule=rule@even_rule,seqlen=seqlen%/%2,random=random)[[1]]
+            even_list<-sequenceR(start=start,rule=rule@even_rule,seqlen=seqlen%/%2)[[1]]
                         
             k<-unlist(mapply(c,odd_list, even_list, SIMPLIFY=FALSE))
             if(seqlen%%2==1)k<-c(k,calculate(rule@odd_rule,k[[length(k)-1]]))#if sequence length is an odd number
@@ -471,6 +468,10 @@ print.DoubleRule<-function(x){
 #------------------------------------------------NEW APPROACH---------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 
+setClassUnion(name="Rule", members=c("SingleRule","DoubleRule"))
+setClassUnion(name="vecORnull", members=c("vector","NULL"))         
+         
+         
 # 'range' of constant value user want to use (it can be a vector (ex. sequence with min value, max value and step)) 
 
 setClassUnion(name="Rule", members=c("SingleRule","DoubleRule"))
@@ -714,6 +715,7 @@ if(validation==0){#if the sequence is not unique, tru generating another one (bu
   }else{item<<-unlist(result)
         
         rule<-rule
+      
         k<-list(item,rule)
         return(k)
         break
@@ -776,121 +778,140 @@ createTest<-function(n,dictionary=basicDictionary,start=1:100,chain=2,del=c(1,2,
 
 #=====PRINTING RULES=================================================================================================================
 
-
-ws<-function(x){
-  
-  if(inherits(x,"AddConstSingleRule")){
-    a1="Add"
-    b1=x@constantVal
-  }
-  if(inherits(x,"MultConstSingleRule")){a1="Multiply the previous element of numeric sequence by"
-                                        b1=x@constantVal
-  }
-  if(inherits(x,"DigSumSingleRule")){ a1="Take sum of digits"
-                                      b1=NULL
-  }
-  
-  if(inherits(x,"NegativeSingleRule")){a1= "Take a negative of the element"
-                                       b1=NULL}
-  
-  
-  if(inherits(x,"IdenSingleRule")){a1=NULL
-                                   b1=NULL}
-  
-  return(list(a1,b1))                
-  
-}
-
-
-
-
-writing_single<-function(x){
-  
-  b<-list()
-  
-  kkk<-function(x){
-  b<<-c(b,list(ws(x)))
-  if(is.null(x@previousRule)){return(b);break}
-  if(!inherits(x@previousRule,"IdenSingleRule")){x<-x@previousRule;kkk(x)}else{return(b);break}
-  }
-  m<-kkk(x)
-  return(m)
-}
-
-
-extract_single_comment<-function(x){
-  b<-list()
-  f<-writing_single(x)
-  z<-order(seq(1:length(f)),decreasing=TRUE)
-  for(i in z){cat(paste(f[[i]][[1]], f[[i]][[2]],"\n"))}
-  
-}
-
-
-writing_double<-function(x){
-  
-  if(inherits(x@firstRule,"IdenSingleRule")) {a1=NULL}else{b<-list();a1=writing_single(x@firstRule)}
-  
-  if(inherits(x@secondRule,"IdenSingleRule")){a2=NULL}else{b<-list();a2=writing_single(x@secondRule)}
-  
-  if(inherits(x,"AddDoubleRule")){a3="Take the sum of two previous elements of numeric sequence"}
-  if(inherits(x,"MultDoubleRule")){a3="Multiply two previous elements of numeric sequence"}
-  
-  if(inherits(x@nextSingle,"IdenSingleRule")){a4=NULL}else{b<-list();a4=writing_single(x@nextSingle)}
-  
-  return(list(a1,a2,a3,a4))
-  
-}
-
-
-
-extract_double_comment<-function(x){
-  f<-writing_double(x)
-  
-  if(!is.null(f[[1]])){k1="Apply the following rules to the first element of a sequence: \n"}else{k1=NULL}
-  if(!is.null(f[[2]])){k2="Apply the following rules to the second element of a sequence: \n"}else{k2=NULL}
-  if(!is.null(f[[4]])){k4="In the end apply the following rule to the result: \n"}else{k4=NULL}
-  
-  cat(paste(k1,"\n"))
-  for( a in length(f[[1]]):1){cat(paste(f[[1]][[a]][[1]],f[[1]][[a]][[2]],"\n"))}
-  
-  cat(paste("\n\n",k2,"\n"))
-  for( a in length(f[[2]]):1){cat(paste(f[[2]][[a]][[1]],f[[2]][[a]][[2]],"\n"))}
-  
-  cat(paste("\n\n",f[[3]]))#double rule 
-  
-  cat(paste("\n\n",k4,"\n"))
-  for( a in length(f[[4]]):1){cat(paste(f[[4]][[a]][[1]],f[[4]][[a]][[2]],"\n"))}
-  
-  
-}
-
-
-
-#[[1] ]"AddConstSingleRule"
 # 
-# [[2]]
-# [1] "MultConstSingleRule"
+# ws<-function(x){
+#   
+#   if(inherits(x,"AddConstSingleRule")){
+#     a1="Add"
+#     b1=x@constantVal
+#   }
+#   if(inherits(x,"MultConstSingleRule")){a1="Multiply the previous element of numeric sequence by"
+#                                         b1=x@constantVal
+#   }
+#   if(inherits(x,"DigSumSingleRule")){ a1="Take sum of digits"
+#                                       b1=NULL
+#   }
+#   
+#   if(inherits(x,"NegativeSingleRule")){a1= "Take a negative of the element"
+#                                        b1=NULL}
+#   
+#   
+#   if(inherits(x,"IdenSingleRule")){a1=NULL
+#                                    b1=NULL}
+#   
+#   return(list(a1,b1))                
+#   
+# }
 # 
-# [[3]]
-# [1] "DigSumSingleRule"
 # 
-# [[4]]
-# [1] "NegativeSingleRule"
 # 
-# [[5]]
-# [1] "AddDoubleRule"
 # 
-# [[6]]
-# [1] "MultDoubleRule"
-#
+# writing_single<-function(x){
+#   
+#   b<-list()
+#   
+#   kkk<-function(x){
+#   b<<-c(b,list(ws(x)))
+#   if(is.null(x@previousRule)){return(b);break}
+#   if(!inherits(x@previousRule,"IdenSingleRule")){x<-x@previousRule;kkk(x)}else{return(b);break}
+#   }
+#   m<-kkk(x)
+#   return(m)
+# }
+# 
+# 
+# extract_single_comment<-function(x){
+#   b<-list()
+#   f<-writing_single(x)
+#   z<-order(seq(1:length(f)),decreasing=TRUE)
+#   for(i in z){cat(paste(f[[i]][[1]], f[[i]][[2]],"\n"))}
+#   
+# }
+# 
+# 
+# writing_double<-function(x){
+#   
+#   if(inherits(x@firstRule,"IdenSingleRule")) {a1=NULL}else{b<-list();a1=writing_single(x@firstRule)}
+#   
+#   if(inherits(x@secondRule,"IdenSingleRule")){a2=NULL}else{b<-list();a2=writing_single(x@secondRule)}
+#   
+#   if(inherits(x,"AddDoubleRule")){a3="Take the sum of two previous elements of numeric sequence"}
+#   if(inherits(x,"MultDoubleRule")){a3="Multiply two previous elements of numeric sequence"}
+#   
+#   if(inherits(x@nextSingle,"IdenSingleRule")){a4=NULL}else{b<-list();a4=writing_single(x@nextSingle)}
+#   
+#   return(list(a1,a2,a3,a4))
+#   
+# }
+# 
+# 
+# 
+# extract_double_comment<-function(x){
+#   f<-writing_double(x)
+#   
+#   if(!is.null(f[[1]])){k1="Apply the following rules to the first element of a sequence: \n"}else{k1=NULL}
+#   if(!is.null(f[[2]])){k2="Apply the following rules to the second element of a sequence: \n"}else{k2=NULL}
+#   if(!is.null(f[[4]])){k4="In the end apply the following rule to the result: \n"}else{k4=NULL}
+#   
+#   cat(paste(k1,"\n"))
+#   for( a in length(f[[1]]):1){cat(paste(f[[1]][[a]][[1]],f[[1]][[a]][[2]],"\n"))}
+#   
+#   cat(paste("\n\n",k2,"\n"))
+#   for( a in length(f[[2]]):1){cat(paste(f[[2]][[a]][[1]],f[[2]][[a]][[2]],"\n"))}
+#   
+#   cat(paste("\n\n",f[[3]]))#double rule 
+#   
+#   cat(paste("\n\n",k4,"\n"))
+#   for( a in length(f[[4]]):1){cat(paste(f[[4]][[a]][[1]],f[[4]][[a]][[2]],"\n"))}
+#   
+#   
+# }
+# 
+# 
+# 
+# #[[1] ]"AddConstSingleRule"
+# # 
+# # [[2]]
+# # [1] "MultConstSingleRule"
+# # 
+# # [[3]]
+# # [1] "DigSumSingleRule"
+# # 
+# # [[4]]
+# # [1] "NegativeSingleRule"
+# # 
+# # [[5]]
+# # [1] "AddDoubleRule"
+# # 
+# # [[6]]
+# # [1] "MultDoubleRule"
+# #
+# 
+# print.Rule<-function(x){
+#                         if(inherits(x,"SingleRule")) extract_single_comment(x)
+#                         if(inherits(x,"DoubleRule")) extract_double_comment(x)
+#                         }
 
-print.Rule<-function(x){
-                        if(inherits(x,"SingleRule")) extract_single_comment(x)
-                        if(inherits(x,"DoubleRule")) extract_double_comment(x)
-                        }
 
+# setMethod("print",signature(x="SingleRule"),
+#           function(x){
+#             bbb<-function(x){ #extracting nested rules
+#               if(!inherits(x@previousRule,"IdenSingleRule"))x<-x@previousRule;bbb(x)
+#               h<-NULL
+#               if("constantVal"%in%slotNames(x))h<-x@constantVal
+#               print(paste(x@description,x@constantVal))
+#                        }
+#             
+#             bbb(x)})
+ 
 
-
-
-
+            
+setMethod("mmm",signature(x="SingleRule"),
+          function(x){ 
+            b<-x
+            if(!inherits(x@previousRule,"IdenSingleRule")){ # if there are some rules nested inside 'x'
+              b <- mmm(x@previousRule) 
+              print("kkk")
+            }
+            return(mmm(b)) # if there are no more nested functions, execute
+          })
