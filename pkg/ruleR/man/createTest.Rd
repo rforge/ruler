@@ -2,10 +2,10 @@
 \alias{createTest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-A function to create test with specyfied parameters.
+A function to create a test with specified parameters.
 }
 \description{
-A function to create test with specyfied parameters.
+A function to a create test with specified parameters.
 }
 \usage{
 createTest(n, dictionary = basicDictionary, start = 1:100, chain = 2, del = c(1, 2, 3), 
@@ -14,8 +14,7 @@ createTest(n, dictionary = basicDictionary, start = 1:100, chain = 2, del = c(1,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{n}{
-how many numeric sequences should be generated (how long the test should be)
-
+how many numeric sequences should be generated? (how long the test should be)
 }
   \item{dictionary}{
 a list of all rules that can be used in generating a test. Every element of this list should be an object of class \code{DictionaryRule}. \cr
@@ -32,20 +31,20 @@ refers only to \code{DoubleRules}. Specifies which elements (1-firstRule,2-secon
 By default all three arguments are generated.
 }
   \item{seqlen}{
-how long a numeric sequence should be. \cr if it is a \code{numeric} every numeric sequence in a test will have the same length.
+how long should each numeric sequence be? \cr If it is a \code{numeric} every numeric sequence in a test will have the same length.
 }
   \item{exact}{
-which rules from \code{dictionary} should be used to create certain items. You can define it for every item in a form of list.
+which rules from \code{dictionary} should be used to create certain items? You can define it for every item in a form of list.
 By default it is all rules from defined \code{dictionary}.
 }
   \item{element_range}{
-what maximum and minimum size of elements are allowed in numeric sequence. It should be a vector of two numeric elements - first one specifying minimal values, second maximum values. If you want to define it separately for every numeric sequence it must be a list of two-element vectors.
+what maximum and minimum size of elements are allowed in the numeric sequence? It should be a vector of two numeric elements - first one specifying minimal values, second maximum values. If you want to define it separately for every numeric sequence it must be a list of two-element vectors.
 By default elements larger than 1000 and smaller than -100 are not allowed in numeric sequences.
 }
 }
 \details{
-If program is unable to generate numeric sequence which is not constant or unique with the parameters given, it will return a list of NA's
-instead of numeric sequence and \code{IdenSingleRule} as a rule used to produce it
+If \code{createTest} is unable to generate numeric sequences which are not constant or unique with the parameters given, it will return a list of NA's
+instead of numeric sequence and \code{IdenSingleRule} as a rule used to produce it.
 }
 \value{
 Function returns a list of numeric sequences \code{[[1]]} and a list of rules to create them \code{[[2]]}. 
@@ -112,7 +111,7 @@ m[[2]] # a list of rules used to create those items
 #-----------------------------------------------------------
 
 m<-createTest(4,seqlen=list(4,5,6,7),start=1) 
-# generating 4 sequences of length respectively  4,5,6,7, all startuing with 1
+# generating 4 sequences of length respectively  4,5,6,7, all starting with 1
  
 m<-createTest(4,seqlen=list(4,5,6,7),start=7:10) 
 # as above, but with starting values from range 7:10
