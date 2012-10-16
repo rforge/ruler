@@ -8,10 +8,10 @@ function
 A function to generate numeric sequence of specified length.
 Is used in \code{\link{createTest}} but can be used separately.
 Note that this function doesn't check for constant sequences or
-too big/small elements in numeric sequence!
+too big/small elements in the numeric sequence!
 }
 \usage{
-sequenceR(start, rule, seqlen, random = TRUE)
+sequenceR(start, rule, seqlen)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,8 +24,8 @@ rule that is to be used to generate numeric sequence
   \item{seqlen}{
 the length of the numeric sequence (default value is 6)
 }
-  \item{random}{
-  logical, if \code{TRUE} (the default) starting values are randomly sampled without replacement from \code{start}, otherwise \code{start[1]} is treated as the starting values for single rules and \code{start[1:2]} for double rules. If \code{start} has length 1, the value is repeated for double rules.
+%  \item{random}{
+%  logical, if \code{TRUE} (the default) starting values are randomly sampled without replacement from \code{start}, otherwise \code{start[1]} is treated as the starting values for single rules and \code{start[1:2]} for double rules. If \code{start} has length 1, the value is repeated for double rules.
   }
 
 }

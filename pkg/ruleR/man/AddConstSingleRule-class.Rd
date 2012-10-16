@@ -6,7 +6,7 @@
 
 \title{Class \code{"AddConstSingleRule"}}
 \description{
- A class for rules which add a specified constant value to the previous element of numeric sequence.
+ A class for rules which add a specified constant value to the previous element of a numeric sequence.
  Objects of this class inherit from \code{SingleRule}.
 }
 \section{Objects from the Class}{
@@ -15,9 +15,9 @@ Objects can be created by calls of the form \code{new("AddConstSingleRule", cons
 }
 \section{Slots}{
   \describe{
-    \item{\code{constantVal}:}{Object of class \code{"numeric"} - a constant that will be added to the previous element of numeric sequence }
-    \item{\code{previousRule}:}{Object of class \code{"SingleRule"} -  a rule that will be executed before \code{AddConstSingleRule} (this is an argument used to combine different rules together)}
-    \item{\code{.S3Class}:}{Object of class \code{"character"} -  S3 methods apply to this object }
+    \item{\code{constantVal}:}{Object of class \code{numeric} - a constant that will be added to the previous element of numeric sequence }
+    \item{\code{previousRule}:}{Object of class \code{SingleRule} -  a rule that will be executed before \code{AddConstSingleRule} (this is an argument used to combine different rules together). If no previous rule is specified, an \code{IdenSingleRule} will be used.}
+    \item{\code{.S3Class}:}{Object of class \code{character} -  S3 methods apply to this object }
   }
 }
 \section{Extends}{
@@ -50,14 +50,14 @@ Maria Rafalak <m.rafalak@practest.com.pl>
 \examples{
 ##[1] A rule that adds 4 to the previous element of numeric sequence
 
-m <- new("AddConstSingleRule",constantVal=4,previousRule=new("IdenSingleRule")) #or 
-m <- createSR(a1=2,cv1=4,n=0)
+m <- new("AddConstSingleRule", constantVal=4)) #or 
+m <- createSR(a1=2, cv1=4, n=0)
 print(m)
 
 
 ##[2] combining rules
 
-p <- new("DigSumSingleRule",previousRule=new("IdenSingleRule")) # a rule that calculates digitsum of a given element
+p <- new("DigSumSingleRule") # a rule that calculates digitsum of a given element
 m <- new("AddConstSingleRule",constantVal=5, previousRule=p)
 
 # or in one step:  

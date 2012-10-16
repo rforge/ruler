@@ -16,7 +16,7 @@
 \alias{calculateSpecific,SubsDoubleRule,numeric,numeric-method}
 \title{ ~~ Methods for Function \code{calculateSpecific}  ~~}
 \description{
- Methods for executing specyfied rules dedicated for every basic rule separately.
+Methods for executing specified rules dedicated for every basic rule separately.
 }
 \section{Methods}{
 \describe{
@@ -74,4 +74,4 @@ method to execute rules on objects of class \code{SubsDoubleRule}
 }
 }}
 \keyword{methods}
-\keyword{ ~~ other possible keyword(s) ~~ }
+%\keyword{ ~~ other possible keyword(s) ~~ }

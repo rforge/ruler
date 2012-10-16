@@ -2,7 +2,7 @@
 \alias{createDR}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function to create objects of class \code{Doublerule}
+A function to create objects of class \code{DoubleRule}
 }
 \description{
 A function to generate objects of class DoubleRule.
@@ -13,16 +13,16 @@ createDR(a = NULL, fr = NULL, sr = NULL, ns = NULL)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{a}{
-an index of \code{DoubleRule} stored on  \code{doubleRules} list to be used while creating new object. If not specyfied it will be generated automatically. 
+an index of \code{DoubleRule} stored on \code{doubleRules} list to be used while creating new object. If not specified, it will be generated automatically. 
 }
   \item{fr}{
-(first rule) an object of class \code{SingleRule}. This rule will be applied to the first element of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{firstRule} argument in object of class \code{DoubleRule}, \code{fr} must be defined as identical function \code{IdenSingleRule} (\code{fr=createSR("IdenSingleRule",n=0)}). For details see example [3].
+(first rule) an object of class \code{SingleRule}. This rule will be applied to the first element of numeric sequence. If no \code{firstRule} argument is given , \code{fr} will be set to the identical function \code{IdenSingleRule} (\code{fr=createSR("IdenSingleRule",n=0)}) in 50 percent of cases and a randomly generated from a call to \code{\link{createSR}} in other cases. For details see example [3].
 }
   \item{sr}{
-(second rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{secondRule} argument in object of class \code{DoubleRule}, \code{sr} must be defined as identical function \code{IdenSingleRule} (\code{sr=createSR("IdenSingleRule",n=0)}). For details see example [3].
+(second rule) an object of class \code{SingleRule}, see \code{fr} for more details but with a 70 percent chance of the identical rule being chosen.
 }
   \item{ns}{
-(next single rule) an object of class \code{SingleRule}. This rule will be applied to the second argument of numeric sequence. If not specyfied it will be generated automatically. To specify no \code{nextSingle} argument in object of class \code{DoubleRule}, \code{ns} must be defined as identical function \code{IdenSingleRule} (\code{sr=createSR("IdenSingleRule",n=0)}). For details see example [3].
+(next single rule) an object of class \code{SingleRule}, see \code{sr} for more details.
 }
 }
 \details{
@@ -61,7 +61,7 @@ m<-createDR()
 print(m)
 
 
-##[2]DoubleRule object with only one argument specyfied
+##[2]DoubleRule object with only one argument specified
 
 m<-createDR(sr=new("AddConstSingleRule",constantVal=3,previousRule=new("IdenSingleRule")))
 #only secondRule argument is specyfied, all other arguments are generated automatically
@@ -134,5 +134,5 @@ print(m)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

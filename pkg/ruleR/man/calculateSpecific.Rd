@@ -5,10 +5,8 @@
 calculateSpecific
 }
 \description{
-Every rule is an object of separate class, which inherits either from
-\code{SingleRule} or \code{DoubleRule} virtual class. This is why for every rule there is defined
- \code{calculateSpecific} method specyfying how to transform arguments supplied to 
-function \code{calculate}. }
+Every rule is an object of a class, which inherits either from
+\code{SingleRule} or \code{DoubleRule} virtual class. This is why for every rule there is a \code{calculateSpecific} method specifying how to transform arguments supplied to the \code{\link{calculate}} function.}
 
 \usage{
 calculateSpecific(x, y, z = NULL)
@@ -29,7 +27,7 @@ calculateSpecific(x, y, z = NULL)
 argument \code{z} is ignored if \code{x} inherits from class \code{SingleRule}
 }
 \value{
-function returs single value of class \code{numeric}
+function returns a single value of class \code{numeric}
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
@@ -51,19 +49,17 @@ function returs single value of class \code{numeric}
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+\dontrun{
+setClass("ExpDoubleRule", contains="DoubleRule",S3methods=TRUE)
 
-#setClass("ExpDoubleRule", contains="DoubleRule",S3methods=TRUE)
-#
-#setMethod("calculateSpecific", 
-#          signature(x="ExpDoubleRule", y="numeric", z="numeric"),
-#          function(x,y,z){
-#            return(y^z)
-#          })
-
-
-
+setMethod("calculateSpecific", 
+          signature(x="ExpDoubleRule", y="numeric", z="numeric"),
+          function(x,y,z){
+            return(y^z)
+          })
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -6,8 +6,7 @@
 
 \title{Class \code{"AddDoubleRule"}}
 \description{
- A class for the rule which adds two previous elements of a number sequence.
- It inherits from class \code{DoubleRule}
+ A class for the rule which adds the two previous elements of a number sequence. It inherits from class \code{DoubleRule}
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("AddDoubleRule",... )}.
@@ -57,18 +56,18 @@ Maria Rafalak <m.rafalak@practest.com.pl>
 
 p <- new("AddDoubleRule")
 calculate(p,12,5) #12+5=17
-
+unlist(sequenceR(1,p,8)[[1]]) # first 8 elements of Fibonacci sequence
 
 
 #[2] combining rules
 
-m <- new("DigSumSingleRule",previousRule=new("IdenSingleRule")) 
+m <- new("DigSumSingleRule") 
 # SingleRule that calculates digitsum of an element of numeric sequence
 
-r <- new("AddConstSingleRule", constantVal=6,previousRule=new("IdenSingleRule"))
+r <- new("AddConstSingleRule", constantVal=6)
 # a SingleRule that adds constant value '6' to the element of numeric sequence 
 
-f <- new("MultConstSingleRule", constantVal=2,previousRule=new("IdenSingleRule"))
+f <- new("MultConstSingleRule", constantVal=2)
 # a SingleRule that muliplies an element of a sequence by constant value '4'
 
 g <- new("AddDoubleRule", firstRule=r, secondRule=f, nextSingle=m)

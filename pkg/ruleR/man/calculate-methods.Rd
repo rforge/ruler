@@ -5,7 +5,7 @@
 %\alias{calculate,SingleRule,numeric,ANY-method}
 \title{ ~~ Methods for Function \code{calculate}  ~~}
 \description{
- Methods to execute rules on specyfied numeric arguments.
+Methods to execute rules on specified numeric arguments.
 }
 \section{Methods}{
 \describe{
@@ -19,6 +19,9 @@
 }
 }}
 
+\details{
+\code{calculate} expects \code{y} to be \code{numeric} of length 1. Only some rules will support vectorization.
+}
 
 \seealso{
 \code{\link{calculateSpecific-methods}}
@@ -26,4 +29,4 @@
 
 
 \keyword{methods}
-\keyword{ ~~ other possible keyword(s) ~~ }
+%\keyword{ ~~ other possible keyword(s) ~~ }

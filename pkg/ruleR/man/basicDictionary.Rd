@@ -5,8 +5,8 @@
 basicDictionary
 }
 \description{
-a default dictionary of rulesused to generate test if no other dictionary is specyfied by user.
-It contains of objects of class \code{DictionaryRule}.
+a default dictionary of rules used to generate a test if no other dictionary is specified by user.
+It contains objects of class \code{DictionaryRule}.
 }
 \usage{basicDictionary}
 \format{
