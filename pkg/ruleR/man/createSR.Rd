@@ -13,16 +13,16 @@ createSR(a1 = NULL, cv1 = NULL, n = NULL, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{a1}{
-is an index from table SingleRule (default a=NULL) //if 'a' is NULL it will be generated
+an index from table \code{SingleRule} (the default \code{NULL} leads to a randomly generated rule)
 }
   \item{cv1}{
-is a constant value
+ a constant value
 }
   \item{n}{
-how many rules are to be nested (default=NULL menas that I want to generate it automatically let's say from c(0,1,2)
+how many rules are to be nested? (the default \code{NULL} will randomly generate an \code{n} from \code{c(0,1,2)}
 }
   \item{\dots}{
-if I would like to add some rules nested I can provide their parameters cv must be always supplied
+parameters for nested rules can be passed via this argument
 }
 }
 \details{
@@ -58,5 +58,5 @@ createSR(a1=2,cv1=4,n=1,c(2,15))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

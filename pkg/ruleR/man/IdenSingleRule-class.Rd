@@ -6,9 +6,7 @@
 
 \title{Class \code{"IdenSingleRule"}}
 \description{
-A class for rules which return not modyfied input.
-Used mainly in \code{automaticTest} to define no futher operations.
-Objects of this class inherit from \code{SingleRule}.
+A class for rules which do not modify input. This class can be seen as a basic building block. Objects of this class inherit from \code{SingleRule}.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("IdenSingleRule", ...)}.

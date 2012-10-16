@@ -2,7 +2,7 @@
 \alias{createTest}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-A function to create a test with specified parameters.
+Create a test with specified parameters.
 }
 \description{
 A function to a create test with specified parameters.
@@ -14,11 +14,11 @@ createTest(n, dictionary = basicDictionary, start = 1:100, chain = 2, del = c(1,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{n}{
-how many numeric sequences should be generated? (how long the test should be)
+how many numeric sequences should be generated?
 }
   \item{dictionary}{
-a list of all rules that can be used in generating a test. Every element of this list should be an object of class \code{DictionaryRule}. \cr
-By default dictionary is a \code{basicDictionary} list but such list can be easily created by user. 
+a list of all rules that can be used when generating the test. Every element of this list should be an object of class \code{DictionaryRule}. \cr
+By default dictionary is a \code{basicDictionary} list but such list can be created by the user. 
 }
   \item{start}{
 a vector specifying the allowed range for starting values. Default range is 1:100
@@ -155,5 +155,5 @@ m<-createTest(4,chain=0,exact=list(c(1,2),c(2,3),c(3,4),c(1,4)))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -2,10 +2,10 @@
 \alias{print.SingleRule}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+print.SingleRule
 }
 \description{
-a function defined to print objects of class \code{SingleRule}
+Print objects of class \code{SingleRule}
 }
 \usage{
 print.SingleRule(x)
@@ -52,5 +52,5 @@ print(b)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

@@ -5,9 +5,9 @@
 
 \title{Class \code{"DoubleRule"}}
 \description{
-A class for rules operating on two elements of numeric sequence.
+A class for rules operating on two elements of a numeric sequence.
 It is a virtual class - so no objects of this class are generated. 
-All classes for specyfic rules operating on two arguiments (ex. \code{AddDoubleRule},\code{DivDoubleRule} etc.)
+All classes for specific rules operating on two arguiments (ex. \code{AddDoubleRule},\code{DivDoubleRule} etc.)
 inherit from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{
@@ -15,9 +15,9 @@ inherit from class \code{DoubleRule}.
 }
 \section{Slots}{
   \describe{
-    \item{\code{firstRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the first element of numeric sequence (before the \code{DoubleRule}).This doesn't need to be specyfied. }
-    \item{\code{secondRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the second element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specyfied. }
-    \item{\code{nextSingle}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the result of \code{DoubleRule}.This doesn't need to be specyfied.}
+    \item{\code{firstRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the first element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specified. }
+    \item{\code{secondRule}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the second element of numeric sequence (before the \code{DoubleRule}). This doesn't need to be specified. }
+    \item{\code{nextSingle}:}{ Object of class \code{"SingleRule"} \code{SingleRule} to be executed on the result of \code{DoubleRule}. This doesn't need to be specified.}
     \item{\code{.S3Class}:}{Object of class \code{"character"} Object of class \code{"character"} S3 methods apply for these objects }
   }
 }

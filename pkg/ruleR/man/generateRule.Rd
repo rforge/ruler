@@ -5,17 +5,17 @@
 generateRule
 }
 \description{
-A function to generate a rule with parameters given. Used in \code{val} function.
+A function to randomly generate a rule. Used in \code{\link{val}} function.
 }
 \usage{
 generateRule(itemDictionary, chain, del)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{itemDictionary}{
+  \item{itemDictionary}{a list of objecets of class \code{\link{DictionaryRule}}
 %%     ~~Describe \code{itemDictionary} here~~
 }
-  \item{chain}{
+  \item{chain}{number of rules to nest
 %%     ~~Describe \code{chain} here~~
 }
   \item{del}{
@@ -48,86 +48,6 @@ generateRule(itemDictionary, chain, del)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (itemDictionary, chain, del) 
-{
-    if (class(itemDictionary) != "list") 
-        stop("itemDictionary must be of class 'list'")
-    h <- sample(1:length(itemDictionary), 1)
-    a <- itemDictionary[[h]]@rule
-    if (inherits(a, "SingleRule")) {
-        if ("constantVal" \%in\% slotNames(a)) {
-            cv <- generate_cv(itemDictionary[[h]])
-            a@constantVal <- cv
-        }
-        itemDictionary <- itemDictionary[-h]
-        if (length(itemDictionary) > 0) {
-            dict_single <- split_dict(itemDictionary, 1)
-            a <- nest(chain, dict_single, a)
-        }
-        else {
-            dict_single <- NULL
-            a <- a
-        }
-    }
-    else {
-        chain0 <- chain
-        dict_single0 <- split_dict(itemDictionary, 1)
-        if (1 \%in\% del) {
-            chain <- chain0
-            dict_single <- dict_single0
-            h <- sample(1:length(dict_single), 1)
-            b <- dict_single[[h]]@rule
-            if ("constantVal" \%in\% slotNames(b)) 
-                b@constantVal <- generate_cv(dict_single[[h]])
-            dict_single <- dict_single[-h]
-            chain = chain - 1
-            if (chain >= 1) {
-                a@firstRule <- nest(chain, dict_single, b)
-            }
-            else {
-                a@firstRule <- b
-            }
-        }
-        if (2 \%in\% del) {
-            chain <- chain0
-            dict_single <- dict_single0
-            h <- sample(1:length(dict_single), 1)
-            b <- dict_single[[h]]@rule
-            if ("constantVal" \%in\% slotNames(b)) 
-                b@constantVal <- generate_cv(dict_single[[h]])
-            dict_single <- dict_single[-h]
-            chain = chain - 1
-            if (chain >= 1) {
-                a@secondRule <- nest(chain, dict_single, b)
-            }
-            else {
-                a@secondRule <- b
-            }
-        }
-        if (3 \%in\% del) {
-            chain <- chain0
-            dict_single <- dict_single0
-            h <- sample(1:length(dict_single), 1)
-            b <- dict_single[[h]]@rule
-            if ("constantVal" \%in\% slotNames(b)) 
-                b@constantVal <- generate_cv(dict_single[[h]])
-            dict_single <- dict_single[-h]
-            chain = chain - 1
-            if (chain >= 1) {
-                a@nextSingle <- nest(chain, dict_single, b)
-            }
-            else {
-                a@nextSingle <- b
-            }
-        }
-    }
-    return(a)
-  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

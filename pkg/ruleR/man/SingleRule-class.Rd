@@ -7,7 +7,7 @@
 
 \title{Class \code{"SingleRule"}}
 \description{
-rules operating on single argument
+rules operating on single arguments
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("SingleRule", ...)}.

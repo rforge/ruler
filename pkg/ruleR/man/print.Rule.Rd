@@ -2,10 +2,10 @@
 \alias{print.Rule}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+Print rules in common language
 }
 \description{
-a function defined to print objects of class \code{DoubleRule} or \code{SingleRule} in a common language.
+Print objects of class \code{DoubleRule} or \code{SingleRule} in common language.
 }
 \usage{
 print.Rule(x)
@@ -51,5 +51,5 @@ print.Rule(m[[2]][[1]])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

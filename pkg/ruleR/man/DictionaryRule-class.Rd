@@ -14,10 +14,10 @@ Objects can be created by calls of the form \code{new("DictionaryRule", ...)} \c
 }
 \section{Slots}{
   \describe{
-    \item{\code{rule}:}{Object of class \code{"Rule"} - it can be either \code{SingleRule} or \code{DoubleRule} }
-    \item{\code{range}:}{Object of class \code{"vecORnull"} a range from which a constant value can be generated. \cr
+    \item{\code{rule}:}{an object of class \code{Rule}, i.e. either \code{SingleRule} or \code{DoubleRule} }
+    \item{\code{range}:}{an object of class \code{vecORnull}, i.e. either a vector or a \code{NULL}. In the former case a range from which constant values can be generated. \cr
     For objects of class \code{DoubleRule} it will be \code{NULL} }
-    \item{\code{.S3Class}:}{Object of class \code{"character"} ~~ }
+    \item{\code{.S3Class}:}{Object of class \code{character}}
   }
 }
 \section{Methods}{

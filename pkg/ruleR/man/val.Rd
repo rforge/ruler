@@ -2,11 +2,11 @@
 \alias{val}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function to validate generated items
+Validate generated items
 }
 \description{
-function saving new items on a list if they are unique and not constant etc.
-Not to be used by user.
+Save new items on a list if they are unique and not constant etc.
+Not intended to be called directly.
 }
 \usage{
 val(items, rules, itemDictionary, chain, del, start, element_range, seqlen, number)
@@ -106,4 +106,4 @@ function (items, rules, itemDictionary, chain, del, start, element_range,
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{internal}
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

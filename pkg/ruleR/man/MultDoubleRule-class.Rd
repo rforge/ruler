@@ -6,7 +6,7 @@
 
 \title{Class \code{"MultDoubleRule"}}
 \description{
-A class for rules multiplying two elements of numeric sequence. 
+A class for rules multiplying two elements of a numeric sequence. 
 Objects of this class inherit from class \code{DoubleRule}.
 }
 \section{Objects from the Class}{

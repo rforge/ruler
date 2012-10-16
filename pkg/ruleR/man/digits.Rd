@@ -21,6 +21,7 @@ numeric value of which digits are separated
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
+A vector which contains the digits if the number (in base 10).
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -49,5 +50,5 @@ m[2]#6
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd1 }
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

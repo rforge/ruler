@@ -4,7 +4,7 @@
 \alias{DigSumSingleRule-class}
 %\alias{calculateSpecific,DigSumSingleRule,numeric,ANY-method}
 
-\title{Class \code{"DigSumSingleRule"}}
+\title{Class \code{DigSumSingleRule}}
 \description{
 A class for rules calculating a sum of digits of a single element of numeric sequence.
 It inherits from class \code{SingleRule}.

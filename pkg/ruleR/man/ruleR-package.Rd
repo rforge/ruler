@@ -7,7 +7,7 @@ ruleR: An R package for rule based item generation
 }
 \description{
 The package generates numeric sequences items for intelligence tests.
-Items can be generated  using either the rules specified by user or random combination of 
+Items can be generated  using either the rules specified by the user or random combination of 
 implemented rules.\cr\cr
 Parameters of the items such as:\cr
 - starting value(s),\cr 
@@ -15,7 +15,7 @@ Parameters of the items such as:\cr
 - rules allowed to create items,\cr
 - number of nesting allowed (the length of chain of rules),\cr
 - length of numeric sequences\cr
-can be specyfied by user. 
+can be specified by user. 
 
 \code{ruleR} 
 
@@ -82,10 +82,10 @@ calculate(ruleS2,67)#6+7=13
 calculate(ruleS2,67,45)#6+7=13 // second argument is ignored because ruleS2 is a SingleRule
 
 calculate(ruleD1,4,17)#4*17=68
-calculate(ruleD1,4) #4 //just returning the first argument
+calculate(ruleD1,4) #4 //just returns the first argument
 
 calculate(ruleD2,5,17)#5+17=22
-calculate(ruleD1,5) #5 //just returning the first argument
+calculate(ruleD1,5) #5 //just returns the first argument
 
 calculate(combine1,12)# (1+2)*2+14=20
 

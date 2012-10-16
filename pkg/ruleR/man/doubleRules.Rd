@@ -2,12 +2,11 @@
 \alias{doubleRules}
 \docType{data}
 \title{
-list of available basic \code{DoubleRule}s
+A list of available basic \code{DoubleRule}s
 }
 \description{
-A list of basic \code{DoubleRule}'s implemented in ruleR. 
-Refering to the index of rules on this list, combining rules is executed. 
-Only names of the rules are stored on the list.
+A list of basic \code{DoubleRule}s implemented in \code{ruleR}. 
+Some functions use this list when (randomly) generating rules and tests.  Only the names of the rules are stored on the list. Changing \code{DoubleRules} changes the behaviour of \code{\link{createSR}},\code{\link{createDR}} and \code{\link{createTest}}
 }
 
 

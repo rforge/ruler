@@ -5,7 +5,7 @@
 ws
 }
 \description{
-helping function to print the name of rule
+An internal function used by \code{\link{extract_single_comment}} and \code{\link{extract_double_comment}}
 }
 \usage{
 ws(x)
@@ -75,4 +75,4 @@ function (x)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{internal}
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

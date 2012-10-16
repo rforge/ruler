@@ -5,8 +5,7 @@
 writing_single
 }
 \description{
-A function used to print rules (\code{SingleRule})
-}
+An internal function called by \code{\link{extract_single_comment}} and \code{\link{extract_double_comment}}}
 \usage{
 writing_single(x)
 }
@@ -63,4 +62,4 @@ function (x)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{internal}
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

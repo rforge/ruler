@@ -2,12 +2,11 @@
 \alias{duplicate}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-function
+Check for duplicate number sequences
 }
 \description{
-A function checking whether a specyfied vector is already in a specyfied matrix. 
-This function is called by \code{automaticTest} while generating numeric sequences for the test, or
-by \code{AddRule}.
+A function checking whether a vector is already a row of a matrix. 
+This function is called by \code{\link{createTest}} while generating numeric sequences for the test.
 }
 \usage{
 duplicate(mx, vec)
@@ -15,10 +14,10 @@ duplicate(mx, vec)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{mx}{
-a matrix in which function \code{duplicate} searches for a specyfied vector
+a matrix in which function \code{duplicate} searches for a specified vector
 }
   \item{vec}{
-a vector for which a specyfied matrix is searched 
+a vector for which a specified matrix is searched 
 }
 }
 \details{
@@ -58,4 +57,4 @@ duplicate(mx=m,vec=g) #FALSE - no cuch vector in the matrix
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{internal}
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

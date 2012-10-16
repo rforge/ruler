@@ -5,7 +5,7 @@
 singleRules
 }
 \description{
-a list of available objects of class \code{SingleRule}
+A list of available objects of class \code{SingleRule}. This list is used by \code{\link{createSR}}, \code{\link{createDR}} and \code{\link{createTest}}. Be careful when changing this list.
 }
 \usage{singleRules}
 \format{

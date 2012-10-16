@@ -5,7 +5,7 @@
 generate_cv
 }
 \description{
-function generating constantVal for singleRules from specyfied range
+A function generating \code{constantVal} arguments for dictionary rules.
 }
 \usage{
 generate_cv(x)
@@ -42,20 +42,6 @@ an object of class DictionaryRule
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x) 
-{
-    if (length(x@range) == 1) 
-        x@range <- rep(x@range, 2)
-    cv <- sample(x@range, 1)
-    return(cv)
-  }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{internal}
+%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
