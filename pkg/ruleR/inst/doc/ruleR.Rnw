@@ -47,9 +47,9 @@ Philipp Doebler \\
 \maketitle
 
 \section{Introduction}
-The success of a psychological test is largely determined by the quality of its items. In classic linear testing, the number of items needed to measure a single latent trait with acceptable reliability is often in the range of 20 to 60 items. While it is certainly possible to construct this number of items with the help of heuristics it is often possible to indentify rules governing the item construction process. For example for the classic Advanced Progressive Matrices Test (\cite{raven1962advanced}) five (broad) rules used in its construction have been identified (\cite{carpenter1990one}). These rules and their combinations are used on the rows and/or columns of a matrix resulting in many different stimuli. Also number sequences used in intelligence tests are often derived from basic rules like addition and subtraction (of constants or two previous numbers), multiplication and the digitsum (sum of the digits of a number).
+The success of a psychological test is largely determined by the quality of its items. In classic linear testing, the number of items needed to measure a single latent trait with acceptable reliability is often in the range of 20 to 60 items. While it is certainly possible to construct this number of items with the help of heuristics it is often possible to identify rules governing the item construction process. For example for the classic Advanced Progressive Matrices Test (\cite{raven1962advanced}) five (broad) rules used in its construction have been identified (\cite{carpenter1990one}). These rules and their combinations are used on the rows and/or columns of a matrix resulting in many different stimuli. Also number sequences used in intelligence tests are often derived from basic rules like addition and subtraction (of constants or two previous numbers), multiplication and the digitsum (sum of the digits of a number).
 
-Recently \emph{automated item generation} (AIG; \cite{irvine2002item}) has been explored in various applied contexts (\cite{arendasy2005automatic, arendasy2006automatic, holling2009automatic, holling2010rule, zeuchrule}). The main idea of AIG is to identify the underlying template or rule(s) that constitute an item and to generate new items (potentially infinetly many) using the template or rule(s).  Two main approaches can be identified: \emph{item cloning} (IC) and \emph{rule-based item generation} (RIG). The first approach uses an existing item (a parent), typically with known psychometric qualities, and produces a clone (a child) of that item by changing its \emph{surface features} (or incidentals). For example in a statistics exam for university students, the cover story of the example is changed, but the student is nevertheless to make the same calculations (e.g. \cite{holling2009automatic}). RIG on the other hand focuses on the rules (sometimes called radicals) that govern the item construction process. Once the rules and their relations (and their relation to surface features of items) are known, a new item can be generated from a (combination of) rule(s). Often it is possible to predict the difficulty of an item by using a linear logistic test model or a relative (LLTM; \cite{fischer1973linear}; \cite{geerlings2011modeling}).
+Recently \emph{automated item generation} (AIG; \cite{irvine2002item}) has been explored in various applied contexts (\cite{arendasy2005automatic, arendasy2006automatic, holling2009automatic, holling2010rule, zeuchrule}). The main idea of AIG is to identify the underlying template or rule(s) that constitute an item and to generate new items (potentially infintely many) using the template or rule(s).  Two main approaches can be identified: \emph{item cloning} (IC) and \emph{rule-based item generation} (RIG). The first approach uses an existing item (a parent), typically with known psychometric qualities, and produces a clone (a child) of that item by changing its \emph{surface features} (or incidentals). For example in a statistics exam for university students, the cover story of the example is changed, but the student is nevertheless to make the same calculations (e.g. \cite{holling2009automatic}). RIG on the other hand focuses on the rules (sometimes called radicals) that govern the item construction process. Once the rules and their relations (and their relation to surface features of items) are known, a new item can be generated from a (combination of) rule(s). Often it is possible to predict the difficulty of an item by using a linear logistic test model or a relative (LLTM; \cite{fischer1973linear}; \cite{geerlings2011modeling}).
 
 There are several situations in which automated item generation is favourable:
 \begin{enumerate}
@@ -63,13 +63,13 @@ In the following we identify some rules for number sequence items %and matrix ty
 and explain details of their implementation in the  \texttt{ruleR} package. We aim to provide a framework to generate number sequence items. %and matrix type items with the ability to extend the system. 
 The package uses S4 classes to represent rules and is written with the understanding that the user will eventually want to extend the existing possibilities; this vignette demonstrates an extension.
 
-While \texttt{R} itself is not a frontend for computer based testing, it's applicability has been successfully demonstrated, for example in the form of the concerto testing platform (\cite{concerto}). Several \texttt{R} packages are worth mentioning in this context: \texttt{catR} (\cite{catR}), which provides functionality for computer adaptive testing, \texttt{ltm} (\cite{ltm}), which can be used to perform a range of psychometric analyses and \texttt{RMySQL} (\cite{RMySQL}) which handles the interaction of \texttt{R} and MySQL databases.
+While \texttt{R} itself is not a front end for computer based testing, its applicability has been successfully demonstrated, for example in the form of the concerto testing platform (\cite{concerto}). Several \texttt{R} packages are worth mentioning in this context: \texttt{catR} (\cite{catR}), which provides functionality for computer adaptive testing, \texttt{ltm} (\cite{ltm}), which can be used to perform a range of psychometric analyses and \texttt{RMySQL} (\cite{RMySQL}) which handles the interaction of \texttt{R} and MySQL databases.
 
 \section{Number sequences}
 Before we showcase a sample \texttt{R} session in which \texttt{ruleR} is used to generate number sequences, we explain some of the ideas behind the package.
 
 \subsection{Number sequence items and their cognitive analysis}
-The analysis of number sequence items often focuses on their psychometric properties, be it those derived from classical test theory (\cite{lord1968statistical}) or from item response theory (IRT; \cite{hambleton1995fundamentals,van1997handbook,embretson2000item,baker2004item}). CTT and IRT have developed precise notions of difficulty (and discriminatory power) of items. Interesting questions though remain: What determines the difficulty of an item? Can the difficutly be predicted from the way the item is constructed? 
+The analysis of number sequence items often focuses on their psychometric properties, be it those derived from classical test theory (\cite{lord1968statistical}) or from item response theory (IRT; \cite{hambleton1995fundamentals,van1997handbook,embretson2000item,baker2004item}). CTT and IRT have developed precise notions of difficulty (and discriminatory power) of items. Interesting questions though remain: What determines the difficulty of an item? Can the difficulty be predicted from the way the item is constructed? 
 
 A statistical approach towards an answer to these questions is provided by the linear logistic test model (LLTM, \cite{fischer1973linear}), or more generally by explanatory IRT models (\cite{de2004explanatory}). These models have been developed to explain item properties from intrinsic item features (and other variables). An analysis with such models requires to study the underlying cognitive process to isolate relevant item features.
 
@@ -83,7 +83,7 @@ The digit sum is formed by adding up all the digits of a number. For example, th
 \[
 23, 4, 9, 4, 4, 8, 3, 2, 5, 7, 3, 1, 4, 5, 9, 5, ...
 \]
-But there are other ways to combine the Fibonacci and digit sum rule, we could for example first caculate the digit sum of both numbers and then apply the Fibonacci rule, as shown in Figure \ref{fig:C}. Again using 23 and 4 as seeds we get the following sequence:
+But there are other ways to combine the Fibonacci and digit sum rule, we could for example first calculate the digit sum of both numbers and then apply the Fibonacci rule, as shown in Figure \ref{fig:C}. Again using 23 and 4 as seeds we get the following sequence:
 \[
 23, 4, 9, 13, 13, 8, 12, 11, 5, 7, 12, ...
 \]
@@ -289,6 +289,8 @@ unlist(sequenceR(11, add5DS, 6)[[1]])
   \caption{Combining single rules}\label{fig:combsingle}
 \end{figure}
 
+In addition to this, \texttt{ruleR} also allows the construction of intertwined rules, i.e. two single rules are used alternately to generate a number sequence. This is handled by the class \texttt{IntertwinedRule}.
+
 \subsubsection{Combinations involving double rules}
 Let's create a Fibonacci rule:
 <<>>=
@@ -296,7 +298,9 @@ fib <- new("AddDoubleRule", firstRule = idrule, secondRule = idrule,
            nextSingle = idrule)
 unlist(sequenceR(c(1,1), fib, 6)[[1]])
 @
-Note that \texttt{sequenceR} does not need an argument of length 2; if we had only specified a single integer it would have been repeated. Also note that \texttt{sequenceR} has a \texttt{random} argument which when set to \texttt{TRUE} samples from the first argument without replacement. From the arguments of the call to \texttt{new} above one can already guess that single rules are used in three places. Figure \ref{fig:comdouble} displays the abstract pattern and two examples. Note that arbitrary complex single rules can be used in this construction process, so it is very easy to make very complex number sequence items this way. One example using radicals in all three places is:
+Note that \texttt{sequenceR} does not need an argument of length 2; if we had only specified a single integer it would have been repeated.
+%Also note that \texttt{sequenceR} has a \texttt{random} argument which when set to \texttt{TRUE} samples from the first argument without replacement.
+From the arguments of the call to \texttt{new} above one can already guess that single rules are used in three places. Figure \ref{fig:combdouble} displays the abstract pattern and two examples. Note that arbitrary complex single rules can be used in this construction process, so it is very easy to make very complex number sequence items this way. One example using radicals in all three places is:
 <<>>=
 complex <- new("AddDoubleRule", firstRule = add5, secondRule = mult2, 
            nextSingle = DS)
@@ -373,7 +377,7 @@ unlist(sequenceR(c(1,1), complex, 6)[[1]])
 \caption{Building double rules}\label{fig:combdouble}
 \end{figure}
 
-Single and double rules can be creared with the \texttt{createSR} and \texttt{createDR} functions, which will refer to the \texttt{singleRules} and \texttt{doubleRules} lists. Changing these lists has to be done with some care!
+Single and double rules can be created with the \texttt{createSR} and \texttt{createDR} functions, which will refer to the \texttt{singleRules} and \texttt{doubleRules} lists. Changing these lists has to be done with some care!
  
  \subsubsection{Advanced features}
  The package features functions to check sequences (for example \texttt{conCheck}, \texttt{check} and \texttt{duplicate}). Random generation of tests is done via \texttt{createTest} which uses a dictionary of rules in the process. The user is able to control the level of nesting (i.e. the number of rules in the dictionary to be combined) as well as the length of the number sequences, starting values, constants and the range of elements. Also the uniqueness of sequences can be analysed with the help of the package, i.e. help is provided to answer the question: Does any other combination of rules generate this sequence?
@@ -408,11 +412,12 @@ unlist(sequenceR(1,mult2mod7,6)[[1]])
 unlist(sequenceR(1,add5mod12,6)[[1]])
 @
 
-\section{Closing remarks}
-The tree structure provided by \texttt{ruleR} might seem overly complex at first glance, but they are well-suited for a later cognitive analysis of items and RIG.  
+% \subsection{Further development of \texttt{ruleR}}
+% One class of intelligence test items which often follows rules are matrix items, which we plan to add next.
 
-\subsection{Further development of \texttt{ruleR}}
-One class of intelligence test items which often follows rules are matrix items, which we plan to add next.
+
+\section*{A closing remark}
+The tree structures provided by \texttt{ruleR} might seem overly complex at first glance if the sole aim is to generate number sequences. But such tree structures are well-suited for a later cognitive analysis of items and RIG. Also the simple case of number sequences revealed the benefits of using S4 classes already, since for example randomly combining radicals like in \texttt{createTest} is very difficult to implement without them. Many test designers are familiar with R these days, so in addition to providing number sequences, \texttt{ruleR} can also be seen as proof of concept of an item generator written in R.
 
 
 \bibliography{ruleR}{}
