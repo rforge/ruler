@@ -36,7 +36,7 @@ setMethod("calculateSpecific",signature(x="IdenSingleRule",y="numeric"),
 setClass("AddConstSingleRule",
          contains="SingleRule",
          representation(constantVal="numeric"),
-         prototype(previousRule=new("IdenSingleRule")),
+         prototype(previousRule=new("IdenSingleRule"),description="Add"),
          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="AddConstSingleRule", y="numeric"),
@@ -50,7 +50,7 @@ setMethod("calculateSpecific",signature(x="AddConstSingleRule", y="numeric"),
 setClass("MultConstSingleRule",
          contains="SingleRule",
          representation(constantVal="numeric"),
-         prototype(previousRule=new("IdenSingleRule")),
+         prototype(previousRule=new("IdenSingleRule"), description="Multiply by "),
          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="MultConstSingleRule", y="numeric"),
@@ -74,15 +74,15 @@ digits <- function(x) {
 setClass("DigSumSingleRule",
          contains="SingleRule",
          representation(description="character"),
-         prototype(previousRule=new("IdenSingleRule"),description="Multiply previous element by value "),
+         prototype(previousRule=new("IdenSingleRule"),description="Take the sum of digits "),
          S3methods=TRUE)
 
-
-setClass("DigSumSingleRule",
-         contains="SingleRule",
-         representation(constantVal="numeric"),
-         prototype(previousRule=new("IdenSingleRule")),
-         S3methods=TRUE)
+# 
+# setClass("DigSumSingleRule",
+#          contains="SingleRule",
+#          representation(constantVal="numeric"),
+#          prototype(constantVal=NULL, previousRule=new("IdenSingleRule")),
+#          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
           function(x,y){
@@ -142,6 +142,8 @@ setClass("DoubleRule",
 
 setClass("AddDoubleRule",
          contains="DoubleRule",
+         representation(description="character"),
+         prototype(firstRule=new("IdenSingleRule"),secondRule=new("IdenSingleRule"),nextSingle=new("IdenSingleRule"), description="Add two previous elements"),
           S3methods=TRUE)
 
 setMethod("calculateSpecific",
@@ -434,34 +436,34 @@ conCheck<-function(x){
 
 #---------------------------------------------------------------------------
 #------function to print objects of class SingleRule and DoubleRule---------
-#---------------------------------------------------------------------------
-
-print.SingleRule<-function(x){
-                                pr<-function(x){
-                                                cat(paste("\nname:", class(x)[1]))
-                                                if("constantVal"%in%slotNames(x)) {cat(paste(", constant value: ", x@constantVal))} 
-                                                }
-                                pr(x)
-                                
-                                if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; print(x)}
-                                
-                              }
-
-
-
-print.DoubleRule<-function(x){
-                              x1=x
-                                             
-                                                             
-                                cat(class(x1)[1])
-                                
-                                if("firstRule"%in%slotNames(x)){cat("\n FIRST RULE:"); x<-x@firstRule;print.SingleRule(x)}
-                                x=x1
-                                if("secondRule"%in%slotNames(x)){cat("\n SECOND RULE:"); x<-x@secondRule;print.SingleRule(x)}
-                                x=x1
-                                if("nextSingle"%in%slotNames(x)){cat("\n NEXT SINGLE:"); x<-x@nextSingle;print.SingleRule(x)}
-                            
-                                }
+# #---------------------------------------------------------------------------
+# 
+# print.SingleRule<-function(x){
+#                                 pr<-function(x){
+#                                                 cat(paste("\nname:", class(x)[1]))
+#                                                 if("constantVal"%in%slotNames(x)) {cat(paste(", constant value: ", x@constantVal))} 
+#                                                 }
+#                                 pr(x)
+#                                 
+#                                 if(!class(x@previousRule)=="SingleRule"){x<-x@previousRule; print(x)}
+#                                 
+#                               }
+# 
+# 
+# 
+# print.DoubleRule<-function(x){
+#                               x1=x
+#                                              
+#                                                              
+#                                 cat(class(x1)[1])
+#                                 
+#                                 if("firstRule"%in%slotNames(x)){cat("\n FIRST RULE:"); x<-x@firstRule;print.SingleRule(x)}
+#                                 x=x1
+#                                 if("secondRule"%in%slotNames(x)){cat("\n SECOND RULE:"); x<-x@secondRule;print.SingleRule(x)}
+#                                 x=x1
+#                                 if("nextSingle"%in%slotNames(x)){cat("\n NEXT SINGLE:"); x<-x@nextSingle;print.SingleRule(x)}
+#                             
+#                                 }
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -778,140 +780,26 @@ createTest<-function(n,dictionary=basicDictionary,start=1:100,chain=2,del=c(1,2,
 
 #=====PRINTING RULES=================================================================================================================
 
-# 
-# ws<-function(x){
-#   
-#   if(inherits(x,"AddConstSingleRule")){
-#     a1="Add"
-#     b1=x@constantVal
-#   }
-#   if(inherits(x,"MultConstSingleRule")){a1="Multiply the previous element of numeric sequence by"
-#                                         b1=x@constantVal
-#   }
-#   if(inherits(x,"DigSumSingleRule")){ a1="Take sum of digits"
-#                                       b1=NULL
-#   }
-#   
-#   if(inherits(x,"NegativeSingleRule")){a1= "Take a negative of the element"
-#                                        b1=NULL}
-#   
-#   
-#   if(inherits(x,"IdenSingleRule")){a1=NULL
-#                                    b1=NULL}
-#   
-#   return(list(a1,b1))                
-#   
-# }
-# 
-# 
-# 
-# 
-# writing_single<-function(x){
-#   
-#   b<-list()
-#   
-#   kkk<-function(x){
-#   b<<-c(b,list(ws(x)))
-#   if(is.null(x@previousRule)){return(b);break}
-#   if(!inherits(x@previousRule,"IdenSingleRule")){x<-x@previousRule;kkk(x)}else{return(b);break}
-#   }
-#   m<-kkk(x)
-#   return(m)
-# }
-# 
-# 
-# extract_single_comment<-function(x){
-#   b<-list()
-#   f<-writing_single(x)
-#   z<-order(seq(1:length(f)),decreasing=TRUE)
-#   for(i in z){cat(paste(f[[i]][[1]], f[[i]][[2]],"\n"))}
-#   
-# }
-# 
-# 
-# writing_double<-function(x){
-#   
-#   if(inherits(x@firstRule,"IdenSingleRule")) {a1=NULL}else{b<-list();a1=writing_single(x@firstRule)}
-#   
-#   if(inherits(x@secondRule,"IdenSingleRule")){a2=NULL}else{b<-list();a2=writing_single(x@secondRule)}
-#   
-#   if(inherits(x,"AddDoubleRule")){a3="Take the sum of two previous elements of numeric sequence"}
-#   if(inherits(x,"MultDoubleRule")){a3="Multiply two previous elements of numeric sequence"}
-#   
-#   if(inherits(x@nextSingle,"IdenSingleRule")){a4=NULL}else{b<-list();a4=writing_single(x@nextSingle)}
-#   
-#   return(list(a1,a2,a3,a4))
-#   
-# }
-# 
-# 
-# 
-# extract_double_comment<-function(x){
-#   f<-writing_double(x)
-#   
-#   if(!is.null(f[[1]])){k1="Apply the following rules to the first element of a sequence: \n"}else{k1=NULL}
-#   if(!is.null(f[[2]])){k2="Apply the following rules to the second element of a sequence: \n"}else{k2=NULL}
-#   if(!is.null(f[[4]])){k4="In the end apply the following rule to the result: \n"}else{k4=NULL}
-#   
-#   cat(paste(k1,"\n"))
-#   for( a in length(f[[1]]):1){cat(paste(f[[1]][[a]][[1]],f[[1]][[a]][[2]],"\n"))}
-#   
-#   cat(paste("\n\n",k2,"\n"))
-#   for( a in length(f[[2]]):1){cat(paste(f[[2]][[a]][[1]],f[[2]][[a]][[2]],"\n"))}
-#   
-#   cat(paste("\n\n",f[[3]]))#double rule 
-#   
-#   cat(paste("\n\n",k4,"\n"))
-#   for( a in length(f[[4]]):1){cat(paste(f[[4]][[a]][[1]],f[[4]][[a]][[2]],"\n"))}
-#   
-#   
-# }
-# 
-# 
-# 
-# #[[1] ]"AddConstSingleRule"
-# # 
-# # [[2]]
-# # [1] "MultConstSingleRule"
-# # 
-# # [[3]]
-# # [1] "DigSumSingleRule"
-# # 
-# # [[4]]
-# # [1] "NegativeSingleRule"
-# # 
-# # [[5]]
-# # [1] "AddDoubleRule"
-# # 
-# # [[6]]
-# # [1] "MultDoubleRule"
-# #
-# 
-# print.Rule<-function(x){
-#                         if(inherits(x,"SingleRule")) extract_single_comment(x)
-#                         if(inherits(x,"DoubleRule")) extract_double_comment(x)
-#                         }
-
-
-# setMethod("print",signature(x="SingleRule"),
-#           function(x){
-#             bbb<-function(x){ #extracting nested rules
-#               if(!inherits(x@previousRule,"IdenSingleRule"))x<-x@previousRule;bbb(x)
-#               h<-NULL
-#               if("constantVal"%in%slotNames(x))h<-x@constantVal
-#               print(paste(x@description,x@constantVal))
-#                        }
-#             
-#             bbb(x)})
- 
-
+setMethod("print",signature(x="SingleRule"), #both [1] and [2] inherit from class 'SingleRule'
+          function(x){
+            k<-list()
             
-setMethod("mmm",signature(x="SingleRule"),
-          function(x){ 
-            b<-x
-            if(!inherits(x@previousRule,"IdenSingleRule")){ # if there are some rules nested inside 'x'
-              b <- mmm(x@previousRule) 
-              print("kkk")
-            }
-            return(mmm(b)) # if there are no more nested functions, execute
+            desc_list<-function(x){
+            if(!inherits(x,"IdenSingleRule")){k<<-c(k,paste(x@description,x@constantVal)); x<-x@previousRule;desc_list(x)}}
+            
+            desc_list(x)
+            
+            for(i in length(k):1){cat(paste(k[[i]],"\n"))}
+                    
+          })
+
+
+
+setMethod("print",signature(x="DoubleRule"), #both [1] and [2] inherit from class 'SingleRule'
+          function(x){
+            if(!inherits(x@firstRule,"IdenSingleRule"))cat("\nRULES APPLIED TO THE FIRST ELEMENT:\n");print(x@firstRule)
+            if(!inherits(x@secondRule,"IdenSingleRule"))cat("\nRULES APPLIED TO THE SECOND ELEMENT:\n");print(x@secondRule)
+            cat(paste("\n",x@description,"\n",sep=""))
+            if(!inherits(x@nextSingle,"IdenSingleRule"))cat("\nRULES APPLIED TO THE RESULT OF PREVIOUS OPERATIONS:\n");print(x@nextSingle)
+            
           })
