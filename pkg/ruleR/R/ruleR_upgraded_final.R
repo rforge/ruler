@@ -71,18 +71,12 @@ digits <- function(x) {
   }
 }
 
+
 setClass("DigSumSingleRule",
          contains="SingleRule",
          representation(description="character"),
-         prototype(previousRule=new("IdenSingleRule"),description="Take the sum of digits "),
+         prototype(description="Take the sum of digits ",previousRule=new("IdenSingleRule")),
          S3methods=TRUE)
-
-# 
-# setClass("DigSumSingleRule",
-#          contains="SingleRule",
-#          representation(constantVal="numeric"),
-#          prototype(constantVal=NULL, previousRule=new("IdenSingleRule")),
-#          S3methods=TRUE)
 
 setMethod("calculateSpecific",signature(x="DigSumSingleRule",y="numeric"),
           function(x,y){
@@ -155,7 +149,9 @@ setMethod("calculateSpecific",
 #[2] MULTIPLY TWO PREVIOUS EXPRESSIONS 
 
 setClass("MultDoubleRule",
-         contains="DoubleRule",         
+         contains="DoubleRule",  
+         representation(description="character"),
+         prototype(firstRule=new("IdenSingleRule"),secondRule=new("IdenSingleRule"),nextSingle=new("IdenSingleRule"), description="Multiply two previous elements"),
          S3methods=TRUE)
 
 
@@ -275,7 +271,7 @@ createSR<-function(a1=NULL,cv1=NULL,n=NULL,...){
                 
                  } # generate 'n' if it is set as null with different probabilities
   
-  
+
   if("constantVal"%in%slotNames(singleRules[[a1]])){m<-new(singleRules[[a1]],constantVal=cv1,previousRule=new("IdenSingleRule"))
   }else{m<-new(singleRules[[a1]],previousRule=new("IdenSingleRule"))}
   
@@ -491,6 +487,7 @@ setClass("DictionaryRule",representation(rule="Rule",range="vecORnull"),S3method
 #'index' - index of the rule in the basic rules list - it can be a list or a simple element
 
 createDictRule<-function(index,range=c(-15:-1,1:15)){
+                                
                                 if(inherits(index,"SingleRule")){rule<-index;if("constantVal"%in%slotNames(index)){range=index@constantVal}else{range=NULL}}
                                 if(inherits(index,"DoubleRule")){rule<-index;range=NULL}
                                 if(class(index)=="numeric"){#you specify rule from the table c(singleRules,doubleRules)
@@ -704,7 +701,7 @@ val<-function(items,rules,itemDictionary,chain,del,start,element_range,seqlen,nu
 if(validation==0){#if the sequence is not unique, tru generating another one (but max. for three times)
     
     
-                  if(number<3) {number=number+1 
+                  if(number<4) {number=number+1 
                                 val(items=items,rules=rules,itemDictionary=itemDictionary,chain=chain,del=del,start=start,element_range=element_range,seqlen=seqlen,number)
                   }else{item<-rep(NA,seqlen)
                         rule<-new("IdenSingleRule")
@@ -713,9 +710,9 @@ if(validation==0){#if the sequence is not unique, tru generating another one (bu
                         return(k)
                         break                       
                         
-                        } # if you failed to generate a unique sequence in 3 attempts- return zero sequence
+                        } # if you failed to generate a unique sequence in 4 attempts- return zero sequence
   }else{item<<-unlist(result)
-        
+                
         rule<-rule
       
         k<-list(item,rule)
@@ -784,8 +781,18 @@ setMethod("print",signature(x="SingleRule"), #both [1] and [2] inherit from clas
           function(x){
             k<-list()
             
-            desc_list<-function(x){
-            if(!inherits(x,"IdenSingleRule")){k<<-c(k,paste(x@description,x@constantVal)); x<-x@previousRule;desc_list(x)}}
+            desc_list<-function(x){ 
+              if(!inherits(x,"IdenSingleRule")){
+                                                if("constantVal"%in%slotNames(x)){k<<-c(k,paste(x@description,x@constantVal)); x<-x@previousRule;desc_list(x)
+                                                                                  }else {k<<-c(k,x@description); x<-x@previousRule;desc_list(x)}
+                                                }
+              
+              
+                                  }
+              
+                                
+            
+            
             
             desc_list(x)
             
@@ -803,3 +810,16 @@ setMethod("print",signature(x="DoubleRule"), #both [1] and [2] inherit from clas
             if(!inherits(x@nextSingle,"IdenSingleRule"))cat("\nRULES APPLIED TO THE RESULT OF PREVIOUS OPERATIONS:\n");print(x@nextSingle)
             
           })
+
+
+
+
+setMethod("print",signature(x="IntertwinedRule"),
+          function(x){
+            cat("\nRULES APPLIED TO 1st,3rd,5th ... ELEMENT:\n");print(x@oddRule)
+            cat("\nRULES APPLIED TO 2nd,4th,6th ...ELEMENT:\n");print(x@evenRule)
+            
+          })
+
+
+
