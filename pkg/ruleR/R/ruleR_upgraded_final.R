@@ -785,7 +785,7 @@ setMethod("print",signature(x="SingleRule"), #both [1] and [2] inherit from clas
               if(!inherits(x,"IdenSingleRule")){
                                                 if("constantVal"%in%slotNames(x)){k<<-c(k,paste(x@description,x@constantVal)); x<-x@previousRule;desc_list(x)
                                                                                   }else {k<<-c(k,x@description); x<-x@previousRule;desc_list(x)}
-                                                }
+                                                }else{k<<-c(k,"")}
               
               
                                   }
