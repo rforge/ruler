@@ -8,7 +8,7 @@ Print rules in common language
 Print objects of class \code{DoubleRule} or \code{SingleRule} in common language.
 }
 \usage{
-print.Rule(x)
+print(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -47,7 +47,7 @@ an object of class \code{DoubleRule} or \code{SingleRule}
 }
 \examples{
 m<-createTest(1)
-print.Rule(m[[2]][[1]])
+print(m[[2]][[1]])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

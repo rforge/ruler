@@ -50,7 +50,7 @@ Maria Rafalak <m.rafalak@practest.com.pl>
 \examples{
 ##[1] A rule that adds 4 to the previous element of numeric sequence
 
-m <- new("AddConstSingleRule", constantVal=4)) #or 
+m <- new("AddConstSingleRule", constantVal=4) #or 
 m <- createSR(a1=2, cv1=4, n=0)
 print(m)
 

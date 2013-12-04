@@ -102,7 +102,7 @@ m<-createTest(10)#all parameters default
 #printing rules used to create an item
 for(i in 1:length(m[[2]])){
     cat(paste("\n\n--------------","rule for item number",i,"-------------\n"))
-    print.Rule(m[[2]][[i]])
+    print(m[[2]][[i]])
                           }
 ## SEE \code{createTest} function for more detail
 

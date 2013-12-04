@@ -53,7 +53,7 @@ Default range is from -15 to 15 (excluding 0). For objects of class \code{Double
 \examples{
 createDictRule(4,range=c(7,2,15)) # creates a rule of multiplication by constant
 # constant can be equal to 7, 2, or 15
-
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }

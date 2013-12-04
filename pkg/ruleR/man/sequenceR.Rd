@@ -28,7 +28,6 @@ the length of the numeric sequence (default value is 6)
 %  logical, if \code{TRUE} (the default) starting values are randomly sampled without replacement from \code{start}, otherwise \code{start[1]} is treated as the starting values for single rules and \code{start[1:2]} for double rules. If \code{start} has length 1, the value is repeated for double rules.
   }
 
-}
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
@@ -56,11 +55,14 @@ function returns a list containing of:
 \code{\link{check}},
 \code{\link{createSR}},
 \code{\link{createDR}}
-
 }
-\examples{
-sequenceR(rule=new("AddConstSingleRule",constantVal=1,previousRule=new("IdenSingleRule")),start=99,seqlen=6)
 
+\examples{
+sequenceR(rule = new("AddConstSingleRule",
+                     constantVal = 1,
+                     previousRule = new("IdenSingleRule")),
+                     start=99,
+                     seqlen=6)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

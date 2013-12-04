@@ -382,9 +382,9 @@ Single and double rules can be created with the \texttt{createSR} and \texttt{cr
  \subsubsection{Advanced features}
  The package features functions to check sequences (for example \texttt{conCheck}, \texttt{check} and \texttt{duplicate}). Random generation of tests is done via \texttt{createTest} which uses a dictionary of rules in the process. The user is able to control the level of nesting (i.e. the number of rules in the dictionary to be combined) as well as the length of the number sequences, starting values, constants and the range of elements. Also the uniqueness of sequences can be analysed with the help of the package, i.e. help is provided to answer the question: Does any other combination of rules generate this sequence?
  
- One last function we would like to demonstrate can come in handy when natural language is needed to describe sequences, for example when providing feedback to examinees. To describe a rule in natural language use \verb+extract_single_comment+ and \verb+extract_double_comment+; the complex example above then gives
+ One last function we would like to demonstrate can come in handy when natural language is needed to describe sequences, for example when providing feedback to examinees. To describe a rule in natural language use \verb+print+; the complex example above then gives
 <<>>=
-extract_double_comment(complex)
+print(complex)
 @
 
 \subsection{Extending \texttt{ruleR} number sequences}
