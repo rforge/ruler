@@ -4,7 +4,7 @@ Title: Generating numeric sequence items for intelligence tests
 Version: 0.1
 Date: 2013-12-04
 Author: Maria Rafalak(Polish Psychological Tests Laboratory), Philipp Doebler (WWU Muenster), Heinz Holling (WWU Muenster)
-Maintainer: Maria Rafalak <m.rafalak@practest.com.pl>
+Maintainer: Philipp Doebler <philipp.doebler@googlemail.com>
 Description: This package helps to generate items for intelligence tests. Items are number sequences and are generated according to the implemented basic rules. Those rules can be easily combined either by a user or automatically. The package generates also 'noise answers' (distractors) helpful in creating items with specified response options.
 Depends: methods 
 License: GPL-2
