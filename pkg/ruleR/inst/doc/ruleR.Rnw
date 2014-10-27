@@ -37,7 +37,10 @@ Maria Rafalak\\
 m.rafalak@practest.com.pl
 \and
 Philipp Doebler \\
-      philipp.doebler@googlemail.com}
+      philipp.doebler@googlemail.com
+\and
+Heinz Holling\\
+      holling@wwu.de}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
